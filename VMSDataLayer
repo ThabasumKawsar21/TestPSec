@@ -1,0 +1,60 @@
+
+// <summary>
+// This file contains DBConnection class.
+// </summary>
+//-----------------------------------------------------------------------
+namespace VMSDataLayer
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Linq;
+    using System.Text;
+
+    /// <summary>
+    /// Data base connection
+    /// </summary>
+    #region DBConnection
+    public class DBConnection
+    {
+        /// <summary>
+        /// Purpose : Method to retrieve connection string from config file and send
+        ///           to calling place.   
+        /// </summary>
+        /// <returns>string value</returns>
+        public static string IVSConnectionstring()
+        {
+            string strALIVEConnection = string.Empty;
+            try
+            {
+                strALIVEConnection = ConfigurationManager.ConnectionStrings["IVSConnectionString"].ToString();
+
+                // strALIVEConnection = @"Data Source=CTSINTBMV1CGDD1;;initial catalog=OneC_IVS;Persist Security Info=True;User ID=OneC_IVS;Password=OneC_IVS;Connection Timeout=60";
+                return strALIVEConnection;
+            }
+            catch (ConfigurationException ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// connection string
+        /// </summary>
+        /// <returns>string value</returns> 
+        public static string LVSConnectionstring()
+        {
+            string strALIVEConnectionLVS = string.Empty;
+            try
+            {
+                strALIVEConnectionLVS = ConfigurationManager.AppSettings["ConnectionStringLVS"].ToString();
+                return strALIVEConnectionLVS;
+            }
+            catch (ConfigurationException ex)
+            {
+                throw ex;
+            }
+        }
+    }
+    #endregion
+}
