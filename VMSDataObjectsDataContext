@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?><Database Name="OneC_VMS" Class="VMSDataObjectsDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="ConnectionString" ConnectionString="Data Source=CTSINTBMVOCDB1,49733;Initial Catalog=OneC_VMS;User ID=OneC_VMS;Password=OneC_VMS" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.MasterData" Member="MasterDatas">
+    <Type Name="MasterData">
+      <Column Name="MasterDataID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MasterDataType" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="MasterDataDescription" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="DisplayOrder" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="MasterData_VisitorEquipment" Member="VisitorEquipments" ThisKey="MasterDataID" OtherKey="MasterDataID" Type="VisitorEquipment" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VisitorEquipments" Member="VisitorEquipments">
+    <Type Name="VisitorEquipment">
+      <Column Name="VisitorEquipmentID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="VisitDetailsID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="MasterDataID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Make" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Model" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="SerialNo" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Others" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="MasterData_VisitorEquipment" Member="MasterData" ThisKey="MasterDataID" OtherKey="MasterDataID" Type="MasterData" IsForeignKey="true" />
+      <Association Name="VisitDetail_VisitorEquipment" Member="VisitDetail" ThisKey="VisitDetailsID" OtherKey="VisitDetailsID" Type="VisitDetail" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VisitorProof" Member="VisitorProofs">
+    <Type Name="VisitorProof">
+      <Column Name="VisitorID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Photo" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Association Name="VisitorMaster_VisitorProof" Member="VisitorMaster" ThisKey="VisitorID" OtherKey="VisitorID" Type="VisitorMaster" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VisitorEmergencyContact" Member="VisitorEmergencyContacts">
+    <Type Name="VisitorEmergencyContact">
+      <Column Name="RequestID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Address" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="FromDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ToDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="VisitorRequest_VisitorEmergencyContact" Member="VisitorRequest" ThisKey="RequestID" OtherKey="RequestID" Type="VisitorRequest" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VisitDetails" Member="VisitDetails">
+    <Type Name="VisitDetail">
+      <Column Name="VisitDetailsID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="RequestID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="ActualOutTime" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="BadgeNo" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="BadgeIssuedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="BadgeStatus" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="IssuedBy" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="LastUpdatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="VisitDetail_VisitorEquipment" Member="VisitorEquipments" ThisKey="VisitDetailsID" OtherKey="VisitDetailsID" Type="VisitorEquipment" />
+      <Association Name="VisitDetail_tblEquipmentsInCustody" Member="tblEquipmentsInCustodies" ThisKey="VisitDetailsID" OtherKey="VisitDetailsID" Type="tblEquipmentsInCustody" />
+      <Association Name="VisitorRequest_VisitDetail" Member="VisitorRequest" ThisKey="RequestID" OtherKey="RequestID" Type="VisitorRequest" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VisitorMaster" Member="VisitorMasters">
+    <Type Name="VisitorMaster">
+      <Column Name="VisitorID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="VisitorReferenceNo" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="FirstName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="LastName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Company" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Designation" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Country" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="MobileNo" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="EmailID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="CreatedBy" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="CreatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="LastUpdatedBy" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="LastUpdateDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Gender" Type="System.String" DbType="Char(2)" CanBeNull="true" />
+      <Column Name="IsConfidential" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="VisitorMaster_VisitorProof" Member="VisitorProof" ThisKey="VisitorID" OtherKey="VisitorID" Type="VisitorProof" Cardinality="One" />
+      <Association Name="VisitorMaster_VisitorRequest" Member="VisitorRequests" ThisKey="VisitorID" OtherKey="VisitorID" Type="VisitorRequest" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VisitorRequest" Member="VisitorRequests">
+    <Type Name="VisitorRequest">
+      <Column Name="RequestID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="RequestedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="VisitorID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Country" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="City" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Facility" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Purpose" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="HostID" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="HostContactNo" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="FromDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="ToDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="FromTime" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="ToTime" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="RequestStatus" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="RecurrencePattern" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Occurence" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Comments" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Createdby" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="CreatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="LastUpdatedby" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="LastUpdatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="HostDepartment" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="PermitITEquipments" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IPAddress" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="ParentReferenceId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ISSMSEnabled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="BulkUpload" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ExternalRequestCameFrom" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="ExternalRequestId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PermitId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SafetyPermitType" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="BuddyId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="LocationId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="OutlookNotfication" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="MailGuid" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="IsEquipmentInCustody" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="VisitorRequest_VisitorEmergencyContact" Member="VisitorEmergencyContact" ThisKey="RequestID" OtherKey="RequestID" Type="VisitorEmergencyContact" Cardinality="One" />
+      <Association Name="VisitorRequest_VisitDetail" Member="VisitDetails" ThisKey="RequestID" OtherKey="RequestID" Type="VisitDetail" />
+      <Association Name="VisitorRequest_VisitorRequest" Member="VisitorRequest2" ThisKey="RequestID" OtherKey="RequestID" Type="VisitorRequest" Cardinality="One" />
+      <Association Name="VisitorMaster_VisitorRequest" Member="VisitorMaster" ThisKey="VisitorID" OtherKey="VisitorID" Type="VisitorMaster" IsForeignKey="true" />
+      <Association Name="VisitorRequest_VisitorRequest" Member="VisitorRequest1" ThisKey="RequestID" OtherKey="RequestID" Type="VisitorRequest" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblEquipmentsInCustody" Member="tblEquipmentsInCustodies">
+    <Type Name="tblEquipmentsInCustody">
+      <Column Name="TokenID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="VisitDetailsID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="TokenNumber" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="EquipmentType" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="CreatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="FacilityID" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="EquipmentID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="VisitDetail_tblEquipmentsInCustody" Member="VisitDetail" ThisKey="VisitDetailsID" OtherKey="VisitDetailsID" Type="VisitDetail" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.GetMasterData" Method="GetMasterData">
+    <Parameter Name="Type" Parameter="type" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="GetMasterDataResult">
+      <Column Name="MasterDataID" Type="System.String" DbType="VarChar(12)" CanBeNull="true" />
+      <Column Name="MasterDataDescription" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="DisplayOrder" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.DisplayDetails" Method="DisplayDetails">
+    <Parameter Name="RequestID" Parameter="requestID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="DisplayDetailsResult">
+      <Column Name="Title" Type="System.String" DbType="VarChar(5) NOT NULL" CanBeNull="false" />
+      <Column Name="FirstName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="LastName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Company" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Designation" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="NativeCountry" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="MobileNo" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="EmailID" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Country" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="City" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Facility" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Purpose" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="HostID" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="HostContactNO" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="FromDate" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="ToDate" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="Escort" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="FromTime" Type="System.TimeSpan" DbType="Time NOT NULL" CanBeNull="false" />
+      <Column Name="ToTime" Type="System.TimeSpan" DbType="Time NOT NULL" CanBeNull="false" />
+      <Column Name="VehicleNo" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="MasterDataId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MasterDataDescription" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Make" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="SerialNo" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ContactAddres" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="FromDate1" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ToDate1" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.ViewDetails" Method="ViewDetails">
+    <Parameter Name="FirstName" Parameter="firstName" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="LastName" Parameter="lastName" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Company" Parameter="company" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Designation" Parameter="designation" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="NativeCountry" Parameter="nativeCountry" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Purpose" Parameter="purpose" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="City" Parameter="city" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Facility" Parameter="facility" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="BadgeNo" Parameter="badgeNo" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="HostName" Parameter="hostName" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Status" Parameter="status" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="FromDate" Parameter="fromDate" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="ToDate" Parameter="toDate" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Date" Parameter="date" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="FromTime" Parameter="fromTime" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="ToTime" Parameter="toTime" Type="System.String" DbType="VarChar(50)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SamedayVisits" Method="SamedayVisits">
+    <Parameter Name="City" Parameter="city" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Date" Parameter="date" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="SamedayVisitsResult">
+      <Column Name="Name" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Company" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Designation" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="FromDate" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="ToDate" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="FromTime" Type="System.TimeSpan" DbType="Time NOT NULL" CanBeNull="false" />
+      <Column Name="ToTime" Type="System.TimeSpan" DbType="Time NOT NULL" CanBeNull="false" />
+      <Column Name="Country" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Purpose" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="city" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Facility" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="HostID" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.GetUserRole" Method="GetUserRole">
+    <Parameter Name="UserID" Parameter="userID" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="GetUserRoleResult">
+      <Column Name="UserRole" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SearchMasterDetails" Method="SearchMasterDetails">
+    <Parameter Name="FirstName" Parameter="firstName" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="LastName" Parameter="lastName" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Company" Parameter="company" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="HostID" Parameter="hostID" Type="System.String" DbType="VarChar(20)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.UpdateStatus" Method="UpdateStatus">
+    <Parameter Name="RequestID" Parameter="requestID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Success" Parameter="success" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <ElementType Name="UpdateStatusResult">
+      <Column Name="Success" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.BatchGenerationBySecurity" Method="BatchGenerationBySecurity">
+    <Parameter Name="RequestId" Parameter="requestId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="BatchGenerationBySecurityResult">
+      <Column Name="BadgeNo" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="HostDepartment" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.GetVisitorDetails" Method="GetVisitorDetails">
+    <Parameter Name="FirstName" Parameter="firstName" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="LastName" Parameter="lastName" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Company" Parameter="company" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Designation" Parameter="designation" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Country" Parameter="country" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="MobileNo" Parameter="mobileNo" Type="System.String" DbType="VarChar(20)" />
+    <Parameter Name="EmailID" Parameter="emailID" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="VisitLocationCountry" Parameter="visitLocationCountry" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="City" Parameter="city" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Facility" Parameter="facility" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="Purpose" Parameter="purpose" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="HostID" Parameter="hostID" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="HostContactNo" Parameter="hostContactNo" Type="System.String" DbType="VarChar(20)" />
+    <Parameter Name="FromDate" Parameter="fromDate" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="ToDate" Parameter="toDate" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="FromTime" Parameter="fromTime" Type="System.TimeSpan" DbType="Time" />
+    <Parameter Name="ToTime" Parameter="toTime" Type="System.TimeSpan" DbType="Time" />
+    <Parameter Name="RecurrencePattern" Parameter="recurrencePattern" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Occurence" Parameter="occurence" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="Success" Parameter="success" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="visitorID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="visitorRequestSQL" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <ElementType Name="GetVisitorDetailsResult">
+      <Column Name="Success" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.ClearVisitDetails" Method="ClearVisitDetails">
+    <Parameter Name="RequestID" Parameter="requestID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="VisitDetailId" Type="System.VarChar(20)" DbType="VarChar(20)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.UpdateUserImgInDB" Method="UpdateUserImgInDB">
+    <Parameter Name="VisitorID" Parameter="visitorID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Photo" Parameter="photo" Type="System.String" DbType="Text" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.UpdateVisitorDetails" Method="UpdateVisitorDetails">
+    <Parameter Name="FirstName" Parameter="firstName" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="LastName" Parameter="lastName" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Company" Parameter="company" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Designation" Parameter="designation" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Country" Parameter="country" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="MobileNo" Parameter="mobileNo" Type="System.String" DbType="VarChar(20)" />
+    <Parameter Name="EmailID" Parameter="emailID" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="visitorID" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="gender" Type="System.String" DbType="Char(2)" />
+    <Parameter Name="IsConfidential" Parameter="isConfidential" Type="System.Boolean" DbType="Bit" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.VerifyExpressCheckIn" Method="VerifyExpressCheckIn">
+    <Parameter Name="RequestID" Parameter="requestID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="SecurityID" Parameter="securityID" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="VisitDetailsID" Parameter="visitDetailsID" Type="System.Int64" DbType="BigInt" Direction="InOut" />
+    <ElementType Name="VerifyExpressCheckInResult">
+      <Column Name="" Member="Column1" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+    </ElementType>
+  </Function>
+</Database>
