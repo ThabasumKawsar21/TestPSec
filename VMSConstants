@@ -1,0 +1,1373 @@
+
+namespace VMSConstants
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Text;
+
+    /// <summary>
+    /// VMS Constants
+    /// </summary>
+    public static class VMSConstants
+    {        
+        /// <summary>
+        /// from time value
+        /// </summary>
+        public const string FROMTIME = "09:00:00";
+
+        /// <summary>
+        /// to time value
+        /// </summary>
+        public const string TOTIME = "18:00:00";
+        
+        /// <summary>
+        /// Date emergency error
+        /// </summary>
+        public const string DATEEMERGENCYERROR = "DateEmergencyError";
+        ////added for VMS CR VMS06072010CR09 by Priti
+
+        /// <summary>
+        /// equipment duplication error
+        /// </summary>
+        public const string EQUIPMENTDUPLICATIONERROR = "Equipments are Duplicated";
+
+        /// <summary>
+        /// error page
+        /// </summary>
+        public const string ERRORPAGE = "ErrorPage.aspx";
+
+        /// <summary>
+        /// purpose empty error
+        /// </summary>
+        public const string PURPOSEEMPTYERROR = "PurposeEmpty";
+
+        /// <summary>
+        /// visitor type clients
+        /// </summary>
+        public const string VISITORTYPECLIENTS = "CLIENTS";
+
+        /// <summary>
+        /// visitor type vendor
+        /// </summary>
+        public const string VISITORTYPEVENDOR = "VENDOR";
+
+        /// <summary>
+        /// visitor type VIP
+        /// </summary>
+        public const string VISITORTYPEVIP = "IMP/VIP VISITOR";
+
+        /// <summary>
+        /// visitor type auditors
+        /// </summary>
+        public const string VISITORTYPEAUDITORS = "AUDITORS";
+
+        /// <summary>
+        /// visitor type guests
+        /// </summary>
+        public const string VISITORTYPEGUESTS = "GUESTS";
+
+        /// <summary>
+        /// visitor type business partner
+        /// </summary>
+        public const string VISITORTYPEBUSINESSPARTNER = "BUSINESS PARTNER";
+
+        /// <summary>
+        /// visitor raised request
+        /// </summary>
+        public const string VISITORRAISEDREQUEST = "VisitorRaisedRequest";
+
+        /// <summary>
+        /// default culture
+        /// </summary>
+        public const string DEFAULTCULTURE = "en-US";
+        ////for testing defects VMS_CR02_05 of IRVMS22062010CR07
+
+        /// <summary>
+        /// grade value
+        /// </summary>
+        public const string GRADE = "GRADE";
+        //// added for CR IRVMS22062010CR07 VMS_CR02_06 testing defects.
+
+        /// <summary>
+        /// visitor type new joiner
+        /// </summary>
+        public const string VISITORTYPENEWJOINEE = "New Joinee";
+
+        ////public static string AssociateIDExcelPath = "~/ExcelFiles/";
+
+        /// <summary>
+        /// excel format type 1 value
+        /// </summary>
+        public const string EXCELFORMAT = ".xlsx";
+
+        /// <summary>
+        /// excel format type 2 value
+        /// </summary>
+        public const string EXCELFORMAT1 = ".xls";
+
+        /// <summary>
+        /// excel format type 3
+        /// </summary>
+        public const string EXCELFORMAT2 = ".xlsm";
+
+        #region GeneralInformationErrorMessages
+
+        /// <summary>
+        /// Title empty error
+        /// </summary>
+        public const string TITLEEMPTYERROR = "TilteEmpty";
+
+        /// <summary>
+        /// first name empty error
+        /// </summary>
+        public const string FIRSTNAMEEMPTYERROR = "FirstNameEmpty";
+
+        /// <summary>
+        /// last name empty
+        /// </summary>
+        public const string LASTNAMEEMPTYERROR = "LastNameEmpty";
+
+        /// <summary>
+        /// first name numeric error
+        /// </summary>
+        public const string FIRSTNAMENUMERICERROR = "FirstNameHavingNumeric";
+
+        /// <summary>
+        /// last name numeric error
+        /// </summary>
+        public const string LASTNAMENUMERICERROR = "LastNameHavingNumeric";
+
+        /// <summary>
+        /// company name empty error
+        /// </summary>
+        public const string COMPANYNAMEEMPTYERROR = "CompanyNameEmpty";
+
+        /// <summary>
+        /// email Id empty error
+        /// </summary>
+        public const string EMAILIDEMPTYERROR = "EmailIDEmpty";
+
+        /// <summary>
+        /// Email Id format error
+        /// </summary>
+        public const string EMAILIDFORMATERROR = "EmailIDNotInFormat";
+
+        /// <summary>
+        /// Native country error
+        /// </summary>
+        public const string NATIVECOUNTRYERROR = "NativeCountryEmpty";
+
+        /// <summary>
+        /// mobile number empty error
+        /// </summary>
+        public const string MOBILENUMBEREMPTYERROR = "MobileNumberEmpty";
+
+        /// <summary>
+        /// mobile number length error
+        /// </summary>
+        public const string MOBILENUMBERLENGTHERROR = "MobileNumberLengtError";
+
+        /// <summary>
+        /// BR Message
+        /// </summary>
+        public const string BRMESSAGE = "<br>";
+
+        ////Vms_Host_upload PHYS19042010CR02
+
+        /// <summary>
+        /// proof Id error type 1
+        /// </summary>
+        public const string PROOFIDERROR1 = "ProofIDError1";
+
+        /// <summary>
+        /// proof Id error type 2
+        /// </summary>
+        public const string PROOFIDERROR2 = "ProofIDError2";
+        ////end
+        #endregion
+
+        #region LocationInformationErrorMessages
+
+        /// <summary>
+        /// country empty error
+        /// </summary>
+        public const string COUNTRYEMPTYERROR = "CountryEmpty";
+
+        /// <summary>
+        /// city empty error
+        /// </summary>
+        public const string CITYEMPTYERROR = "CityEmpty";
+        ////Added by lakshmi on Aug 13 2009    
+
+        /// <summary>
+        /// facility empty error
+        /// </summary>
+        public const string FACILITYEMPTYERROR = "FacilityEmpty";
+        ////End
+
+        /// <summary>
+        /// date error
+        /// </summary>
+        public const string DATEERROR = "DateError";
+
+        /// <summary>
+        /// date duration error
+        /// </summary>
+        public const string DATEDURATIONERROR = "DateDurationError";
+
+        /// <summary>
+        /// current time error
+        /// </summary>
+        public const string CURRENTTIMEERROR = "CurrentTimeError";
+
+        /// <summary>
+        /// time error
+        /// </summary>
+        public const string TIMEERROR = "TimeError";
+        ////added by priti on 3rd June for VMS CR VMS31052010CR6   Requests are allowed to raise for only 15 days in advance
+
+        /// <summary>
+        /// advance days error type 1
+        /// </summary>
+        public const string ADVANCEDAYSERROR = "Requests are allowed to raise for only ";
+
+        /// <summary>
+        /// advance days error type 2
+        /// </summary>
+        public const string ADVANCEDAYSERROR1 = " days in advance. ";
+
+        #endregion
+
+        #region GeneralConstants
+
+        /// <summary>
+        /// save flag
+        /// </summary>
+        public const string SAVEFLAG = "SaveFlag";
+
+        /// <summary>
+        /// visitor master object
+        /// </summary>
+        public const string VISITORMASTEROBJECT = "VisitorMasterObj";
+
+        /// <summary>
+        /// visitor location object
+        /// </summary>
+        public const string VISITORLOCOBJECT = "VisitorLocObj";
+
+        /// <summary>
+        /// visitor emergency contact object
+        /// </summary>
+        public const string VISITOREMERGENCYCONTACTOBJECT = "VisitorEmergencyContactObj";
+
+        /// <summary>
+        /// already exists message
+        /// </summary>
+        public const string ALREADYEXISTSMESSAGE = "Visitor Information already available on database";
+
+        /// <summary>
+        /// successful message
+        /// </summary>
+        public const string SUCCESSFULMESSAGE = "Submitted Successfully";
+
+        /// <summary>
+        /// time extension message
+        /// </summary>
+        public const string TIMEEXTENSIONSUCCESS = "Time extended successfully";
+
+        /// <summary>
+        /// user Id value
+        /// </summary>
+        public const string USERID = "UserID";
+
+        /// <summary>
+        /// Select value
+        /// </summary>
+        public const string SELECT = "Select";
+
+        /// <summary>
+        /// India value
+        /// </summary>
+        public const string INDIA = "India";
+
+        /// <summary>
+        /// other value
+        /// </summary>
+        public const string OTHERS = "Others";
+
+        /// <summary>
+        /// purpose value
+        /// </summary>
+        public const string PURPOSE = "Purpose";
+
+        /// <summary>
+        /// yet to arrive value
+        /// </summary>
+        public const string YETTOARRIVE = "Yet To Arrive";
+        
+        /// <summary>
+        /// countries values
+        /// </summary>
+        public const string COUNTRIES = "admin:Countries";
+
+        /// <summary>
+        /// cities value
+        /// </summary>
+        public const string CITIES = "admin:Cities";
+
+        /// <summary>
+        /// facilities value
+        /// </summary>
+        public const string FACILITIES = "admin:Facilities";
+
+        /// <summary>
+        /// host name value
+        /// </summary>
+        public const string HOSTNAME = "admin:AssociateDisplayName";
+
+        /// <summary>
+        /// phone value
+        /// </summary>
+        public const string PHONE = "admin:PhoneHome1";
+
+        /// <summary>
+        /// home page value
+        /// </summary>
+        public const string HOMEPAGE = "Default.aspx";
+
+        /// <summary>
+        /// home page
+        /// </summary>
+        public const string HOMEPG = "Home.aspx";
+
+        /// <summary>
+        /// host redirected page
+        /// </summary>
+        public const string HOSTREDIRECTIONPAGE = "HostWP.aspx";
+
+        /// <summary>
+        /// allow only alpha expression
+        /// </summary>
+        public const string ALLOWONLYALPHAEXPR = "^[a-zA-Z]+((\\ [a-zA-Z])?[a-zA-Z]*)*$";
+
+        /// <summary>
+        /// email format expression
+        /// </summary>
+        public const string EMAILFORMATEXPR = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" + @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" + @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+
+        /// <summary>
+        /// length expression
+        /// </summary>
+        public const string LENGHTEXPR = "^\\d{10}";
+
+        /// <summary>
+        /// logger name
+        /// </summary>
+        public const string LOGGERNAME = "LoggerName";
+
+        /// <summary>
+        /// error value
+        /// </summary>
+        public const string ERROR = "Error";
+
+        /// <summary>
+        /// error as log files
+        /// </summary>
+        public const string ERRORASLOGFILES = "ErrorAsLogFiles";
+
+        /// <summary>
+        /// error as emails
+        /// </summary>
+        public const string ERRORASEMAILS = "ErrorAsEmails";
+
+        /// <summary>
+        /// new line message
+        /// </summary>
+        public const string NEWLINEMESSAGE = "Message: {message}{newline}";
+
+        /// <summary>
+        /// new line category
+        /// </summary>
+        public const string NEWLINECATEGORY = "Category: {category}{newline}";
+
+        /// <summary>
+        /// log error
+        /// </summary>
+        public const string LOGERROR = "Log_Error_";
+
+        /// <summary>
+        /// log file name
+        /// </summary>
+        public const string LOGFILENAME = "logFilename";
+
+        /// <summary>
+        /// to address value
+        /// </summary>
+        public const string TOADDRESS = "ToAddress";
+
+        /// <summary>
+        /// from address value
+        /// </summary>
+        public const string FROMADDRESS = "FromAddress";
+
+        /// <summary>
+        /// SMTP Host address
+        /// </summary>
+        public const string SMTPHOSTADDRESS = "SMTPHostAddress";
+
+        /// <summary>
+        /// subject line
+        /// </summary>
+        public const string SUBJECTLINE = "SubjectLine";
+
+        /// <summary>
+        /// SMTP Port
+        /// </summary>
+        public const string SMTPPORT = "SMTPPort";
+
+        /// <summary>
+        /// empty value
+        /// </summary>
+        public const string EMPTY = "Empty";
+
+        /// <summary>
+        /// debug value
+        /// </summary>
+        public const string DEBUG = "Debug";
+
+        /// <summary>
+        /// exception log generated message
+        /// </summary>
+        public const string EXCEPTIONLOGGENERATEDMSG = "Exception Log Generated On";
+
+        /// <summary>
+        /// at value
+        /// </summary>
+        public const string AT = "at";
+
+        /// <summary>
+        /// general information value
+        /// </summary>
+        public const string GENERALINFORMATIONMSG = "General Information";
+
+        /// <summary>
+        /// no exception information message
+        /// </summary>
+        public const string NOEXCEPTIONINFORMATIONMSG = "No Exception Information Exists";
+
+        /// <summary>
+        /// exception information message
+        /// </summary>
+        public const string EXCEPTIONINFORMATIONMSG = "Exception Information: Exception #";
+
+        /// <summary>
+        /// exception type
+        /// </summary>
+        public const string EXCEPTIONTYPE = "Exception Type:";
+
+        /// <summary>
+        /// stack trace
+        /// </summary>
+        public const string STACKTRACE = "StackTrace";
+
+        /// <summary>
+        /// inner exception
+        /// </summary>
+        public const string INNEREXCEPTION = "InnerException";
+
+        /// <summary>
+        /// undefined value
+        /// </summary>
+        public const string UNDEFINED = "Null/Undefined";
+
+        /// <summary>
+        /// additional information
+        /// </summary>
+        public const string ADDITIONALINFORMATION = "AdditionalInformation";
+
+        /// <summary>
+        /// additional exception information message
+        /// </summary>
+        public const string ADDITIONALEXCEPTIONINFORMATIONMSG = "Additional Exception Information:";
+
+        /// <summary>
+        /// stack trace information message
+        /// </summary>
+        public const string STACKTRACEINFORMATIONMSG = "Stack Trace Information";
+
+        /// <summary>
+        /// serializing exception message
+        /// </summary>
+        public const string SERIALIZINGEXCEPTIONMSG = "Error serializing  exception to text";
+
+        /// <summary>
+        /// logger value
+        /// </summary>
+        public const string LOGGER = "Logger";
+
+        /// <summary>
+        /// insufficient permission message
+        /// </summary>
+        public const string INSUFFICIENTPERMISSIONMSG = "Insufficient permissions to access information.";
+
+        /// <summary>
+        /// error accessing information message
+        /// </summary>
+        public const string ERRORACCESSINGINFORMATIONMSG = "Error accessing information.";
+
+        /// <summary>
+        /// from address value
+        /// </summary>
+        public const string FROMADD = "FromAddress";
+
+        /// <summary>
+        /// host address value
+        /// </summary>
+        public const string HOSTADD = "SMTPHostAddress";
+
+        /// <summary>
+        /// port value
+        /// </summary>
+        public const string PORT = "SMTPPort";
+        ////Begin Changes IVS CR 009 Vimal 30May2011
+
+        /// <summary>
+        /// token for IVS Image approved mail
+        /// </summary>
+        public const string TOKENFORIVSIMAGEAPPROVEDMAIL = "tknAssociateName|tknApprovedDate";
+
+        /// <summary>
+        /// token for IVS image rejected mail
+        /// </summary>
+        public const string TOKENFORIVSIMAGEREJECTEDEDMAIL = "tknAssociateName|tknRejectedDate|tknReason";
+
+        /// <summary>
+        /// token for IVS image submitted mail
+        /// </summary>
+        public const string TOKENFORIVSIMAGESUBMITTEDMAIL = "tknAssociateName|tknSubmittedDate";
+        ////End Changes IVS CR 009 Vimal 30May2011
+
+        /// <summary>
+        /// token for mail template
+        /// </summary>
+        public const string TOKENFORMAILTEMPLATE = "tknName|tknVisitor|tknCompany|tknReqID|tknInDate|tknInTime|tknBadgeNo|tknOutDate|tknOutTime|tknCity|tknFacility";
+
+        /// <summary>
+        /// token for mail to visitor template
+        /// </summary>
+        public const string TOKENFORMAILTOVISITORTEMPLATE = "tknLink";
+
+        /// <summary>
+        /// token for mail host
+        /// </summary>
+        public const string TOKENFORMAILTOHOST = "tknAssociateName|tknVisitorEmail";
+
+        ////LVS17052010CR07 start
+
+        /// <summary>
+        /// token for mail to associate LVS
+        /// </summary>
+        public const string TOKENFORMAILTOASSOCIATELVS = "tkncheckindate|tkncheckoutdate|tkncheckincity|tkncheckinfacility|tkncheckoutcity|tkncheckoutfacility|tknassociate";
+
+        ////LVS17052010CR07 end
+
+        /// <summary>
+        /// token for IVSSAN storage
+        /// </summary>
+        public const string TOKENFORIVSSANSTORAGE = "tknfileException|tknExceptionDate";
+
+        ////OCM start
+
+        /// <summary>
+        /// token for IVS mail template
+        /// </summary>
+        public const string TOKENFORIVSMAILTEMPLATE = "tknmanager|tknemployee|tknfacility|tknCity|tknFromDate|tknToDate";
+        ////end
+
+        /// <summary>
+        /// requested subject line
+        /// </summary>
+        public const string REQUESTEDSUBJECTLINE = "TeleconManager - Request Submitted";
+
+        /// <summary>
+        /// badge issued
+        /// </summary>
+        public const string BADGEISSUED = "Issued";
+
+        /// <summary>
+        /// badge returned template
+        /// </summary>
+        public const string BADGERETURNEDTEMPLATE = "BadgeReturnedTemplate";
+
+        /// <summary>
+        /// badge issued template
+        /// </summary>
+        public const string BADGEISSUEDTEMPLATE = "BadgeIssuedTemplate";
+        
+        /// <summary>
+        /// badge issued subject line
+        /// </summary>
+        public const string BADGEISSUEDSUBJECTLINE = "VMS – Issuance of visitor badge";
+
+        /// <summary>
+        /// subject line returned
+        /// </summary>
+        public const string SUBJECTLINERETURNED = "VMS - Visitor badge submission";
+
+        /// <summary>
+        /// send link by mail subject line
+        /// </summary>
+        public const string SENDLINKBYMAILSUBJECTLINE = "Cognizant Visitor Management System";
+
+        /// <summary>
+        /// alert notification
+        /// </summary>
+        public const string ALERTNOTIFICATION = "VMS - Alert notification";
+
+        /// <summary>
+        /// send link template
+        /// </summary>
+        public const string SENDLINKTEMPLATE = "SendLinkTemplate";
+
+        /// <summary>
+        /// time extended template
+        /// </summary>
+        public const string TIMEEXTENDEDTEMPLATE = "Timeextendedtemplate";
+
+        /// <summary>
+        /// send link
+        /// </summary>
+        public const string SENDLINK = "SENDLINK";
+
+        /// <summary>
+        /// request status
+        /// </summary>
+        public const string REQUESTSTATUS = "Out";
+
+        ////added by 257126
+
+        /// <summary>
+        /// cancel request template
+        /// </summary>
+        public const string CANCELREQUESTTEMPLATE = "CancelRequest";
+
+        /// <summary>
+        /// subject line cancelled
+        /// </summary>
+        public const string SUBJECTLINECANCELLED = "VMS – Visitor Request Cancelled";
+
+        /// <summary>
+        /// token for cancel request to host mail template
+        /// </summary>
+        public const string TOKENFORCANCELREQUESTTOHOSTMAILTEMPLATE = "tknAssociateName|tknVisitor|tknCompany|tknInDate|tknInTime|tknOutDate|tknOutTime|tknCity|tknFacility";
+        
+        ////added by ranga
+
+        /// <summary>
+        /// invalid user message
+        /// </summary>
+        public const string INVALIDUSERMESSAGE = "Invalid User Id or Password. Please try again. ";
+        #endregion
+
+        ////public static string ERRORPAGE = "ErrorPage.aspx";
+
+        /// <summary>
+        /// success page
+        /// </summary>
+        public const string SUCCESSPAGE = "Success.aspx";
+
+        /// <summary>
+        /// access denied page
+        /// </summary>
+        public const string ACCESSDENIEDPAGE = "AccessDenied.aspx";
+
+        /// <summary>
+        /// welcome value
+        /// </summary>
+        public const string WELCOME = "Welcome";
+
+        /// <summary>
+        /// enter associate Id
+        /// </summary>
+        public const string ENTERASSOCIATEID = "Please Enter AssociateID";
+
+        /// <summary>
+        /// no record found
+        /// </summary>
+        public const string NORECORDFOUND = "No records found";
+
+        /// <summary>
+        /// total value
+        /// </summary>
+        public const string TOTAL = " Total no of records : ";
+
+        /// <summary>
+        /// valid associate Id
+        /// </summary>
+        public const string VALIDASSOCIATEID = "Associate ID does not exist";
+
+        /// <summary>
+        /// start date criteria
+        /// </summary>
+        public const string STARTDATECRITERIA = "The start date must be less than the end date or current date";
+
+        ////added by bincey on 17 Oct 2012
+
+        /// <summary>
+        /// country select criteria
+        /// </summary>
+        public const string COUNTRYSELECTCRITERIA = "Please select Country field";
+
+        /// <summary>
+        /// search criteria
+        /// </summary>
+        public const string SEARCHCRITERIA = "Please select atleast one criteria";
+
+        /// <summary>
+        /// security admin
+        /// </summary>
+        public const int SECURITYADMIN = 1;
+
+        /// <summary>
+        /// admin value 2
+        /// </summary>
+        public const int ADMIN = 2;
+
+        /// <summary>
+        /// IVS Menu text
+        /// </summary>
+        public const string IVSMENUTEXT = "IVS";
+
+        /// <summary>
+        /// card report menu text
+        /// </summary>
+        public const string CARDREPORTMENUTEXT = "Cards Issued Report";
+        
+        /// <summary>
+        /// image upload menu text
+        /// </summary>
+        public const string IMAGEUPLOADMENUTEXT = "Upload Associates Image";
+
+        /// <summary>
+        /// laptop report menu text
+        /// </summary>
+        public const string LAPTOPREPORTMENUTEXT = "Laptop Users Report";
+
+        /// <summary>
+        /// enter serial number
+        /// </summary>
+        public const string ENTERSERIALNUMBER = "Please read the Serial Number";
+
+        /// <summary>
+        /// home value
+        /// </summary>
+        public const string HOME = "Home";
+
+        /// <summary>
+        /// Id card already issued
+        /// </summary>
+        public const string IDCARDALREADYISSUED = "ID Card already issued for the selected Facility.";
+
+        /// <summary>
+        /// check in laptop
+        /// </summary>
+        public const string CHECKINLAPTOP = "Please Check-in Laptop";
+
+        /// <summary>
+        /// check out laptop
+        /// </summary>
+        public const string CHECKOUTLAPTOP = "Please Check-out Laptop";
+
+        /// <summary>
+        /// verify location
+        /// </summary>
+        public const string VERIFYLOCATION = "Laptop Details verified for the User :";
+
+        /// <summary>
+        /// select check in or check out
+        /// </summary>
+        public const string SELECTCHECKINORCHECKOUT = "Please select Check-in or Check-out option";
+
+        /// <summary>
+        /// check in
+        /// </summary>
+        public const string CHECKIN = "CIN";
+
+        /// <summary>
+        /// check out
+        /// </summary>
+        public const string CHECKOUT = "COUT";
+
+        /// <summary>
+        /// image value
+        /// </summary>
+        public const string IMAGE = "Image";
+
+        /// <summary>
+        /// image path value
+        /// </summary>
+        public const string IMAGEPATH = "~/Images/char.jpeg";
+
+        /// <summary>
+        /// unknown blood long
+        /// </summary>
+        public const string UNKNOWNBLOODLONG = "UNKNOWN";
+
+        /// <summary>
+        /// unknown blood short
+        /// </summary>
+        public const string UNKNOWNBLOODSHORT = "U";
+
+        /// <summary>
+        /// not available
+        /// </summary>
+        public const string NOTAVALIABLE = "Not Available";
+
+        /// <summary>
+        /// select location
+        /// </summary>
+        public const string SELECTLOCATION = "Please Select Location";
+
+        /// <summary>
+        /// select facility
+        /// </summary>
+        public const string SELECTFACILITY = "Please Select Facility";
+
+        /// <summary>
+        /// temporary card issued
+        /// </summary>
+        public const string TEMPORARYCARDISSUED = "Temporary ID card issued successfully for the Associate :";
+
+        /// <summary>
+        /// temporary card returned
+        /// </summary>
+        public const string TEMPORARYCARDRETURNED = "Temporary ID card Returned successfully for the Associate";
+
+        /// <summary>
+        /// under value
+        /// </summary>
+        public const string UNDER = " under ";
+
+        /// <summary>
+        /// location value
+        /// </summary>
+        public const string LOCATION = " location.";
+
+        /// <summary>
+        /// select value
+        /// </summary>
+        public const string SELECTDROPDOWNVALUE = " ----Select----";
+
+        /// <summary>
+        /// select no image report
+        /// </summary>
+        public const string SELECTNoImageReport = "Select";
+
+        /// <summary>
+        /// select start date
+        /// </summary>
+        public const string SELECTSTARTDATE = "Please Select Start Date";
+
+        /// <summary>
+        /// select one criteria
+        /// </summary>
+        public const string SELECTONECRITERIA = "Please enter serial number/AssociateID/Asset Number";
+
+        /// <summary>
+        /// Laptop serial asset No
+        /// </summary>
+        public const string LTSERIALASSETNO = "please enter the Laptop serial no or Asset no";
+
+        /// <summary>
+        /// Laptop not permitted
+        /// </summary>
+        public const string LTNOTPERMIT = " : Associate is not permitted to carry the Laptop";
+
+        /// <summary>
+        /// laptop not found
+        /// </summary>
+        public const string LTNOTFOUND = "Laptop Details not found";
+
+        /// <summary>
+        /// associate Id
+        /// </summary>
+        public const string ASSOCIATEID = "AssociateID";
+
+        /// <summary>
+        /// serial number
+        /// </summary>
+        public const string SERIALNUMBER = "SerialNo";
+
+        /// <summary>
+        /// asset number
+        /// </summary>
+        public const string ASSETNUMBER = "AssetNumber";
+
+        /// <summary>
+        /// valid user
+        /// </summary>
+        public const string VALIDUSER = "Valid";
+
+        /// <summary>
+        /// invalid value
+        /// </summary>
+        public const string INVALID = "Invalid";
+
+        /// <summary>
+        /// invalid user Id
+        /// </summary>
+        public const string INVALIDUSER = "Invalid User";
+
+        /// <summary>
+        /// location select
+        /// </summary>
+        public const string LOCATIONSELECT = "Select Location";
+
+        /// <summary>
+        /// facility select
+        /// </summary>
+        public const string FACILITYSELECT = "Select Facility";
+
+        /// <summary>
+        /// associate Id match
+        /// </summary>
+        public const string ASSOCIATEIDMATCH = "Associate ID does not match";
+
+        /// <summary>
+        /// select valid image file
+        /// </summary>
+        public const string SELECTVALIDIMAGEFILE = "Please select a valid image file";
+
+        /// <summary>
+        /// select image
+        /// </summary>
+        public const string SELECTIMAGE = "Please Select Image";
+
+        /// <summary>
+        /// image upload failed
+        /// </summary>
+        public const string IMAGEUPLOADFAILEDINDATABASE = "Images failed to upload in database.";
+
+        /// <summary>
+        /// image uploaded successfully
+        /// </summary>
+        public const string IMAGEUPLOADEDSUCESSFULLY = "Images successfully uploaded  for the Associate : ";
+
+        /// <summary>
+        /// please select
+        /// </summary>
+        public const string PLEASESELECT = "Please select ";
+
+        /// <summary>
+        /// file types
+        /// </summary>
+        public const string FILETYPES = "file types";
+
+        /// <summary>
+        /// .JPEJ file
+        /// </summary>
+        public const string JPEGFILE = ".jpeg";
+
+        /// <summary>
+        /// .jpg file
+        /// </summary>
+        public const string JPGFILE = ".jpg";
+
+        /// <summary>
+        /// denied user
+        /// </summary>
+        public const string DENIEDUSER = "User don't have the access to the system";
+
+        /// <summary>
+        /// invalid user or password
+        /// </summary>
+        public const string INVALIDUSERORPASSWWORD = "Invalid UserName/PassWord";
+
+        ////  public static string HOMEPAGE = "Home.aspx";
+
+        /// <summary>
+        /// card exists
+        /// </summary>
+        public const string CARDEXITS = "Already Temporary ID Card Issued, Please Select checkout option to Surrender the Existing ID Card";
+
+        /// <summary>
+        /// card issue
+        /// </summary>
+        public const string CARDISSUE = "Select Check in option to Issue a Temporary ID Card";
+
+        /// <summary>
+        /// issue card for other location
+        /// </summary>
+        public const string ISSUECARDFOROTHERLOCATION = "Temporary ID cannot issued in different location";
+
+        /// <summary>
+        /// card issued today
+        /// </summary>
+        public const string CARDISSUEDTODAY = "Temporary ID already  Issued today";
+
+        ////added by priti on 15th June for VMS CR VMS31052010CR6 code review defects
+
+        /// <summary>
+        /// repeat visitor
+        /// </summary>
+        public const string REPEATVISITOR = "REPEAT VISITOR";
+
+        /// <summary>
+        /// issued value
+        /// </summary>
+        public const string ISSUED = "ISSUED";
+
+        //// changed for CR IRVMS22062010CR07 starts here done by Priti
+
+        /// <summary>
+        /// get city facility
+        /// </summary>
+        public const string GETCITYFACILITY = "getCityFacility";
+        //// end changes for CR IRVMS22062010CR07 starts here done by Priti
+
+        ////Begin Changes IVS CR 009 Vimal 27May2011
+
+        /// <summary>
+        /// image name
+        /// </summary>
+        public const string IMAGENAME = "The FileName is Invalid";
+
+        /// <summary>
+        /// invalid file format
+        /// </summary>
+        public const string INVALIDFILEFORMAT = "Invalid File Format";
+
+        /// <summary>
+        /// image upload success
+        /// </summary>
+        public const string IMAGEUPLOADSUCCESS = "Image Submitted Successfully";
+
+        /// <summary>
+        /// image upload failed
+        /// </summary>
+        public const string IMAGEUPLOADFAILED = "Failed to upload Image";
+
+        /// <summary>
+        /// select file
+        /// </summary>
+        public const string SELECTFILE = "Select an Image File to Upload";
+
+        /// <summary>
+        /// submitted value
+        /// </summary>
+        public const string SUBMITTED = "Uploaded an Image";
+
+        /// <summary>
+        /// approved value
+        /// </summary>
+        public const string APPROVED = "Approved the Image Change Request";
+
+        /// <summary>
+        /// rejected value
+        /// </summary>
+        public const string REJECTED = "Rejected for the reason :";
+
+        /// <summary>
+        /// print status
+        /// </summary>
+        public const string PRINTSTATUS = "Printed"; 
+        ////End Changes IVS CR 009 Vimal 27May2011
+
+        /// <summary>
+        /// no records found message
+        /// </summary>
+        public const string NORECORDSFOUNDMESSAGE = "No Matching Records Found";
+
+        /// <summary>
+        /// role delegation subject line
+        /// </summary>
+        public const string ROLEDELEGATIONSUBJECTLINE = "Access Granted for Physical Security Portal";
+
+        /// <summary>
+        /// token for mail to user
+        /// </summary>
+        public const string TOKENFORMAILTOUSER = "tknuser|tknrole|tknfacilty|tkncity";
+
+        /// <summary>
+        /// user not found
+        /// </summary>
+        public const string USERNOTFOUND = "User Information Unavailable. Please check the AssociateID";
+
+        /// <summary>
+        /// max image size
+        /// </summary>
+        public const string MAXIMAGESIZE = "Image size exceed maximum allowed size. Maxmium allowed size is 200 KB";
+
+        /// <summary>
+        /// reset print status
+        /// </summary>
+        public const string RESETPRINTSTATUS = "Reset Print Status"; 
+
+        /// <summary>
+        /// default country
+        /// </summary>
+        public const string DEFAULTCOUNTRY = "India";
+
+        ////added by 257126
+
+        /// <summary>
+        /// image upload size
+        /// </summary>
+        public const string IMAGEUPLOADSIZE = "Image uploaded should not exceed 200KB";
+
+        /// <summary>
+        /// token for remainder mail template
+        /// </summary>
+        public const string TOKENFORREMINDERMAILTEMPLATE = "tknName|tknfacility|tknFromDate|tknDate|tknCity|tknCountry";
+        
+        /// <summary>
+        /// remainder mail template
+        /// </summary>
+        public const string REMINDERMAILTEMPLATE = "ReminderMailtemplate";
+
+        /// <summary>
+        /// subject line remainder
+        /// </summary>
+        public const string SUBJECTLINEREMINDER = "Reminder : Temporary ID card return";
+
+        /// <summary>
+        /// temporary card remainder
+        /// </summary>
+        public const string TEMPORARYCARDREMINDER = "Reminder Mail has been sent to the Associate";
+
+        ////added by 257318
+
+        /// <summary>
+        /// date range
+        /// </summary>
+        public const string DATERANGE = "Please select a date within 7 days from today";
+
+        /// <summary>
+        /// to date
+        /// </summary>
+        public const string TODATE = "Please select a valid Date in the 'ToDate' field";
+
+        ////added by 257932
+
+        /// <summary>
+        /// notification value
+        /// </summary>
+        public const string NOTIFICATION = "Associate has been issued a Temporary ID Card";
+
+        /// <summary>
+        /// date valid
+        /// </summary>
+        public const string DATEVALID = "To Date has to be greater than From Date  ";
+
+        /// <summary>
+        /// Id forgot
+        /// </summary>
+        public const string IDFORGOT = "20";
+
+        /// <summary>
+        /// Onsite return
+        /// </summary>
+        public const string ONSITERETURN = "21";
+
+        /// <summary>
+        /// Id Lost
+        /// </summary>
+        public const string IDLOST = "22";
+
+        #region CandidateDetailsMessages
+
+        /// <summary>
+        /// no record
+        /// </summary>
+        public const string NORECORD = "Details not available Currently";
+
+        /// <summary>
+        /// no associate Id
+        /// </summary>
+        public const string NOASSOCIATEID = "Associate ID is not mapped";
+
+        /// <summary>
+        /// No emergency contact
+        /// </summary>
+        public const string NOEMERGENCYCONTACT = "Emergency Contact Not Available";
+
+        /// <summary>
+        /// No Blood group
+        /// </summary>
+        public const string NOBLOODGROUP = "Blood Group Information Not Available";
+
+        /// <summary>
+        /// No first name
+        /// </summary>
+        public const string NOFIRSTNAME = "First Name is Not Available";
+
+        /// <summary>
+        /// No Last name
+        /// </summary>
+        public const string NOLASTNAME = "Last Name is Not Available";
+
+        /// <summary>
+        /// No associate type
+        /// </summary>
+        public const string NOASSOCIATETYPE = "Associate Type Information Not Available";
+
+        /// <summary>
+        /// Image not available
+        /// </summary>
+        public const string NOIMAGE = "Image Not Available";
+
+        /// <summary>
+        /// card issued
+        /// </summary>
+        public const string CARDISSUED = "Card has already been issued for the Candidate";
+
+        /// <summary>
+        /// all details available
+        /// </summary>
+        public const string ALLDETAILSAVAILABLE = "All the details are Available";
+        #endregion
+
+        ////added by 257318
+        
+        /// <summary>
+        /// Lost value
+        /// </summary>
+        public const string LOST = "Lost";
+
+        /// <summary>
+        /// printer jammed
+        /// </summary>
+        public const string PRINTERJAMMED = "Printer jammed";
+
+        /// <summary>
+        /// IVS Check in
+        /// </summary>
+        public const string IVSCHECKIN = "IVSCheckInProcess";
+
+        /// <summary>
+        /// IVS Check in SMS
+        /// </summary>
+        public const string IVSCHECKINSMS = "IVSCheckInSMSProcess";
+
+        /// <summary>
+        /// VMS Check in
+        /// </summary>
+       public const string VMSCHECKIN = "VMSCheckInProcess";
+        /// <summary>
+        /// VMS Checkout
+        /// </summary>
+        public const string VMSCHECKOUT = "vmscheckout";
+        /// <summary>
+        /// VMS Reissue
+        /// </summary>
+        public const string VMSREISSUE = "vmsreissue";
+        /// <summary>
+        /// VMS Surrender
+        /// </summary>
+        public const string VMSSURRENDER = "vmssurrender";
+
+        /// <summary>
+        /// IVS remainder mail
+        /// </summary>
+        public const string IVSREMINDERMAIL = "IVSReminderMailProcess";
+
+        /// <summary>
+        /// notification to host
+        /// </summary>
+        public const string NOTIFICATIONTOHOST = "VMSNotificationToHostOnSubmit";
+
+        /// <summary>
+        /// Is XLS file
+        /// </summary>
+        public const string ISXLSFILE = ".xls";
+
+        /// <summary>
+        /// is XLSX file
+        /// </summary>
+        public const string ISXLSXFILE = ".xlsx";
+
+        /// <summary>
+        /// upload invalid file
+        /// </summary>
+        public const string UPLOADINVALIDFILE = "Upload Error. File/path does not exist.";
+
+        /// <summary>
+        /// upload sheet error
+        /// </summary>
+        public const string UPLOADSHEETERROR = "Upload Error. Please use the defined template.";
+
+        /// <summary>
+        /// upload empty records
+        /// </summary>
+        public const string UPLOADEMPTYRECORDS = "No Records Found,Please Add data then upload";
+
+        /// <summary>
+        /// upload special characters error
+        /// </summary>
+        public const string UPLOADSPECIALCHARACTERSERROR = "Upload Error. Special Characters found in uploaded file";
+
+        /// <summary>
+        /// upload file error
+        /// </summary>
+        public const string UPLOADFILEERROR = "Upload Error. Select a file with extension .XLS or .XLSX to upload";
+
+        /// <summary>
+        /// The current date field
+        /// </summary>        
+        private static DateTime crntdate;
+
+        /// <summary>
+        /// Gets or sets current date value
+        /// </summary>
+[SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", Justification = "Reviewed")]
+        public static DateTime CURRENTDATE
+        {
+            get
+            {
+                return crntdate;
+            }
+
+            set
+            {
+                crntdate = DateTime.Now;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets from time now value
+        /// </summary>
+[SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", Justification = "Reviewed")]
+        public static string FROMTIMENV
+        {
+            get
+            {
+                return FROMTIMENV;
+            }
+
+            set
+            {
+                FROMTIMENV = DateTime.Now.ToShortTimeString();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets to time now value
+        /// </summary>
+[SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", Justification = "Reviewed")]
+        public static string TOTIMENV
+        {
+            get
+            {
+                return TOTIMENV;
+            }
+
+            set
+            {
+                TOTIMENV = DateTime.Now.AddHours(3).ToShortTimeString();
+            }
+        }
+    }
+}
