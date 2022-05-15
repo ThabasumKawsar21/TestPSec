@@ -1,0 +1,210 @@
+//-----------------------------------------------------------------------
+// <copyright file="HttpHandler.cs" company="CTS">
+//     Copyright (c) MyCompanyName. All rights reserved.
+// </copyright>
+// <summary>
+// This file contains HttpHandler class.
+// </summary>
+//-----------------------------------------------------------------------
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.IO;
+using System.Runtime.Remoting.Contexts;
+using System.Security.Principal;
+using System.Web;
+using System.Web.Security;
+using System.Web.SessionState;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml;
+
+/// <summary>
+/// Description for HttpHandler
+/// </summary>
+public class HttpHandler : IHttpHandler, IRequiresSessionState
+{
+    /// <summary>
+    /// Gets a value indicating whether it is reusable
+    /// </summary>
+    /// <return>boolean type</return>
+    public bool IsReusable
+    {
+        get
+        {
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// Class to process request
+    /// </summary>
+    /// <param name="context">The context parameter</param>
+    public void ProcessRequest(HttpContext context)
+    {
+        string strRoleId = string.Empty;
+        string strRequestFileName = string.Empty;
+
+        try
+        {
+            string CurrentUserId = string.Empty;
+            // Checking Login User is valid user or not.
+            if (HttpContext.Current.Session["LoginID"] == null)
+            {
+                // Don't change - required for CAMS integration.
+                CurrentUserId = VMSUtility.VMSUtility.GetUserId();
+                ////  string[] strUserId = HttpContext.Current.Request.LogonUserIdentity.Name.ToString().Split('\\');
+                HttpContext.Current.Session["LoginID"] = CurrentUserId;
+                //// HttpContext.Current.Response.Redirect("Login.aspx", false);           
+                return;
+            }
+            else
+            {
+                CurrentUserId = HttpContext.Current.Session["LoginID"].ToString();
+            }
+
+            if (HttpContext.Current.Session["RoleID"] != null)
+            {
+                if (HttpContext.Current.Session["RoleID"].ToString().Equals("Admin"))
+                {
+                    HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(CurrentUserId), new string[] { "Admin" });
+                }
+
+                if (HttpContext.Current.Session["RoleID"].ToString().Equals("Security"))
+                {
+                    HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(CurrentUserId), new string[] { "Security" });
+                }
+
+                if (HttpContext.Current.Session["RoleID"].ToString().Equals("SuperAdmin"))
+                {
+                    HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(CurrentUserId), new string[] { "SuperAdmin" });
+                }
+
+                if (HttpContext.Current.Session["RoleID"].ToString().Equals("ReceptionAdmin"))
+                {
+                    HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(CurrentUserId), new string[] { "ReceptionAdmin" });
+                }
+
+                if (HttpContext.Current.Session["RoleID"].ToString().Equals("Host"))
+                {
+                    HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(CurrentUserId), new string[] { "Host" });
+                }
+
+                if (HttpContext.Current.Session["RoleID"].ToString().Equals("IDCardAdmin"))
+                {
+                    HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(CurrentUserId), new string[] { "IDCardAdmin" });
+                }
+
+                if (HttpContext.Current.Session["RoleID"].ToString().Equals("Approver"))
+                {
+                    HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(CurrentUserId), new string[] { "Approver" });
+                }
+
+                if (HttpContext.Current.Session["RoleID"].ToString().Equals("Visitor Desk"))
+                {
+                    HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(CurrentUserId), new string[] { "Visitor Desk" });
+                }
+            }
+
+            ////Begin Changes User Access Pages Fix 19May2011 Vimal 
+            ////strRequestFileName = Path.GetFileName(context.Request.FilePath).ToLower();
+
+            ////if (HttpContext.Current.Session["RoleID"].ToString().Equals("Security"))
+            ////{
+            //    if (strRequestFileName.Equals("VolumeofVisitors.aspx"))
+            //    {
+            //        context.Response.Redirect("AccessDenied.aspx", false);
+            //        return;
+            //    }
+            //    if (strRequestFileName.Equals("MultipleEntries.aspx"))
+            //    {
+            //        context.Response.Redirect("AccessDenied.aspx", false);
+            //        return;
+            //    }
+            //    if (strRequestFileName.Equals("DatabyDepartmentHost.aspx"))
+            //    {
+            //        context.Response.Redirect("AccessDenied.aspx", false);
+            //        return;
+            //    }
+            ////}
+
+            strRequestFileName = Path.GetFileName(context.Request.FilePath).ToLower(); ////Get the Page being Requested
+            ArrayList userPages = new ArrayList(); ////Declare Arraylist for the List of allowed pages
+            using (XmlTextReader xtr = new XmlTextReader(HttpContext.Current.Server.MapPath("~/UserPages.xml")))
+            {
+                ////Reading the XML File containing User based pages
+                xtr.WhitespaceHandling = WhitespaceHandling.None;
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load(xtr);
+                XmlNodeList defaultPageNode = xmlDoc.GetElementsByTagName("AllUsers"); ////Default Pages
+                if (defaultPageNode != null)
+                {
+                    foreach (XmlNode node in defaultPageNode)
+                    {
+                        foreach (XmlNode childNode in node.ChildNodes)
+                        {
+                            userPages.Add(childNode.InnerText.ToLower());
+                        }
+                    }
+                }
+
+                string userRole = HttpContext.Current.Session["RoleID"].ToString(); // Get the user Role
+                //string userRole = "Admin";
+
+                XmlNodeList pageNode = xmlDoc.GetElementsByTagName(userRole); // get the Pages for the Specified Role
+                if (pageNode != null)
+                {
+                    foreach (XmlNode node in pageNode)
+                    {
+                        foreach (XmlNode childNode in node.ChildNodes)
+                        {
+                            userPages.Add(childNode.InnerText.ToLower());
+                        }
+                    }
+                }
+
+                if (!userPages.Contains(strRequestFileName))
+                {
+                  
+                        context.Response.Redirect("AccessDenied.aspx", true);
+                        ////Redirecting if the User doesn't have the respective Access
+                        System.Web.HttpContext.Current.Response.End();
+                   
+                   
+                    //Context.ApplicationInstance.CompleteRequest();
+                    return;
+                }
+
+                Page paint = (Page)PageParser.GetCompiledPageInstance(context.Request.Path, context.Server.MapPath(context.Request.Path), context);
+
+                paint.PreRenderComplete += new EventHandler(this.Hand_PreRenderComplete);
+
+                paint.ProcessRequest(context);
+            }
+
+        }
+
+        catch (System.Threading.ThreadAbortException ex)
+        {
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    /// <summary>
+    /// The Pre render complete event
+    /// </summary>
+    /// <param name="sender">The sender parameter</param>
+    /// <param name="e">The e parameter</param>        
+    public void Hand_PreRenderComplete(object sender, EventArgs e)
+    {
+        HttpContext.Current.RewritePath(HttpContext.Current.Request.Path);
+    }
+}
