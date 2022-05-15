@@ -1,0 +1,153 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BusinessManager
+{
+    [Serializable]
+    public class Mobile
+    {
+        /// <summary>
+        /// short message as Empty
+        /// </summary>
+        private string summary = string.Empty;
+
+        /// <summary>
+        /// short message as Empty
+        /// </summary>
+        private string summaryJSON = string.Empty;
+
+        /// <summary>
+        /// short message as Empty
+        /// </summary>
+        private string contentJSON = string.Empty;
+
+        /// <summary>
+        /// short message as Empty
+        /// </summary>
+        private string templateID = string.Empty;
+
+        /// <summary>
+        /// short message as Empty
+        /// </summary>
+        private string content = string.Empty;
+
+        /// <summary>
+        /// short message as Empty
+        /// </summary>
+        private string title = string.Empty;
+
+        /// <summary>
+        /// short message as Empty
+        /// </summary>
+        private string dueDate = string.Empty;
+
+        /// <summary>
+        /// Gets or sets ShortMessage
+        /// </summary>     
+        public string Summary
+        {
+            get
+            {
+                return this.summary;
+            }
+
+            set
+            {
+                this.summary = value;
+            }
+        }
+        /// <summary>
+        /// Gets or sets ShortMessage
+        /// </summary>     
+        public string SummaryJSON
+        {
+            get
+            {
+                return this.summaryJSON;
+            }
+
+            set
+            {
+                this.summaryJSON = value;
+            }
+        }
+        /// <summary>
+        /// Gets or sets ShortMessage
+        /// </summary>     
+        public string ContentJSON
+        {
+            get
+            {
+                return this.contentJSON;
+            }
+
+            set
+            {
+                this.contentJSON = value;
+            }
+        }
+        /// <summary>
+        /// Gets or sets ShortMessage
+        /// </summary>     
+        public string TemplateID
+        {
+            get
+            {
+                return this.templateID;
+            }
+
+            set
+            {
+                this.templateID = value;
+            }
+        }
+        /// <summary>
+        /// Gets or sets ShortMessage
+        /// </summary>     
+        public string Content
+        {
+            get
+            {
+                return this.content;
+            }
+
+            set
+            {
+                this.content = value;
+            }
+        }
+        /// <summary>
+        /// Gets or sets ShortMessage
+        /// </summary>     
+        public string Title
+        {
+            get
+            {
+                return this.title;
+            }
+
+            set
+            {
+                this.title = value;
+            }
+        }
+        /// <summary>
+        /// Gets or sets ShortMessage
+        /// </summary>     
+        public string DueDate
+        {
+            get
+            {
+                return this.dueDate;
+            }
+
+            set
+            {
+                this.dueDate = value;
+            }
+        }
+    }
+}
