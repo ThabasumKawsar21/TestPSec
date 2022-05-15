@@ -1,0 +1,63 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace VMSUtility
+{
+    [Serializable]
+    public class ECMUpload
+    {
+        /// <summary>
+        /// Gets or sets facility ID
+        /// </summary>  
+        public string ECMlink { get; set; }
+
+        /// <summary>
+        /// Gets or sets facility ID
+        /// </summary>  
+        public string QueryString { get; set; }
+
+        /// <summary>
+        /// Gets or sets facility ID
+        /// </summary>  
+        public string EncryptedKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets facility ID
+        /// </summary>  
+        public int AppId { get; set; }
+
+        /// <summary>
+        /// Gets or sets facility ID
+        /// </summary>  
+        public string Logonuser { get; set; }
+
+        /// <summary>
+        /// Gets or sets facility ID
+        /// </summary>  
+        public string ECMOnecQueryURL { get; set; }
+
+        /// <summary>
+        /// Gets or sets facility ID
+        /// </summary>  
+        public string EncryptedMetaData { get; set; }
+
+        /// <summary>
+        /// Gets or sets facility ID
+        /// </summary>  
+        public string EcmResult { get; set; }
+
+        /// <summary>
+        /// Gets or sets facility ID
+        /// </summary>  
+        public string EcmContentId { get; set; }
+
+        /// <summary>
+        /// Gets or sets facility ID
+        /// </summary>  
+        public string Ecmstatus { get; set; }
+    }
+
+}
+
