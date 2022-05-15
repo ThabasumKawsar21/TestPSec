@@ -1,0 +1,34 @@
+
+
+namespace BusinessManager
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
+    /// <summary>
+    /// One Communicator 
+    /// </summary>
+    [Serializable]
+    public class OneCommunicator
+    {     
+        /// <summary>
+        /// Gets or sets TransactionParameters
+        /// </summary>
+        public OneCommunicatorTransactionParameters TransactionParameters
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets ChannelParameters
+        /// </summary>
+        public ChannelParameters ChannelParameters
+        {
+            get;
+            set;
+        }
+    }
+}
