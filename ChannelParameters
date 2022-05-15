@@ -1,0 +1,63 @@
+namespace BusinessManager
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using VMSBL;
+
+    /// <summary>
+    /// To define Channel Parameters
+    /// </summary>
+    [Serializable]
+    public class ChannelParameters
+    {
+        /// <summary>
+        /// Mobile as null
+        /// </summary>        
+        public Mobile mobile
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// Gets or sets Email
+        /// </summary>
+        public Email Email
+        {
+            get;
+            set;
+        }
+        
+        /// <summary>
+        /// Gets or sets OCS
+        /// </summary>
+        public string OCS
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets One Click
+        /// </summary>
+        public string OneClick
+        {
+            get;
+            set;
+        }
+
+        public Mobile Mobile
+        {
+            get
+            {
+                return this.mobile;
+            }
+
+            set
+            {
+                this.mobile = value;
+            }
+        }
+    }
+}
