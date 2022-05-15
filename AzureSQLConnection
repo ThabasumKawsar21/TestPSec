@@ -1,0 +1,279 @@
+
+namespace AzureSQLHelper
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Data.EntityClient;
+    using System.Data.Metadata.Edm;
+    using System.Data.SqlClient;
+    using System.IO;
+    using System.Net;
+    using System.Reflection;
+    using System.Security.Cryptography;
+    using System.Web.Script.Serialization;
+
+    /// <summary>
+    /// Azure SQL Connection
+    /// </summary>
+    public static class AzureSQLConnection
+    {
+        /// <summary>
+        /// sync Object
+        /// </summary>
+        private static readonly object SyncObject = new object();
+
+        /// <summary>
+        /// appMSI Id
+        /// </summary>
+        private static string appMSIId = null;
+
+        /// <summary>
+        /// in sec
+        /// </summary>
+        private static bool? insec = null, hasUserId = null;
+
+        /// <summary>
+        /// valid To
+        /// </summary>
+        private static DateTime? validTo = null;
+
+        /// <summary>
+        /// Format our new DateTime object to start at the UNIX Epoch
+        /// </summary>
+        private static DateTime dateTime = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
+
+        /// <summary>
+        /// access Token
+        /// </summary>
+        private static string accessTokn = null;
+
+        /// <summary>
+        /// Entity Connection settings
+        /// </summary>
+        /// <param name="connectionstring">connection string</param>
+        /// <param name="entitytype">entity type</param>
+        /// <returns>Entity Connection</returns>
+        public static EntityConnection GetEntityConnection(string connectionstring, Type entitytype)
+        {
+            SqlConnection connection = new SqlConnection(connectionstring);
+            if (insec == null || hasUserId == null)
+            {
+                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connection.ConnectionString);
+                hasUserId = !string.IsNullOrEmpty(builder.UserID);
+                insec = builder.IntegratedSecurity;
+            }
+
+            if (connection != null && !hasUserId.Value && !insec.Value)
+            {
+                connection.AccessToken = GetAccessTokenMSI();
+            }
+
+            if (insec.Value)
+            {
+                throw new InvalidOperationException("Usage of Integrated Security or Trusted_Connection is not allowed");
+            }
+
+            MetadataWorkspace workspace = new MetadataWorkspace(new string[] { "res://*/" }, new Assembly[] { Assembly.GetAssembly(entitytype) });
+            return new EntityConnection(workspace, connection);
+        }
+
+        /// <summary>
+        /// Open With MSI
+        /// </summary>
+        /// <param name="connection">SQL connection</param>
+        public static void OpenWithMSI(this SqlConnection connection)
+        {
+            if (insec == null || hasUserId == null)
+            {
+                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connection.ConnectionString);
+                hasUserId = !string.IsNullOrEmpty(builder.UserID);
+                insec = builder.IntegratedSecurity;
+            }
+
+            if (connection != null && !hasUserId.Value && !insec.Value)
+            {
+                connection.AccessToken = GetAccessTokenMSI();
+            }
+
+            if (insec.Value)
+            {
+                throw new InvalidOperationException("Usage of Integrated Security or Trusted_Connection is not allowed");
+            }
+
+            connection.Open();
+        }
+
+        /// <summary>
+        /// Set Access Token
+        /// </summary>
+        /// <param name="sqlConnection">SQL Connection</param>
+        public static void SetAccessToken(this SqlConnection sqlConnection)
+        {
+            if (insec == null || hasUserId == null)
+            {
+                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
+                hasUserId = !string.IsNullOrEmpty(builder.UserID);
+                insec = builder.IntegratedSecurity;
+            }
+
+            if (sqlConnection != null && !hasUserId.Value && !insec.Value)
+            {
+                sqlConnection.AccessToken = GetAccessTokenMSI();
+            }
+
+            if (insec.Value)
+            {
+                throw new InvalidOperationException("Usage of Integrated Security or Trusted_Connection is not allowed");
+            }
+        }
+
+        /// <summary>
+        /// Get Access Token
+        /// </summary>
+        /// <returns>return token</returns>
+        private static string GetAccessTokenMSI()
+        {
+            if (appMSIId == null)
+            {
+                lock (SyncObject)
+                {
+                    if (appMSIId == null)
+                    {
+                        appMSIId = DecryptString(ConfigurationManager.AppSettings["AppMSIHash"], ConfigurationManager.AppSettings["AppMSICrypto"] != null ? ConfigurationManager.AppSettings["AppMSICrypto"] : ConfigurationManager.AppSettings["SQLMICrypto"]);
+                    }
+                }
+            }
+
+            try
+            {
+                if (accessTokn == null || validTo == null || validTo.Value < DateTime.Now)
+                {
+                    lock (SyncObject)
+                    {
+                        if (accessTokn == null || validTo == null || validTo.Value < DateTime.Now)
+                        {
+                            return GetAuthToken();
+                        }
+                        else
+                        {
+                            return accessTokn;
+                        }
+                    }
+                }
+                else
+                {
+#if DEBUG
+                    Console.WriteLine("else");
+#endif
+                    return accessTokn;
+                }
+            }
+            catch (Exception e)
+            {
+                string errorText = string.Format("{0} \n\n{1}", e.Message, e.InnerException != null ? e.InnerException.Message : "Acquire token failed");
+                System.Diagnostics.Trace.WriteLine(errorText);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get Authentication Token
+        /// </summary>
+        /// <returns>static string</returns>
+        private static string GetAuthToken()
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create($"http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&client_id={appMSIId}&resource=https%3A%2F%2Fdatabase.windows.net%2F");
+            request.Headers["Metadata"] = "true";
+            request.Method = "GET";
+            ////string accessToken = null;
+
+            //// Call Managed Service Identity endpoint.
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            using (response)
+            {
+                //// Pipe response Stream to a StreamReader and extract access token.
+                StreamReader streamResponse = new StreamReader(response.GetResponseStream());
+                using (streamResponse)
+                {
+                    string stringResponse = streamResponse.ReadToEnd();
+                    streamResponse.Close();
+                    JavaScriptSerializer j = new JavaScriptSerializer();
+                    Dictionary<string, string> list = (Dictionary<string, string>)j.Deserialize(stringResponse, typeof(Dictionary<string, string>));
+                    accessTokn = list["access_token"];
+                    double timestamp = double.Parse(list["expires_on"]);
+
+                    // Add the timestamp (number of seconds since the Epoch) to be converted
+                    validTo = dateTime.AddSeconds(timestamp - 300).ToLocalTime();
+
+                    return accessTokn;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Decrypt String
+        /// </summary>
+        /// <param name="cipher">key cipher</param>
+        /// <param name="keyString">key String</param>
+        /// <returns>static string</returns>
+        private static string DecryptString(string cipher, string keyString)
+        {
+#if DEBUG
+            Console.WriteLine("DecryptString");
+#endif
+            byte[] cipherText = Convert.FromBase64String(cipher), key = Convert.FromBase64String(keyString);
+            //// Check arguments.
+            if (cipherText == null || cipherText.Length < 32)
+            {
+                string message = "cipherText";
+                throw new ArgumentNullException(message);
+            }
+
+            if (key == null || key.Length <= 0)
+            {
+                string message = "Key";
+                throw new ArgumentNullException(message);
+            }
+
+            // Declare the Aes object
+            // used to decrypt the data.
+            AesManaged aesAlg = null;
+
+            // Declare the string used to hold
+            // the decrypted text.
+            string plaintext = null;
+
+            try
+            {
+                // Create an Aes object
+                // with the specified key and IV.
+                aesAlg = new AesManaged();
+                aesAlg.Mode = CipherMode.CBC;
+                aesAlg.Padding = PaddingMode.Zeros;
+                aesAlg.Key = key;
+                byte[] iv = new byte[16];
+                Array.Copy(cipherText, 0, iv, 0, 16);
+                aesAlg.IV = iv;
+
+                // Create a decrytor to perform the stream transform.
+                using (aesAlg)
+                {
+                    ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+                    using (decryptor)
+                    {
+                        var plainBytes = decryptor.TransformFinalBlock(cipherText, 16, cipherText.Length - 16);
+                        plaintext = System.Text.Encoding.UTF8.GetString(plainBytes).Trim((char)0);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            return plaintext;
+        }
+    }
+}
