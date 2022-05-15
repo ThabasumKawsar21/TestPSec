@@ -1,0 +1,191 @@
+// -----------------------------------------------------------------------
+// <copyright file="GenericTimeZone.cs" company="CTS">
+// Copyright (c) . All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace VMSBusinessLayer
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Runtime.Remoting.Contexts;
+    using System.Web;
+
+    /// <summary>
+    /// generic time zone class
+    /// </summary>
+    public class GenericTimeZone
+    {
+        /// <summary>
+        /// Get IST Time Format Date
+        /// </summary>
+        /// <param name="datetimeinfo">date time information value</param>
+        /// <param name="timeoffsetvalue">time off set value</param>
+        /// <returns>date time details in IST value</returns>
+        public DateTime GetdatetimedetailsinIST(DateTime datetimeinfo, string timeoffsetvalue)
+        {
+            string offset;
+            if (string.IsNullOrEmpty(timeoffsetvalue))
+            {
+                offset = "-330";
+            }
+            else
+            {
+                offset = timeoffsetvalue;
+            }
+
+            string timeZoneFormat = Convert.ToString(ConfigurationManager.AppSettings["TimeZone"]);
+            string strIndianTimezone = timeZoneFormat;
+            TimeZoneInfo tzinfoIndian = TimeZoneInfo.FindSystemTimeZoneById(strIndianTimezone);
+            DateTime dt_DateTime = datetimeinfo.AddMinutes(Convert.ToInt32(offset)); ////ToUniversalTime();
+            dt_DateTime = TimeZoneInfo.ConvertTimeFromUtc(dt_DateTime, tzinfoIndian);
+            return dt_DateTime;
+        }
+
+        /// <summary>
+        /// To get local time zone date and time
+        /// </summary>
+        /// <param name="dt">date value</param>
+        /// <returns>string value</returns>      
+        public string ToClientTime(DateTime dt)
+        {
+            var timeOffSet = HttpContext.Current.Session["TimezoneOffset"];
+            if (timeOffSet != null)
+            {
+                var offset = int.Parse(timeOffSet.ToString());
+                dt = dt.AddMinutes(-1 * offset);
+                return dt.ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// To get local time zone date and time
+        /// </summary>
+        /// <param name="dt">date value</param>
+        /// <param name="offsetval">offset value</param>
+        /// <returns>string value</returns>      
+        public string ToLocalTimeZone(DateTime dt, string offsetval)
+        {
+            var timeOffSet = HttpContext.Current.Session["TimezoneOffset"];
+            if (timeOffSet != null)
+            {
+                string timeZoneFormat = Convert.ToString(ConfigurationManager.AppSettings["TimeZone"]);
+                TimeZoneInfo tzinfoIndian = TimeZoneInfo.FindSystemTimeZoneById(timeZoneFormat);
+                DateTime datetimeutc = TimeZoneInfo.ConvertTimeToUtc(dt, tzinfoIndian); ////converting to UTC
+                ////Converting to local time zone from UTC 
+                var offset = int.Parse(offsetval);
+                DateTime datetimelocal = datetimeutc.AddMinutes(-1 * offset);
+                return datetimelocal.ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// To get local current 
+        /// </summary>
+        /// <returns>current date value</returns>
+        public DateTime GetCurrentDate()
+        {
+            DateTime createdDate = new DateTime();
+            if (HttpContext.Current.Session["currentDateTime"] != null)
+            {
+                string format;
+                format = "dd/MM/yyyy HH:mm:ss";
+                System.Globalization.CultureInfo provider = System.Globalization.CultureInfo.InvariantCulture;
+                string currenttime = Convert.ToString(HttpContext.Current.Session["currentDateTime"]);
+                var today = DateTime.ParseExact(currenttime, format, provider);
+                var runTime = new DateTime(today.Year, today.Month, today.Day, today.Hour, today.Minute, today.Second);
+                createdDate = this.GetdatetimedetailsinIST(Convert.ToDateTime(runTime), Convert.ToString(HttpContext.Current.Session["TimezoneOffset"]));
+               
+            }
+            else
+            {
+              
+                    System.Web.HttpContext.Current.Response.Redirect("~/SessionExpired.aspx", true);
+                    
+                
+            }
+
+            return createdDate;
+        }
+
+        /// <summary>
+        /// Gets local current date value
+        /// </summary>
+        /// <returns>local current date value</returns>
+        public DateTime GetLocalCurrentDate()
+        {
+            var today = new DateTime();
+            if (HttpContext.Current.Session["currentDateTime"] != null)
+            {
+                string format;
+                format = "dd/MM/yyyy HH:mm:ss";
+                System.Globalization.CultureInfo provider = System.Globalization.CultureInfo.InvariantCulture;
+                string currenttime = Convert.ToString(HttpContext.Current.Session["currentDateTime"]);
+                today = DateTime.ParseExact(currenttime, format, provider);
+            }
+            else
+            {
+                try
+                {
+                    System.Web.HttpContext.Current.Response.Redirect("~/SessionExpired.aspx", true);
+                    
+                }
+                //Context.ApplicationInstance.CompleteRequest();
+                catch(System.Threading.ThreadAbortException ex)
+                {
+
+                }
+            }
+
+            return today;
+        }
+
+        /// <summary>
+        /// Gets local current date in format
+        /// </summary>
+        /// <returns>current date</returns>
+        public DateTime GetLocalCurrentDateInFormat()
+        {
+            DateTime objDate = new DateTime();
+            if (HttpContext.Current.Session["currentDateTime"] != null)
+            {
+                string format;
+                format = "dd/MM/yyyy HH:mm:ss";
+                System.Globalization.CultureInfo provider = System.Globalization.CultureInfo.InvariantCulture;
+                string currenttime = Convert.ToString(HttpContext.Current.Session["currentDateTime"]);
+                var today = DateTime.ParseExact(currenttime, format, provider);
+                DateTimeFormatInfo dtfi = new DateTimeFormatInfo();
+                dtfi.ShortDatePattern = "dd-MM-yyyy";
+                dtfi.DateSeparator = "-";
+                objDate = Convert.ToDateTime(currenttime, dtfi);
+            }
+            else
+            {
+                try
+                {
+                    System.Web.HttpContext.Current.Response.Redirect("~/SessionExpired.aspx", true);
+                    
+                }
+               // Context.ApplicationInstance.CompleteRequest();
+               catch(System.Threading.ThreadAbortException ex)
+                {
+
+                }
+            }
+
+            return objDate;
+        }
+    }
+}
