@@ -1,0 +1,1327 @@
+
+
+namespace Telecom.BLL
+{
+    using BusinessManager;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Text;
+
+    /// <summary>
+    /// Communicator class for mail sending
+    /// </summary>
+    [Serializable]
+    public class CommunicatorBLL
+    {
+        /// <summary>
+        /// transaction parameters
+        /// </summary>
+        private TransactionParameters transactionParameters = null;
+
+        /// <summary>
+        /// template parameters
+        /// </summary>
+        private TemplateParameters templateParameters = null;
+
+        /// <summary>
+        /// Gets or sets transaction parameter
+        /// </summary>
+        public TransactionParameters TransactionParameters
+        {
+            get
+            {
+                return this.transactionParameters;
+            }
+
+            set
+            {
+                this.transactionParameters = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets template parameter
+        /// </summary>
+        public TemplateParameters TemplateParameters
+        {
+            get
+            {
+                return this.templateParameters;
+            }
+
+            set
+            {
+                this.templateParameters = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// one communicator class
+    /// </summary>
+    [Serializable]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed")]
+    public class OneCommunicator
+    {
+        /// <summary>
+        /// transaction parameter
+        /// </summary>
+        private OneCommunicatorTransactionParameters transactionParameters = null;
+
+        /// <summary>
+        /// channel parameter
+        /// </summary>
+        private ChannelParameters channelParameters = null;
+
+        /// <summary>
+        /// Gets or sets transaction parameter
+        /// </summary>
+        public OneCommunicatorTransactionParameters TransactionParameters
+        {
+            get
+            {
+                return this.transactionParameters;
+            }
+
+            set
+            {
+                this.transactionParameters = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets channel parameter
+        /// </summary>
+        public ChannelParameters ChannelParameters
+        {
+            get
+            {
+                return this.channelParameters;
+            }
+
+            set
+            {
+                this.channelParameters = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// channel parameter class
+    /// </summary>
+    [Serializable]
+    public class ChannelParameters
+    {
+        /// <summary>
+        /// Gets or sets Email
+        /// </summary>
+        public Email Email
+        {
+            get;
+            set;
+        }
+
+        public Mobile Mobile
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// Gets or sets OCS
+        /// </summary>
+        public string OCS
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets One Click
+        /// </summary>
+        public string OneClick
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets SMS
+        /// </summary>
+        public string SMS
+        {
+            get;
+            set;
+        }
+    }
+
+    /// <summary>
+    /// Email class
+    /// </summary>
+    [Serializable]
+    public class Email
+    {
+        /// <summary>
+        /// cc value
+        /// </summary>
+        private string cc = string.Empty;
+
+        /// <summary>
+        /// bcc value
+        /// </summary>
+        private string bcc = string.Empty;
+
+        ////private string _RequestorId = string.Empty;
+
+        /// <summary>
+        /// template parameter value
+        /// </summary>
+        private TemplateParameters templateParameters = null;
+
+        /// <summary>
+        /// Gets or sets CC value
+        /// </summary>
+        public string CC
+        {
+            get
+            {
+                return this.cc;
+            }
+
+            set
+            {
+                this.cc = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets BCC value
+        /// </summary>
+        public string BCC
+        {
+            get
+            {
+                return this.bcc;
+            }
+
+            set
+            {
+                this.bcc = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets Template parameter value
+        /// </summary>
+        public TemplateParameters TemplateParameters
+        {
+            get
+            {
+                return this.templateParameters;
+            }
+
+            set
+            {
+                this.templateParameters = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// SMS class
+    /// </summary>
+    public class SMS
+    {
+        /// <summary>
+        /// short message value
+        /// </summary>
+        private string shortmeassage = string.Empty;
+
+        /// <summary>
+        /// is Required value
+        /// </summary>
+        private string isRequired = string.Empty;
+
+        /// <summary>
+        /// transaction parameter value
+        /// </summary>
+        private TransactionParameters transactionparameters = null;
+
+        /// <summary>
+        /// Gets or sets short message value
+        /// </summary>
+        public string ShortMessage
+        {
+            get
+            {
+                return this.shortmeassage;
+            }
+
+            set
+            {
+                this.shortmeassage = value;
+            }
+        }
+        ////public bool  IsRequired 
+        ////{
+        ////    get
+        ////    {
+        ////        return _isRequired;
+        ////    }
+        ////    set
+        ////    {
+        ////        _isRequired = value;
+        ////    }
+
+        ////}
+
+        /// <summary>
+        /// Gets or sets Transaction parameters
+        /// </summary>
+        public TransactionParameters TransactionParameters
+        {
+            get
+            {
+                return this.transactionparameters;
+            }
+
+            set
+            {
+                this.transactionparameters = value;
+            }
+        }
+    }
+
+
+    public class Mobile
+    {
+        /// <summary>
+        /// short message as Empty
+        /// </summary>
+        private string summary = string.Empty;
+
+        /// <summary>
+        /// short message as Empty
+        /// </summary>
+        private string summaryJSON = string.Empty;
+
+        /// <summary>
+        /// short message as Empty
+        /// </summary>
+        private string contentJSON = string.Empty;
+
+        /// <summary>
+        /// short message as Empty
+        /// </summary>
+        private string templateID = string.Empty;
+
+        /// <summary>
+        /// short message as Empty
+        /// </summary>
+        private string content = string.Empty;
+
+        /// <summary>
+        /// short message as Empty
+        /// </summary>
+        private string title = string.Empty;
+
+        /// <summary>
+        /// short message as Empty
+        /// </summary>
+        private string dueDate = string.Empty;
+
+        /// <summary>
+        /// Gets or sets ShortMessage
+        /// </summary>     
+        public string Summary
+        {
+            get
+            {
+                return this.summary;
+            }
+
+            set
+            {
+                this.summary = value;
+            }
+        }
+        /// <summary>
+        /// Gets or sets ShortMessage
+        /// </summary>     
+        public string SummaryJSON
+        {
+            get
+            {
+                return this.summaryJSON;
+            }
+
+            set
+            {
+                this.summaryJSON = value;
+            }
+        }
+        /// <summary>
+        /// Gets or sets ShortMessage
+        /// </summary>     
+        public string ContentJSON
+        {
+            get
+            {
+                return this.contentJSON;
+            }
+
+            set
+            {
+                this.contentJSON = value;
+            }
+        }
+        /// <summary>
+        /// Gets or sets ShortMessage
+        /// </summary>     
+        public string TemplateID
+        {
+            get
+            {
+                return this.templateID;
+            }
+
+            set
+            {
+                this.templateID = value;
+            }
+        }
+        /// <summary>
+        /// Gets or sets ShortMessage
+        /// </summary>     
+        public string Content
+        {
+            get
+            {
+                return this.content;
+            }
+
+            set
+            {
+                this.content = value;
+            }
+        }
+        /// <summary>
+        /// Gets or sets ShortMessage
+        /// </summary>     
+        public string Title
+        {
+            get
+            {
+                return this.title;
+            }
+
+            set
+            {
+                this.title = value;
+            }
+        }
+        /// <summary>
+        /// Gets or sets ShortMessage
+        /// </summary>     
+        public string DueDate
+        {
+            get
+            {
+                return this.dueDate;
+            }
+
+            set
+            {
+                this.dueDate = value;
+            }
+        }
+    }
+        /// <summary>
+        /// One communicator transaction parameters class
+        /// </summary>
+        [Serializable]
+    public class OneCommunicatorTransactionParameters
+    {
+        /// <summary>
+        /// recipient value
+        /// </summary>
+        private string recipients = string.Empty;
+
+        /// <summary>
+        /// request id value
+        /// </summary>
+        private string requestId = string.Empty;
+
+        /// <summary>
+        /// process value
+        /// </summary>
+        private string process = string.Empty;
+
+        /// <summary>
+        /// global app Id value
+        /// </summary>
+        private string globalAppId = string.Empty;
+
+        /// <summary>
+        /// Gets or sets recipient value
+        /// </summary>
+        public string Recipients
+        {
+            get
+            {
+                return this.recipients;
+            }
+
+            set
+            {
+                this.recipients = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets request Id value
+        /// </summary>
+        public string RequestId
+        {
+            get
+            {
+                return this.requestId;
+            }
+
+            set
+            {
+                this.requestId = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets Process value
+        /// </summary>
+        public string Process
+        {
+            get
+            {
+                return this.process;
+            }
+
+            set
+            {
+                this.process = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets global app Id value
+        /// </summary>
+        public string GlobalAppId
+        {
+            get
+            {
+                return this.globalAppId;
+            }
+
+            set
+            {
+                this.globalAppId = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Transaction parameters class
+    /// </summary>
+    public class TransactionParameters
+    {
+        /// <summary>
+        /// request Id value
+        /// </summary>
+        private string requestID = string.Empty;
+
+        /// <summary>
+        /// CC list value
+        /// </summary>
+        private string cclist = string.Empty;
+
+        /// <summary>
+        /// requestor Id value
+        /// </summary>
+        private string requestorId = string.Empty;
+
+        /// <summary>
+        /// Gets or sets request Id value
+        /// </summary>
+        public string RequestID
+        {
+            get
+            {
+                return this.requestID;
+            }
+
+            set
+            {
+                this.requestID = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets CC list value
+        /// </summary>
+        public string CCList
+        {
+            get
+            {
+                return this.cclist;
+            }
+
+            set
+            {
+                this.cclist = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets requestor Id value
+        /// </summary>
+        public string RequestorId
+        {
+            get
+            {
+                return this.requestorId;
+            }
+
+            set
+            {
+                this.requestorId = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// template parameter class
+    /// </summary>
+    [Serializable]
+    public class TemplateParameters
+    {
+        /// <summary>
+        /// To date value
+        /// </summary>
+        private string todate = string.Empty;
+
+        /// <summary>
+        /// from date value
+        /// </summary>
+        private string fromDate = string.Empty;
+
+        /// <summary>
+        /// city value
+        /// </summary>
+        private string city = string.Empty;
+
+        /// <summary>
+        /// visitor type value
+        /// </summary>
+        private string visitorType = string.Empty;
+
+        /// <summary>
+        /// manager value
+        /// </summary>
+        private string manager = string.Empty;
+
+        /// <summary>
+        /// in time value
+        /// </summary>
+        private string intime = string.Empty;
+
+        /// <summary>
+        /// in date value
+        /// </summary>
+        private string indate = string.Empty;
+
+        /// <summary>
+        /// facility value
+        /// </summary>
+        private string facility = string.Empty;
+
+        /// <summary>
+        /// visitor name value
+        /// </summary>
+        private string visitorName = string.Empty;
+
+        /// <summary>
+        /// host name value
+        /// </summary>
+        private string hostName = string.Empty;
+
+        /// <summary>
+        /// country value
+        /// </summary>
+        private string country = string.Empty;
+
+        /// <summary>
+        /// subject value
+        /// </summary>
+        private string subject = string.Empty;
+
+        /// <summary>
+        /// host Id value
+        /// </summary>
+        private string hostID = string.Empty;
+
+        /// <summary>
+        /// host mail Id value
+        /// </summary>
+        private string hostMailID = string.Empty;
+
+        /// <summary>
+        /// host First name value
+        /// </summary>
+        private string hostFirstName = string.Empty;
+
+        /// <summary>
+        /// company value
+        /// </summary>
+        private string company = string.Empty;
+
+        /// <summary>
+        /// email body text value
+        /// </summary>
+        private string emailBodyText = string.Empty;
+
+        /// <summary>
+        /// email body text value
+        /// </summary>
+        private string requestor = string.Empty;
+
+        /// <summary>
+        /// visitors text value
+        /// </summary>
+        private string visitors = string.Empty;
+
+        /// <summary>
+        /// Gets or sets visitors
+        /// </summary>
+        public string Visitors
+        {
+            get
+            {
+                return this.visitors;
+            }
+
+            set
+            {
+                this.visitors = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets email body text
+        /// </summary>
+        public string Requestor
+        {
+            get
+            {
+                return this.requestor;
+            }
+
+            set
+            {
+                this.requestor = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets email body text
+        /// </summary>
+        public string EmailBodyText
+        {
+            get
+            {
+                return this.emailBodyText;
+            }
+
+            set
+            {
+                this.emailBodyText = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets host name
+        /// </summary>
+        public string HostName
+        {
+            get
+            {
+                return this.hostName;
+            }
+
+            set
+            {
+                this.hostName = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets host Id
+        /// </summary>
+        public string HostID
+        {
+            get
+            {
+                return this.hostID;
+            }
+
+            set
+            {
+                this.hostID = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets host mail Id
+        /// </summary>
+        public string HostMailID
+        {
+            get
+            {
+                return this.hostMailID;
+            }
+
+            set
+            {
+                this.hostMailID = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets visitor type
+        /// </summary>
+        public string VisitorType
+        {
+            get
+            {
+                return this.visitorType;
+            }
+
+            set
+            {
+                this.visitorType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets host first name
+        /// </summary>
+        public string HostFirstName
+        {
+            get
+            {
+                return this.hostFirstName;
+            }
+
+            set
+            {
+                this.hostFirstName = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets company value
+        /// </summary>
+        public string Company
+        {
+            get
+            {
+                return this.company;
+            }
+
+            set
+            {
+                this.company = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets visitor name
+        /// </summary>
+        public string VisitorName
+        {
+            get
+            {
+                return this.visitorName;
+            }
+
+            set
+            {
+                this.visitorName = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets facility value
+        /// </summary>
+        public string Facility
+        {
+            get
+            {
+                return this.facility;
+            }
+
+            set
+            {
+                this.facility = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets in time value
+        /// </summary>
+        public string InTime
+        {
+            get
+            {
+                return this.intime;
+            }
+
+            set
+            {
+                this.intime = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets in Date value
+        /// </summary>
+        public string InDate
+        {
+            get
+            {
+                return this.indate;
+            }
+
+            set
+            {
+                this.indate = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets manager value
+        /// </summary>
+        public string Manager
+        {
+            get
+            {
+                return this.manager;
+            }
+
+            set
+            {
+                this.manager = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets city value
+        /// </summary>
+        public string City
+        {
+            get
+            {
+                return this.city;
+            }
+
+            set
+            {
+                this.city = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets from date value
+        /// </summary>
+        public string FromDate
+        {
+            get
+            {
+                return this.fromDate;
+            }
+
+            set
+            {
+                this.fromDate = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets to date value
+        /// </summary>
+        public string ToDate
+        {
+            get
+            {
+                return this.todate;
+            }
+
+            set
+            {
+                this.todate = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets country value
+        /// </summary>
+        public string Country
+        {
+            get
+            {
+                return this.country;
+            }
+
+            set
+            {
+                this.country = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets subject value
+        /// </summary>
+        public string Subject
+        {
+            get
+            {
+                return this.subject;
+            }
+
+            set
+            {
+                this.subject = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Technical detail class
+    /// </summary>
+    [Serializable]
+    public class TechnicalDetail
+    {
+        /// <summary>
+        /// associate Id value
+        /// </summary>
+        private string associateID = string.Empty;
+
+        /// <summary>
+        /// associate name value
+        /// </summary>
+        private string associateName = string.Empty;
+
+        /// <summary>
+        /// SEZ facility value
+        /// </summary>
+        private string sezFacility = string.Empty;
+
+        /// <summary>
+        /// date of joining value
+        /// </summary>
+        private string dateofJoining = string.Empty;
+
+        /// <summary>
+        /// designation value
+        /// </summary>
+        private string designation = string.Empty;
+
+        /// <summary>
+        /// practice value
+        /// </summary>
+        private string practice = string.Empty;
+
+        /// <summary>
+        /// account value
+        /// </summary>
+        private string account = string.Empty;
+
+        /// <summary>
+        /// billability value
+        /// </summary>
+        private string billability = string.Empty;
+
+        /// <summary>
+        /// category value
+        /// </summary>
+        private string category = string.Empty;
+
+        /// <summary>
+        /// request Id value
+        /// </summary>
+        private string requestid = string.Empty;
+
+        /// <summary>
+        /// SEZ status value
+        /// </summary>
+        private string sezStatus = string.Empty;
+
+        /// <summary>
+        /// Vertical Id value
+        /// </summary>
+        private string verticalId = string.Empty;
+
+        /// <summary>
+        /// location value
+        /// </summary>
+        private string location = string.Empty;
+
+        /// <summary>
+        /// release date value
+        /// </summary>
+        private string releaseDate = string.Empty;
+
+        /// <summary>
+        /// release status value
+        /// </summary>
+        private string releaseStatus = string.Empty;
+
+        /// <summary>
+        /// Gets or sets associate Id
+        /// </summary>
+        public string AssociateID
+        {
+            get
+            {
+                return this.associateID;
+            }
+
+            set
+            {
+                this.associateID = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets associate name
+        /// </summary>
+        public string AssociateName
+        {
+            get
+            {
+                return this.associateName;
+            }
+
+            set
+            {
+                this.associateName = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets SEZ facility
+        /// </summary>
+        public string SEZfacility
+        {
+            get
+            {
+                return this.sezFacility;
+            }
+
+            set
+            {
+                this.sezFacility = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets date of joining value
+        /// </summary>
+        public string DateofJoining
+        {
+            get
+            {
+                return this.dateofJoining;
+            }
+
+            set
+            {
+                this.dateofJoining = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets designation value
+        /// </summary>
+        public string Designation
+        {
+            get
+            {
+                return this.designation;
+            }
+
+            set
+            {
+                this.designation = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets practice value
+        /// </summary>
+        public string Practice
+        {
+            get
+            {
+                return this.practice;
+            }
+
+            set
+            {
+                this.practice = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets account value
+        /// </summary>
+        public string Account
+        {
+            get
+            {
+                return this.account;
+            }
+
+            set
+            {
+                this.account = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets billability value
+        /// </summary>
+        public string Billability
+        {
+            get
+            {
+                return this.billability;
+            }
+
+            set
+            {
+                this.billability = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets category value
+        /// </summary>
+        public string Category
+        {
+            get
+            {
+                return this.category;
+            }
+
+            set
+            {
+                this.category = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets request Id value
+        /// </summary>
+        public string Requestid
+        {
+            get
+            {
+                return this.requestid;
+            }
+
+            set
+            {
+                this.requestid = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets SEZ status
+        /// </summary>
+        public string SEZstatus
+        {
+            get
+            {
+                return this.sezStatus;
+            }
+
+            set
+            {
+                this.sezStatus = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets vertical Id value
+        /// </summary>
+        public string VerticalId
+        {
+            get
+            {
+                return this.verticalId;
+            }
+
+            set
+            {
+                this.verticalId = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets location value
+        /// </summary>
+        public string Location
+        {
+            get
+            {
+                return this.location;
+            }
+
+            set
+            {
+                this.location = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets release date
+        /// </summary>
+        public string ReleaseDate
+        {
+            get
+            {
+                return this.releaseDate;
+            }
+
+            set
+            {
+                this.releaseDate = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets release status
+        /// </summary>
+        public string ReleaseStatus
+        {
+            get
+            {
+                return this.releaseStatus;
+            }
+
+            set
+            {
+                this.releaseStatus = value;
+            }
+        }
+    }
+}
