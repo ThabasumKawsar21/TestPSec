@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://10.242.46.141/AdminWebServices" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://10.242.46.141/AdminWebServices" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://10.242.46.141/AdminWebServices">
+      <s:element name="AdminService_GetAllVerticals">
+        <s:complexType />
+      </s:element>
+      <s:element name="AdminService_GetAllVerticalsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AdminService_GetAllVerticalsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AdminService_GetAllHorizontals">
+        <s:complexType />
+      </s:element>
+      <s:element name="AdminService_GetAllHorizontalsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AdminService_GetAllHorizontalsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AdminService_GetAssociate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputAssociateID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AdminService_GetAssociateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AdminService_GetAssociateResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AdminService_GetAccountsInVertical">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputVerticalID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AdminService_GetAccountsInVerticalResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AdminService_GetAccountsInVerticalResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AdminService_GetLocation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputCountry" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="inputCity" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AdminService_GetLocationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AdminService_GetLocationResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AdminService_GetFacilites">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputCity" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AdminService_GetFacilitesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AdminService_GetFacilitesResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AdminService_GetProjectsInAccount">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputAccountID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AdminService_GetProjectsInAccountResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AdminService_GetProjectsInAccountResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="AdminService_GetAllVerticalsSoapIn">
+    <wsdl:part name="parameters" element="tns:AdminService_GetAllVerticals" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAllVerticalsSoapOut">
+    <wsdl:part name="parameters" element="tns:AdminService_GetAllVerticalsResponse" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAllHorizontalsSoapIn">
+    <wsdl:part name="parameters" element="tns:AdminService_GetAllHorizontals" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAllHorizontalsSoapOut">
+    <wsdl:part name="parameters" element="tns:AdminService_GetAllHorizontalsResponse" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAssociateSoapIn">
+    <wsdl:part name="parameters" element="tns:AdminService_GetAssociate" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAssociateSoapOut">
+    <wsdl:part name="parameters" element="tns:AdminService_GetAssociateResponse" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAccountsInVerticalSoapIn">
+    <wsdl:part name="parameters" element="tns:AdminService_GetAccountsInVertical" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAccountsInVerticalSoapOut">
+    <wsdl:part name="parameters" element="tns:AdminService_GetAccountsInVerticalResponse" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetLocationSoapIn">
+    <wsdl:part name="parameters" element="tns:AdminService_GetLocation" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetLocationSoapOut">
+    <wsdl:part name="parameters" element="tns:AdminService_GetLocationResponse" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetFacilitesSoapIn">
+    <wsdl:part name="parameters" element="tns:AdminService_GetFacilites" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetFacilitesSoapOut">
+    <wsdl:part name="parameters" element="tns:AdminService_GetFacilitesResponse" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetProjectsInAccountSoapIn">
+    <wsdl:part name="parameters" element="tns:AdminService_GetProjectsInAccount" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetProjectsInAccountSoapOut">
+    <wsdl:part name="parameters" element="tns:AdminService_GetProjectsInAccountResponse" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAllVerticalsHttpGetIn" />
+  <wsdl:message name="AdminService_GetAllVerticalsHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAllHorizontalsHttpGetIn" />
+  <wsdl:message name="AdminService_GetAllHorizontalsHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAssociateHttpGetIn">
+    <wsdl:part name="inputAssociateID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAssociateHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAccountsInVerticalHttpGetIn">
+    <wsdl:part name="inputVerticalID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAccountsInVerticalHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetLocationHttpGetIn">
+    <wsdl:part name="inputCountry" type="s:string" />
+    <wsdl:part name="inputCity" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetLocationHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetFacilitesHttpGetIn">
+    <wsdl:part name="inputCity" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetFacilitesHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetProjectsInAccountHttpGetIn">
+    <wsdl:part name="inputAccountID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetProjectsInAccountHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAllVerticalsHttpPostIn" />
+  <wsdl:message name="AdminService_GetAllVerticalsHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAllHorizontalsHttpPostIn" />
+  <wsdl:message name="AdminService_GetAllHorizontalsHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAssociateHttpPostIn">
+    <wsdl:part name="inputAssociateID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAssociateHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAccountsInVerticalHttpPostIn">
+    <wsdl:part name="inputVerticalID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetAccountsInVerticalHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetLocationHttpPostIn">
+    <wsdl:part name="inputCountry" type="s:string" />
+    <wsdl:part name="inputCity" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetLocationHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetFacilitesHttpPostIn">
+    <wsdl:part name="inputCity" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetFacilitesHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetProjectsInAccountHttpPostIn">
+    <wsdl:part name="inputAccountID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AdminService_GetProjectsInAccountHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:portType name="AdminWebServicesSoap">
+    <wsdl:operation name="AdminService_GetAllVerticals">
+      <wsdl:input message="tns:AdminService_GetAllVerticalsSoapIn" />
+      <wsdl:output message="tns:AdminService_GetAllVerticalsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAllHorizontals">
+      <wsdl:input message="tns:AdminService_GetAllHorizontalsSoapIn" />
+      <wsdl:output message="tns:AdminService_GetAllHorizontalsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAssociate">
+      <wsdl:input message="tns:AdminService_GetAssociateSoapIn" />
+      <wsdl:output message="tns:AdminService_GetAssociateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAccountsInVertical">
+      <wsdl:input message="tns:AdminService_GetAccountsInVerticalSoapIn" />
+      <wsdl:output message="tns:AdminService_GetAccountsInVerticalSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetLocation">
+      <wsdl:input message="tns:AdminService_GetLocationSoapIn" />
+      <wsdl:output message="tns:AdminService_GetLocationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetFacilites">
+      <wsdl:input message="tns:AdminService_GetFacilitesSoapIn" />
+      <wsdl:output message="tns:AdminService_GetFacilitesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetProjectsInAccount">
+      <wsdl:input message="tns:AdminService_GetProjectsInAccountSoapIn" />
+      <wsdl:output message="tns:AdminService_GetProjectsInAccountSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="AdminWebServicesHttpGet">
+    <wsdl:operation name="AdminService_GetAllVerticals">
+      <wsdl:input message="tns:AdminService_GetAllVerticalsHttpGetIn" />
+      <wsdl:output message="tns:AdminService_GetAllVerticalsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAllHorizontals">
+      <wsdl:input message="tns:AdminService_GetAllHorizontalsHttpGetIn" />
+      <wsdl:output message="tns:AdminService_GetAllHorizontalsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAssociate">
+      <wsdl:input message="tns:AdminService_GetAssociateHttpGetIn" />
+      <wsdl:output message="tns:AdminService_GetAssociateHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAccountsInVertical">
+      <wsdl:input message="tns:AdminService_GetAccountsInVerticalHttpGetIn" />
+      <wsdl:output message="tns:AdminService_GetAccountsInVerticalHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetLocation">
+      <wsdl:input message="tns:AdminService_GetLocationHttpGetIn" />
+      <wsdl:output message="tns:AdminService_GetLocationHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetFacilites">
+      <wsdl:input message="tns:AdminService_GetFacilitesHttpGetIn" />
+      <wsdl:output message="tns:AdminService_GetFacilitesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetProjectsInAccount">
+      <wsdl:input message="tns:AdminService_GetProjectsInAccountHttpGetIn" />
+      <wsdl:output message="tns:AdminService_GetProjectsInAccountHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="AdminWebServicesHttpPost">
+    <wsdl:operation name="AdminService_GetAllVerticals">
+      <wsdl:input message="tns:AdminService_GetAllVerticalsHttpPostIn" />
+      <wsdl:output message="tns:AdminService_GetAllVerticalsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAllHorizontals">
+      <wsdl:input message="tns:AdminService_GetAllHorizontalsHttpPostIn" />
+      <wsdl:output message="tns:AdminService_GetAllHorizontalsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAssociate">
+      <wsdl:input message="tns:AdminService_GetAssociateHttpPostIn" />
+      <wsdl:output message="tns:AdminService_GetAssociateHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAccountsInVertical">
+      <wsdl:input message="tns:AdminService_GetAccountsInVerticalHttpPostIn" />
+      <wsdl:output message="tns:AdminService_GetAccountsInVerticalHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetLocation">
+      <wsdl:input message="tns:AdminService_GetLocationHttpPostIn" />
+      <wsdl:output message="tns:AdminService_GetLocationHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetFacilites">
+      <wsdl:input message="tns:AdminService_GetFacilitesHttpPostIn" />
+      <wsdl:output message="tns:AdminService_GetFacilitesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetProjectsInAccount">
+      <wsdl:input message="tns:AdminService_GetProjectsInAccountHttpPostIn" />
+      <wsdl:output message="tns:AdminService_GetProjectsInAccountHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AdminWebServicesSoap" type="tns:AdminWebServicesSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AdminService_GetAllVerticals">
+      <soap:operation soapAction="http://10.242.46.141/AdminWebServices/AdminService_GetAllVerticals" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAllHorizontals">
+      <soap:operation soapAction="http://10.242.46.141/AdminWebServices/AdminService_GetAllHorizontals" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAssociate">
+      <soap:operation soapAction="http://10.242.46.141/AdminWebServices/AdminService_GetAssociate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAccountsInVertical">
+      <soap:operation soapAction="http://10.242.46.141/AdminWebServices/AdminService_GetAccountsInVertical" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetLocation">
+      <soap:operation soapAction="http://10.242.46.141/AdminWebServices/AdminService_GetLocation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetFacilites">
+      <soap:operation soapAction="http://10.242.46.141/AdminWebServices/AdminService_GetFacilites" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetProjectsInAccount">
+      <soap:operation soapAction="http://10.242.46.141/AdminWebServices/AdminService_GetProjectsInAccount" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AdminWebServicesSoap12" type="tns:AdminWebServicesSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AdminService_GetAllVerticals">
+      <soap12:operation soapAction="http://10.242.46.141/AdminWebServices/AdminService_GetAllVerticals" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAllHorizontals">
+      <soap12:operation soapAction="http://10.242.46.141/AdminWebServices/AdminService_GetAllHorizontals" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAssociate">
+      <soap12:operation soapAction="http://10.242.46.141/AdminWebServices/AdminService_GetAssociate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAccountsInVertical">
+      <soap12:operation soapAction="http://10.242.46.141/AdminWebServices/AdminService_GetAccountsInVertical" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetLocation">
+      <soap12:operation soapAction="http://10.242.46.141/AdminWebServices/AdminService_GetLocation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetFacilites">
+      <soap12:operation soapAction="http://10.242.46.141/AdminWebServices/AdminService_GetFacilites" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetProjectsInAccount">
+      <soap12:operation soapAction="http://10.242.46.141/AdminWebServices/AdminService_GetProjectsInAccount" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AdminWebServicesHttpGet" type="tns:AdminWebServicesHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="AdminService_GetAllVerticals">
+      <http:operation location="/AdminService_GetAllVerticals" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAllHorizontals">
+      <http:operation location="/AdminService_GetAllHorizontals" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAssociate">
+      <http:operation location="/AdminService_GetAssociate" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAccountsInVertical">
+      <http:operation location="/AdminService_GetAccountsInVertical" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetLocation">
+      <http:operation location="/AdminService_GetLocation" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetFacilites">
+      <http:operation location="/AdminService_GetFacilites" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetProjectsInAccount">
+      <http:operation location="/AdminService_GetProjectsInAccount" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AdminWebServicesHttpPost" type="tns:AdminWebServicesHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="AdminService_GetAllVerticals">
+      <http:operation location="/AdminService_GetAllVerticals" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAllHorizontals">
+      <http:operation location="/AdminService_GetAllHorizontals" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAssociate">
+      <http:operation location="/AdminService_GetAssociate" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetAccountsInVertical">
+      <http:operation location="/AdminService_GetAccountsInVertical" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetLocation">
+      <http:operation location="/AdminService_GetLocation" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetFacilites">
+      <http:operation location="/AdminService_GetFacilites" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdminService_GetProjectsInAccount">
+      <http:operation location="/AdminService_GetProjectsInAccount" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AdminWebServices">
+    <wsdl:port name="AdminWebServicesSoap" binding="tns:AdminWebServicesSoap">
+      <soap:address location="http://adminwebservices/Adminwebservice.asmx" />
+    </wsdl:port>
+    <wsdl:port name="AdminWebServicesSoap12" binding="tns:AdminWebServicesSoap12">
+      <soap12:address location="http://adminwebservices/Adminwebservice.asmx" />
+    </wsdl:port>
+    <wsdl:port name="AdminWebServicesHttpGet" binding="tns:AdminWebServicesHttpGet">
+      <http:address location="http://adminwebservices/Adminwebservice.asmx" />
+    </wsdl:port>
+    <wsdl:port name="AdminWebServicesHttpPost" binding="tns:AdminWebServicesHttpPost">
+      <http:address location="http://adminwebservices/Adminwebservice.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
