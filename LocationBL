@@ -1,0 +1,182 @@
+// -----------------------------------------------------------------------
+// <copyright file="LocationBL.cs" company="CTS">
+// Copyright (c) . All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+namespace VMSBusinessLayer
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
+    /// <summary>
+    /// location Business layer class
+    /// </summary>
+    public class LocationBL
+    {
+        #region Public Methods
+        ////CR---IVS01062010CR09
+
+        /// <summary>
+        /// associate without photo
+        /// </summary>
+        /// <param name="strEmployeeID">employee Id</param>
+        /// <param name="strCity">city value</param>
+        /// <param name="strFacility">facility value</param>
+        /// <param name="strCountry">country value</param>
+        /// <returns>returns associate details</returns>
+        public System.Data.DataTable Assoiciateswithoutphoto(
+            string strEmployeeID, 
+            string strCity, 
+            string strFacility, 
+            string strCountry)
+        {
+            try
+            {
+                VMSDataLayer.LocationDL objLocationDL = new VMSDataLayer.LocationDL();
+                System.Data.DataTable dtassociatedetails = objLocationDL.Assoiciateswithoutphoto(
+                    strEmployeeID, 
+                    strCity, 
+                    strFacility, 
+                    strCountry);
+                return dtassociatedetails;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        ////CR---IVS01062010CR09--end
+
+        #region GetCityDetails
+        /// <summary>
+        /// Method to retrieve city details
+        /// </summary>
+        /// <returns>City Details Data Table</returns>
+        public System.Data.DataTable GetCityDetails()
+        {
+            try
+            {
+                VMSDataLayer.LocationDL objLocationDL = new VMSDataLayer.LocationDL();
+                System.Data.DataTable dtcities = objLocationDL.GetCityDetails();
+                return dtcities;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region GetFacilityDetails
+
+        /// <summary>
+        /// Method to retrieve city details
+        /// </summary>
+        /// <param name="cityName">city name</param>
+        /// <returns>City Details Data Table</returns>
+        public System.Data.DataTable GetFacilityDetails(string cityName)
+        {
+            try
+            {
+                VMSDataLayer.LocationDL objLocationDL = new VMSDataLayer.LocationDL();
+                System.Data.DataTable dtfacility = objLocationDL.GetFacilityDetails(cityName);
+                return dtfacility;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region GetFacilities
+        /// <summary>
+        /// Method to retrieve city details
+        /// </summary>
+        /// <returns>City Details Data Table</returns>
+        public System.Data.DataTable GetFacilities()
+        {
+            try
+            {
+                VMSDataLayer.LocationDL objLocationDL = new VMSDataLayer.LocationDL();
+                System.Data.DataTable dtfacility = objLocationDL.GetFacilities();
+                return dtfacility;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion
+        #region GetLocationsForIDCardIssued
+        /// <summary>
+        /// Method to retrieve Location details of ID card issued Location
+        /// </summary>
+        /// <param name="strEmployeeID">employee Id value</param>
+        /// <param name="strCardIssueDate">card issue date</param>     
+        /// <returns>Facility Data table</returns>
+        public System.Data.DataTable GetLocationsForIDCardIssued(
+            string strEmployeeID, 
+            string strCardIssueDate)
+        {
+            try
+            {
+                VMSDataLayer.LocationDL objLocationDL = new VMSDataLayer.LocationDL();
+                System.Data.DataTable dtfacility = objLocationDL.GetLocationsForIDCardIssued(
+                    strEmployeeID, 
+                    strCardIssueDate);
+                return dtfacility;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+    }
+        #endregion    
+}
