@@ -1,0 +1,99 @@
+r42e//-----------------------------------------------------------------------
+// <copyright file="ExceptionLogger.cs" company="MyCompanyName">
+//     Copyright (c) MyCompanyName. All rights reserved.
+// </copyright>
+// <summary>
+// This file contains ExceptionLogger class.
+// </summary>
+//-----------------------------------------------------------------------
+namespace ExceptionService
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Web;
+    using ExceptionService.OneCExceptionLogger;
+
+    /// <summary>
+    /// The ExceptionLogger class
+    /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1053:StaticHolderTypesShouldNotHaveConstructors", Justification = "Reviewed")]
+    public class ExceptionLogger
+    {
+        /// <summary>
+        /// The OneC_ExceptionLogger method
+        /// </summary>
+        /// <param name="ex">The ex parameter</param>
+        /// <param name="source">The source parameter</param>        
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", Justification = "Reviewed")]
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", Justification = "Reviewed")]
+        public static void OneC_ExceptionLogger(Exception ex, object source)
+        {
+            DateTime date = DateTime.Now;
+            ExceptionLog exceptiondetails = new ExceptionLog();
+            try
+            {
+                LoggingClient logclient = new LoggingClient();
+                string onecExceptionMsg = string.Empty;
+                var frame = new StackFrame(0);
+                exceptiondetails.ApplicationName = "Physical Security";
+                exceptiondetails.ClassName = frame.GetMethod().ReflectedType.FullName;
+                exceptiondetails.MethodName = frame.GetMethod().Name;
+                exceptiondetails.Message = ex.Message;
+                exceptiondetails.StackTrace = ex.StackTrace;
+                exceptiondetails.ApplicationType = ApplicationType.WebApplication;
+                exceptiondetails.EmployeeID = HttpContext.Current.Session["LoginID"].ToString();
+                exceptiondetails.GlobalAppId = 1496;
+                exceptiondetails.MachineName = Environment.MachineName;
+                exceptiondetails.Message = ex.Message.ToString();
+                onecExceptionMsg = ex.Message.ToString();
+                logclient.LogExceptionEntry(exceptiondetails);
+                
+                    HttpContext.Current.Response.Redirect("ErrorPage.aspx", true);
+              
+               
+                // Context.ApplicationInstance.CompleteRequest();
+            }
+            catch (System.Threading.ThreadAbortException exp)
+            {
+
+            }
+            catch (Exception)
+            {
+                
+                try
+                {
+                    
+                    string onecExceptionMsg = string.Empty;
+                    var frame = new StackFrame(0);
+                    exceptiondetails.MethodName = frame.GetMethod().Name+"; Class Name:"+ frame.GetMethod().ReflectedType.FullName+"; Machine: "+ Environment.MachineName+"; Associate Id:" + HttpContext.Current.Session["LoginID"].ToString();
+                    exceptiondetails.Message = ex.Message;
+                    exceptiondetails.StackTrace = ex.StackTrace;
+                    VMSBusinessLayer.VMSBusinessLayer objexceptionLogger = new VMSBusinessLayer.VMSBusinessLayer();
+                    objexceptionLogger.LogException(exceptiondetails.Message, exceptiondetails.MethodName, exceptiondetails.StackTrace);
+                     
+                        HttpContext.Current.Response.Redirect("ErrorPage.aspx", true);
+                    
+                    
+                    // Context.ApplicationInstance.CompleteRequest();
+
+
+
+
+                }
+                catch (System.Threading.ThreadAbortException exp)
+                {
+
+                }
+                catch (Exception)
+                {
+                    
+                }
+            }
+        }
+    }
+}
