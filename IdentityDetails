@@ -1,0 +1,35 @@
+
+
+namespace VMSBusinessEntity
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
+    /// <summary>
+    /// TODO: Update summary.
+    /// </summary>
+    public class IdentityDetails
+    {
+        /// <summary>
+        /// Gets or sets the IdentityID property
+        /// </summary>        
+        public int IdentityID { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the VisitorID property
+        /// </summary>        
+        public int VisitorID { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the IdentityType property
+        /// </summary>        
+        public string IdentityType { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the IdentityNo property
+        /// </summary>        
+        public string IdentityNo { get; set; }
+    }
+}
