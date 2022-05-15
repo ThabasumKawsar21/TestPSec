@@ -1,0 +1,1732 @@
+
+
+namespace VMSBusinessLayer
+{
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+
+       /// <summary>
+    /// employee business layer class
+        /// </summary>
+    public class EmployeeBL
+        {
+        #region SaveAssociateInformation
+
+        ////Begin Changes IVS CR006 Vimal
+
+        /// <summary>
+        /// Method to Save Associate Information
+        /// </summary>
+        /// <param name="associateID">associate Id value</param>
+        /// <param name="strCheckStatus">check status</param>
+        ///  <param name="intCardcount">card count</param>
+        ///  <param name="strAdminID">admin Id</param>
+        ///  <param name="strLocationID">location id</param>
+        /// <returns>Save Flag integer value</returns>
+        public ArrayList SaveAssociateInformation(string associateID, string strCheckStatus, int intCardcount, string strAdminID, string strLocationID)
+        {
+            try
+            {
+                ////int SaveFlag;
+                ////SaveFlag = new EmployeeDL().SaveAssociateInformation(AssociateID, strCheckStatus, IntCardcount, strAdminID, strLocationID);
+                ArrayList list = new VMSDataLayer.EmployeeDL().SaveAssociateInformation(associateID, strCheckStatus, intCardcount, strAdminID, strLocationID);
+                return list;
+                ////return SaveFlag;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        ////End Changes IVS CR006 Vimal
+        #endregion
+
+        #region IsCardIssuedLocation
+
+        /// <summary>
+        /// Is card issued location
+        /// </summary>
+        /// <param name="strAssociateID">associate Id</param>
+        /// <param name="intLocationID">location Id</param>
+        /// <returns>returns string value</returns>
+        public string IsCardIssuedLocation(string strAssociateID, int intLocationID)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmp = new VMSDataLayer.EmployeeDL();
+                string strReturnValue = objEmp.IsCardIssuedLocation(strAssociateID, intLocationID);
+                return strReturnValue;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region CheckInAssociate
+        ////public string CheckInAssociate(string AssociateID, string strAdminID, string strLocationID)
+
+        /// <summary>
+        /// Check in associate
+        /// </summary>
+        /// <param name="associateID">associate id value</param>
+        /// <param name="strAdminID">admin Id value</param>
+        /// <param name="strLocationID">location Id value</param>
+        /// <param name="strReason">Reason Id value</param>
+        /// <param name="dtfromDate1">from Date 1</param>
+        /// <param name="dtfromDate">from Date</param>
+        /// <param name="dttoDate">to date value</param>
+        /// <param name="cardType">card type</param>
+        /// <returns>associate details</returns>
+        public string CheckInAssociate(string associateID, string strAdminID, string strLocationID, string strReason, DateTime dtfromDate1, DateTime dtfromDate, DateTime dttoDate, string cardType)
+        {
+            try
+            {
+                string list = new VMSDataLayer.EmployeeDL().CheckInAssociate(associateID, strAdminID, strLocationID, strReason, dtfromDate1, dtfromDate, dttoDate, cardType);
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Duplicate IVS entry
+        /// </summary>
+        /// <param name="associateID">associate Id</param>
+        /// <param name="strAdminID">admin Id value</param>
+        /// <param name="strLocationID">location Id value</param>
+        /// <param name="strReason">Reason value</param>
+        /// <param name="dtfromDate">from date</param>
+        /// <param name="dttoDate">to date</param>
+        /// <returns>returns duplicate IVS value</returns>
+        public int DuplicateIVSEntry(string associateID, string strAdminID, string strLocationID, string strReason, DateTime dtfromDate, DateTime dttoDate)
+        {
+            try
+            {
+                int duplicate = new VMSDataLayer.EmployeeDL().DuplicateIVSEntry(associateID, strAdminID, strLocationID, strReason, dtfromDate, dttoDate);
+                return duplicate;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region CheckOutAssociate
+
+        /// <summary>
+        /// check out associate
+        /// </summary>
+        /// <param name="passNumber">pass number</param>
+        /// <param name="strAdminID">admin Id</param>
+        /// <param name="badgeStatus">badge status</param>
+        /// <param name="bdgestatusDesr">badge status description</param>
+        /// <param name="strLocation">location value</param>
+        /// <returns>returns associate check out details</returns>
+        public string CheckOutAssociate(string passNumber, string strAdminID, string badgeStatus, string bdgestatusDesr, string strLocation,DateTime currenttime)
+        {
+            try
+            {
+                return new VMSDataLayer.EmployeeDL().CheckOutAssociate(passNumber, strAdminID, badgeStatus, bdgestatusDesr, strLocation, currenttime);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+        /*code by ram*/
+        #region GetlostStatus
+
+        /// <summary>
+        /// Get lost status
+        /// </summary>
+        /// <param name="passdetailID">pass detail Id</param>
+        /// <returns>returns get lost details</returns>
+        public DataSet GetlostStatus(int passdetailID)
+        {
+            try
+            {
+                return new VMSDataLayer.EmployeeDL().GetlostStatus(passdetailID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion
+        /*code by ram*/
+        /*code by ram*/
+        #region GetlocationfromGSMS
+
+        /// <summary>
+        /// Get location from GSMS
+        /// </summary>
+        /// <param name="locationid">location Id</param>
+        /// <returns>returns location details from GSMS</returns>
+        public DataSet GetlocationfromGSMS(string locationid)
+        {
+            try
+            {
+                return new VMSDataLayer.EmployeeDL().GetlocationfromGSMS(locationid);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        /*code by ram*/
+
+        #region SaveReprintDetails
+
+        /// <summary>
+        /// save reprint details
+        /// </summary>
+        /// <param name="passDetailsID">pass details Id</param>
+        /// <param name="securityID">security Id</param>
+        /// <param name="strComments">comments value</param>
+        /// <returns>returns status of saved reprint details</returns>
+        public bool SaveReprintDetails(int passDetailsID, string securityID, string strComments)
+        {
+            try
+            {
+                return new VMSDataLayer.EmployeeDL().SaveReprintDetails(passDetailsID, securityID, strComments);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region GetODICardsIssued
+
+        /// <summary>
+        /// Get ODI cards issued
+        /// </summary>
+        /// <param name="strLocation">location value</param>
+        /// <param name="strAssociateID">associate Id</param>
+        /// <returns>returns ODI cards details</returns>
+        public DataSet GetODICardsIssued(string strLocation, string strAssociateID,DateTime curDate)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                return objEmployeeDetailsDL.GetODICardsIssued(strLocation, strAssociateID,curDate);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region GetLostMailerPOCID
+
+        /// <summary>
+        /// Get Lost Mailer POC Id
+        /// </summary>
+        /// <param name="strLocation">location value</param>
+        /// <returns>returns get lost mailer POC Id</returns>
+        public DataSet GetLostMailerPOCID(string strLocation)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                return objEmployeeDetailsDL.GetLostMailerPOCID(strLocation);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        ////added by Krishna(449138) fro temp accesscard
+        #region GetLostMailerACCPOCID
+
+        /// <summary>
+        /// Get lost mailer ACC POC Id
+        /// </summary>
+        /// <param name="strLocation">location value</param>
+        /// <returns>returns lost mailer details</returns>
+        public DataSet GetLostMailerACCPOCID(string strLocation)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                return objEmployeeDetailsDL.GetLostMailerACCPOCID(strLocation);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion 
+
+        #region SaveLaptopInformation
+
+        /// <summary>
+        /// Method to Save Laptop Information
+        /// </summary>
+        /// <param name="strAssociateID">associate id value</param>
+        /// <param name="strCheckStatus">check status</param>
+        /// <param name="strUserID">user Id value</param>
+        /// <param name="strLocationID">location Id</param>
+        /// <param name="strAssetNumber">asset number</param>
+        /// <param name="strSerialNumber">serial number</param>
+        /// <returns>Save flag string</returns>
+        public int SaveLaptopInformation(string strAssociateID, string strCheckStatus, string strUserID, string strLocationID, string strAssetNumber, string strSerialNumber)
+        {
+            try
+            {
+                int saveFlag;
+                saveFlag = new VMSDataLayer.EmployeeDL().SaveLaptopInformation(strAssociateID, strCheckStatus, strUserID, strLocationID, strAssetNumber, strSerialNumber);
+                return saveFlag;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+        ////LVS17052010CR07 start
+
+        #region Incompleteverificationupdation
+
+        /// <summary>
+        /// Method to Save Laptop Information
+        /// </summary>
+        /// <param name="strAssociateID">associate Id value</param>
+        /// <param name="strUserID">user id value</param> 
+        /// <param name="strLocationID">location id value</param>
+        /// <param name="popupdetails">pop up details</param>    
+        /// <returns>Save Flag string</returns>
+        public DataSet Incompleteverificationupdation(string strAssociateID, string strUserID, string strLocationID, string popupdetails)
+        {
+            try
+            {
+                DataSet dscarddetails = new DataSet();
+                dscarddetails = new VMSDataLayer.EmployeeDL().Incompleteverificationupdation(strAssociateID, strUserID, strLocationID, popupdetails);
+                return dscarddetails;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        ////LVS17052010CR07 end
+
+        #region ValidatePassDetails
+
+        /// <summary>
+        /// Method to Validate Pass Details
+        /// </summary>
+        /// <param name="associateID">associate Id value</param>
+        /// <param name="passIssuedDate">pass issued date</param>
+        /// <param name="passReturnedDate">pass returned date</param>
+        /// <param name="locationCity">location city</param>
+        ///  <param name="strLocationID">location id value</param>       
+        /// <returns>Error Message string</returns>
+        public int ValidatePassDetails(string associateID, string passIssuedDate, string passReturnedDate, string locationCity, string strLocationID)
+        {
+            try
+            {
+                //// 181795 code starts here regarding the CR
+                int checkFlag;
+                checkFlag = new VMSDataLayer.EmployeeDL().ValidatePassDetails(associateID, passIssuedDate, passReturnedDate, locationCity, strLocationID);
+                return checkFlag;
+                //// 181795 code Ends here regarding the CR
+
+                ////string strErrorMessage;
+                ////strErrorMessage = new EmployeeDL().ValidatePassDetails(AssociateID, IssuedDate, strLocationID);
+                //// return strErrorMessage;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region ValidateLaptopDetails
+        /// <summary>
+        /// Method to Validate LaptopDetails
+        /// </summary>
+        /// <param name="strParameter">parameter value</param> 
+        /// <param name="strSelectFlag">select flag value</param>  
+        /// <returns>Error Message string</returns>
+        public string ValidateLaptopDetails(string strParameter, string strSelectFlag)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                string strErrorMessage = objEmployeeDetailsDL.ValidateLaptopDetails(strParameter, strSelectFlag);
+                return strErrorMessage;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region ValidateAssociateDetails
+        /// <summary>
+        /// Method to Validate Associate Details
+        /// </summary>
+        /// <param name="associateId">associate Id</param>          
+        /// <returns>Error Message string</returns>
+        public bool ValidateAssociateDetails(string associateId)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                int intFlag = objEmployeeDetailsDL.ValidateAssociateDetails(associateId);
+                if (intFlag != 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+            }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Validate associate image details
+        /// </summary>
+        /// <param name="associateId">associate Id</param>
+        /// <returns>returns flag value</returns>
+        public int ValidateAssociateImageDetails(string associateId)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                int intFlag = objEmployeeDetailsDL.ValidateAssociateDetails(associateId);
+                return intFlag;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region ValidateLaptopUserDetails
+        /// <summary>
+        /// Method to Validate Laptop User Details
+        /// </summary>
+        /// <param name="associateID">associate id</param>
+        /// <param name="laptopPassIssuedDate">laptop pass issued date</param> 
+        /// <param name="laptopPassReturnedDate">laptop pass returned date</param>
+        /// <param name="locationCity">location city value</param>
+        /// <param name="strLocationID">location Id</param>
+        /// <returns>Check Flag string</returns>
+        public int ValidateLaptopUserDetails(string associateID, string laptopPassIssuedDate, string laptopPassReturnedDate, string locationCity, string strLocationID)
+        {
+            try
+            {
+                int checkFlag;
+                checkFlag = new VMSDataLayer.EmployeeDL().ValidateLaptopUserDetails(associateID, laptopPassIssuedDate, laptopPassReturnedDate, locationCity, strLocationID);
+                return checkFlag;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region ValidateLoginUser
+        /// <summary>
+        /// Method to Validate Laptop User Details
+        /// </summary>
+        /// <param name="strAssociateId">associate Id value</param>
+        /// <param name="strPassword">password value</param>        
+        /// <returns>Error Message string</returns>
+        public string ValidateLoginUser(string strAssociateId, string strPassword)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                string strErrorMessage = objEmployeeDetailsDL.ValidateLoginUser(strAssociateId, strPassword);
+                return strErrorMessage;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region ApplicantImageUpload
+
+        /// <summary>
+        /// validate candidate Id
+        /// </summary>
+        /// <param name="applicantID">applicant Id value</param>
+        /// <returns>returns validated value</returns>
+        public bool ValidateCandidateID(string applicantID)
+        {
+            try
+            {
+                VMSDataLayer.VMSDataLayer.MasterDataDL objEmployeeDL = new VMSDataLayer.VMSDataLayer.MasterDataDL();
+
+                return objEmployeeDL.ValidateCandidatID(applicantID);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        /// <summary>
+        /// insert applicant Image in DB
+        /// </summary>
+        /// <param name="applicantID">applicant Id value</param>
+        /// <param name="strImgPath">Image path value</param>
+        /// <param name="strbloodGroup">blood group</param>
+        /// <param name="emergencyContact">emergency contact</param>
+        /// <param name="location">location value</param>
+        /// <param name="adminID">admin Id</param>
+        /// <returns>returns status of inserted data</returns>
+        public int InsertApplicantImgInDB(string applicantID, string strImgPath, string strbloodGroup, string emergencyContact, string location, string adminID)
+        {
+            VMSDataLayer.VMSDataLayer.MasterDataDL objEmployeeDL = new VMSDataLayer.VMSDataLayer.MasterDataDL();
+            //// EmployeeDL  objEmployeeDL = new EmployeeDL();
+            string strBinaryDataImg;
+            string strEncryptedBinaryData;
+            int n = 0;
+            try
+            {
+                if (strImgPath.ToUpper().Contains("ASSOCIATEIMAGE"))
+                {
+                    strBinaryDataImg = this.ReadFile(strImgPath);
+                    strEncryptedBinaryData = this.EncrpytBinaryData(strBinaryDataImg);
+                }
+                else
+                {
+                    strEncryptedBinaryData = this.EncrpytBinaryData(strImgPath);
+                }
+
+                if (strEncryptedBinaryData != null && strEncryptedBinaryData != string.Empty)
+                {
+                    n = objEmployeeDL.InsertApplicantImgInDB(applicantID, strEncryptedBinaryData, strbloodGroup, emergencyContact, location, adminID);
+                }
+
+                return n;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        #endregion
+
+        #region ApplicantIDByAssociateID
+
+        /// <summary>
+        /// Get applicant Id by associate Id
+        /// </summary>
+        /// <param name="associateID">associate Id value</param>
+        /// <returns>returns applicant Id</returns>
+        public string GetApplicantIDByAssociateID(string associateID)
+        {
+            VMSDataLayer.EmployeeDL uploadAssociate = new VMSDataLayer.EmployeeDL();
+            try
+            {
+                return uploadAssociate.GetApplicantIDByAssociateID(associateID);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        #endregion
+
+        #region GetIDCardLocations
+
+        /// <summary>
+        /// Get Id card locations
+        /// </summary>
+        /// <returns>get location value</returns>
+        public DataTable GetIDCardLocations()
+        {
+            VMSDataLayer.EmployeeDL getLocation = new VMSDataLayer.EmployeeDL();
+            try
+            {
+                return getLocation.GetIDCardLocations().Tables[0];
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        #endregion
+
+        #region AssociateIDUpload
+
+        /// <summary>
+        /// Upload associate IDs
+        /// </summary>
+        /// <param name="associateID">associate Id value</param>
+        /// <returns>returns uploaded associate Ids</returns>
+        public DataSet UploadAssociateIDs(DataTable associateID)
+        {
+            int count = 0;
+            VMSDataLayer.EmployeeDL uploadAssociate = new VMSDataLayer.EmployeeDL();
+            DataSet ds = new DataSet();
+            DataTable dtcount = new DataTable();
+            dtcount.Columns.Add("Count", typeof(int));
+            DataTable dterror = new DataTable();
+            dterror.Columns.Add("ApplicantID", typeof(string));
+            dterror.Columns.Add("AssociateID", typeof(string));
+
+            dterror.Columns.Add("AssociateName", typeof(string));
+            dterror.Columns.Add("BloodGroup", typeof(string));
+            dterror.Columns.Add("EmergencyContact", typeof(string));
+            dterror.Columns.Add("Error", typeof(string));
+            try
+            {
+                foreach (DataRow dr in associateID.Rows)
+                {
+                    switch (this.ValidateID(dr))
+                    {
+                        case 0:
+                            if (uploadAssociate.UpdateAssociateID(dr["ApplicantID"].ToString(), dr["AssociateID"].ToString(), dr["AssociateName"].ToString(), dr["BloodGroup"].ToString(), dr["EmergencyContact"].ToString()))
+                            {
+                                count++;
+                                break;
+                            }
+                            else
+                            {
+                                dterror.Rows.Add(dr["ApplicantID"].ToString(), dr["AssociateID"].ToString(), dr["AssociateName"].ToString(), "ApplicantID doesnot exist");
+                            }
+
+                            break;
+                        case 1:
+                            dterror.Rows.Add(dr["ApplicantID"].ToString(), dr["AssociateID"].ToString(), dr["AssociateName"].ToString(), "Invalid AssociateID");
+                            break;
+                        case 2:
+                            dterror.Rows.Add(dr["ApplicantID"].ToString(), dr["AssociateID"].ToString(), dr["AssociateName"].ToString(), "Invalid ApplicantID");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                dtcount.Rows.Add(count);
+                ds.Tables.Add(dtcount);
+                ds.Tables.Add(dterror);
+                return ds;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                dtcount = null;
+                associateID = null;
+                dterror = null;
+                ds = null;
+            }
+        }
+
+        /// <summary>
+        /// Validate Id
+        /// </summary>
+        /// <param name="dr">data row</param>
+        /// <returns>returns status</returns>
+        public int ValidateID(DataRow dr)
+        {
+            try
+            {
+                if (dr["ApplicantID"].ToString().Length == 16)
+                {
+                    if (Convert.ToInt64(dr["AssociateID"].ToString()) <= 999999)
+                    {
+                        return 0;
+                    }
+                    else
+                    {
+                        return 1;
+                }
+                }
+                else
+                {
+                    return 2;
+            }
+            }
+            catch (FormatException)
+            {
+                return 1;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region GetImageFilesAndStoreInDB
+        /// <summary>
+        /// Method to store the photo image in Database
+        /// </summary>
+        /// <param name="strImgPath">image path</param>
+        /// <param name="strAssociateID">associate Id</param>
+        /// <returns>returns image files and store in DB</returns>
+        public bool GetImageFilesAndStoreInDB(string strImgPath, string strAssociateID)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDL = new VMSDataLayer.EmployeeDL();
+                string strBinaryDataImg;
+                string strEncryptedBinaryData;
+
+                if (strImgPath.ToUpper().Contains("ASSOCIATEIMAGE"))
+                {
+                    strBinaryDataImg = this.ReadFile(strImgPath);
+                    strEncryptedBinaryData = this.EncrpytBinaryData(strBinaryDataImg);
+                }
+                else
+                {
+                    strEncryptedBinaryData = this.EncrpytBinaryData(strImgPath);
+                }
+
+                if (strEncryptedBinaryData != null && strEncryptedBinaryData != string.Empty)
+                {
+                    objEmployeeDL.UpdateUserImgInDB(strAssociateID, strEncryptedBinaryData);
+                }
+
+                return true;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region GetUserDetails
+        /// <summary>
+        /// Method to get UserName 
+        /// </summary>
+        /// <param name="strUserId">user Id</param>
+        /// <returns>record Hash table</returns>
+        public Hashtable GetUserDetails(string strUserId)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetails = new VMSDataLayer.EmployeeDL();
+                Hashtable htrecord = new Hashtable();
+                htrecord = objEmployeeDetails.GetUserDetails(strUserId);
+                return htrecord;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region GetEmployeeList
+        /// <summary>
+        /// Method to retrieve Employee List
+        /// </summary>
+        /// <param name="strEmployeeID">employee Id</param>
+        /// <param name="strLocation">location Id</param> 
+        ///  <param name="strStartDate">start date</param>
+        /// <param name="strEndDate">end date</param>  
+        /// <param name="countryId">country id</param>
+        /// <param name="facility">facility value</param>
+        /// <returns>Employee List Data table</returns>
+        public System.Data.DataTable GetEmployeeList(string strEmployeeID, string strLocation, string strStartDate, string strEndDate, string countryId, string facility)
+        {
+            VMSDataLayer.EmployeeDL objEmployeeDetailDL = new VMSDataLayer.EmployeeDL();
+            DataTable dtemployeeList = new DataTable();
+            try
+            {
+                if (string.IsNullOrEmpty(strEmployeeID))
+                {
+                    strEmployeeID = null;
+                }
+
+                dtemployeeList = objEmployeeDetailDL.IDCardIssuedReport(strEmployeeID, strLocation, strStartDate, strEndDate, countryId, facility);
+                return dtemployeeList;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                objEmployeeDetailDL = null;
+                dtemployeeList = null;
+            }
+        }
+        #endregion
+
+        #region GetLaptopUsersList
+        /// <summary>
+        /// Method to retrieve Laptop Users List
+        /// </summary>
+        /// <param name="strEmployeeID">Employee Id value</param>
+        /// <param name="strLocation">Location value</param> 
+        ///  <param name="strStartDate">Start date value</param>
+        /// <param name="strEndDate">end date value</param>  
+        /// <returns>Employee List Data table</returns>
+        public System.Data.DataTable GetLaptopUsersList(string strEmployeeID, string strLocation, string strStartDate, string strEndDate)
+        {
+            VMSDataLayer.EmployeeDL objEmployeeDetailDL = new VMSDataLayer.EmployeeDL();
+            DataTable dtemployeeList = new DataTable();
+            try
+            {
+                dtemployeeList = objEmployeeDetailDL.GetLaptopUsersList(strEmployeeID, strLocation, strStartDate, strEndDate);
+                return dtemployeeList;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                objEmployeeDetailDL = null;
+                dtemployeeList = null;
+            }
+        }
+        #endregion
+
+        #region GetLVSEmployeeDetails
+
+        /// <summary>
+        /// Method to retrieve Employee Details of Laptop Users
+        /// </summary>
+        /// <param name="associateId">associate Id</param>
+        /// <returns>Employee Information Data row</returns>
+        public System.Data.DataRow GetLVSEmployeeDetails(string associateId)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                DataRow dremployeeInfo = objEmployeeDetailsDL.GetLVSEmployeeDetails(associateId);
+                return dremployeeInfo;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region MoveImagesToFolder
+
+        /// <summary>
+        /// Move images to folder
+        /// </summary>
+        /// <param name="adminID">admin Id value</param>
+        /// <param name="dt">date time value</param>
+        /// <returns>returns employees details</returns>
+        public DataTable MoveImagesToFolder(string adminID, DateTime dt)
+        {
+            VMSBusinessLayer.UserDetailsBL location = new VMSBusinessLayer.UserDetailsBL();
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                DataSet dslocation = location.GetIDCardLocation(adminID);
+                string strLocation = dslocation.Tables[0].Rows[0]["Location"].ToString().Trim();
+                return objEmployeeDetailsDL.MoveImagesToFolder(strLocation, dt);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region ApplicantNoImageReport
+
+        /// <summary>
+        /// get applicant Number image report
+        /// </summary>
+        /// <param name="adminID">admin Id</param>
+        /// <param name="fromDate">from date</param>
+        /// <param name="todate">to date</param>
+        /// <returns>returns employee details</returns>
+        public DataTable GetApplicantNoImageReport(string adminID, string fromDate, string todate)
+        {
+            VMSBusinessLayer.UserDetailsBL location = new VMSBusinessLayer.UserDetailsBL();
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                string strLocation = location.GetIDCardLocation(adminID).Tables[1].Rows[0]["LocationID"].ToString();
+                return objEmployeeDetailsDL.GetApplicantNoImageReport(strLocation, fromDate, todate);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Get applicant number image
+        /// </summary>
+        /// <param name="applicantID">applicant Id</param>
+        /// <returns>returns employee details</returns>
+        public DataTable GetApplicantNoImage(string applicantID)
+        {
+            VMSBusinessLayer.UserDetailsBL location = new VMSBusinessLayer.UserDetailsBL();
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                return objEmployeeDetailsDL.GetApplicantNoImage(applicantID);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region SubmitImageChangeRequest
+
+        /// <summary>
+        /// submit image change request
+        /// </summary>
+        /// <param name="strAssociateID">associate Id</param>
+        /// <param name="strImgPath">image path value</param>
+        /// <param name="strUserId">user Id value</param>
+        /// <param name="strComments">comments value</param>
+        /// <returns>returns employee details</returns>
+        public bool SubmitImageChangeRequest(string strAssociateID, string strImgPath, string strUserId, string strComments)
+        {
+            try
+            {
+                string strBinaryDataImg = this.ReadFile(strImgPath);
+                string strEncryptedBinaryData;
+                strEncryptedBinaryData = this.EncrpytBinaryData(strBinaryDataImg);
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                return objEmployeeDetailsDL.SubmitImageChangeRequest(strAssociateID, strEncryptedBinaryData, strUserId, strComments);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region ApproveRejectImageChangeRequest
+
+        /// <summary>
+        /// approve reject image change request
+        /// </summary>
+        /// <param name="approve">approve value</param>
+        /// <param name="intRequestID">request Id</param>
+        /// <param name="strAdminId">admin id</param>
+        /// <param name="strApproverComments">approver comments</param>
+        /// <returns>returns employees details</returns>
+        public bool ApproveRejectImageChangeRequest(bool approve, int intRequestID, string strAdminId, string strApproverComments)
+        {
+            bool result = false;
+            VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+            try
+            {
+                if (approve)
+                {
+                    result = objEmployeeDetailsDL.ApproveImageUploadRequest(intRequestID, strAdminId, strApproverComments);
+                }
+                else
+                {
+                    result = objEmployeeDetailsDL.RejectImageUploadRequest(intRequestID, strAdminId, strApproverComments);
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region ImgChangeRequestDetails
+
+        /// <summary>
+        /// image change request details
+        /// </summary>
+        /// <param name="strAssociateID">associate Id value</param>
+        /// <returns>employee details</returns>
+        public DataSet ImgChangeRequestDetails(string strAssociateID)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                return objEmployeeDetailsDL.ImgChangeRequestDetails(strAssociateID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region ImgChangeRequestDetailswithReqID
+
+        /// <summary>
+        /// Image change request details with request Id
+        /// </summary>
+        /// <param name="requestID">request id</param>
+        /// <returns>employee details</returns>
+        public DataSet ImgChangeRequestDetailswithReqID(int requestID)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                return objEmployeeDetailsDL.ImgChangeRequestDetailswithReqID(requestID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Manage Image Outlook Integration
+        /// </summary>
+        /// <param name="associateId">associate Id</param>
+        /// <param name="isIntegrated">integrated value</param>
+        /// <returns>employee details</returns>
+        public bool ManageImageOutlookIntegration(string associateId, bool isIntegrated)
+        {
+            VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+            return objEmployeeDetailsDL.ManageImageOutlookIntegration(associateId, isIntegrated);
+        }
+        #endregion
+
+        #region GetAllImageChangeRequests
+
+        /// <summary>
+        /// Get all image change requests
+        /// </summary>
+        /// <param name="startIndex">start index value</param>
+        /// <param name="pageSize">page size</param>
+        /// <param name="sortBy">sort by</param>
+        /// <returns>employee details</returns>
+        public DataSet GetAllImageChangeRequests()
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                return objEmployeeDetailsDL.GetAllImageChangeRequests();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Get all image change requests
+        /// </summary>
+        /// <param name="startIndex">start index value</param>
+        /// <param name="pageSize">page size</param>
+        /// <param name="sortBy">sort by</param>
+        /// <returns>employee details</returns>
+        public DataSet GetApproverComments()
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                return objEmployeeDetailsDL.GetApproverComments();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #region GetUploadedImageDetails
+
+        /// <summary>
+        /// Get uploaded image details
+        /// </summary>
+        /// <param name="requestID">request Id</param>
+        /// <returns>returns result</returns>
+        public string GetUploadedImageDetails(string requestID)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                //// Byte[] dByte;
+                var result = objEmployeeDetailsDL.GetUploadedImageDetails(requestID);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region GetApplicantImageDetails
+        ////Vimal
+
+        /// <summary>
+        /// Get applicant image details
+        /// </summary>
+        /// <param name="applicantId">applicant Id</param>
+        /// <returns>returns result</returns>
+        public byte[] GetApplicantImageDetails(string applicantId)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                byte[] dbyte;
+                //// DataRow drEmployeeInfo = objEmployeeDetailsDL.GetApplicantImageDetails(ApplicantId);
+                string dremployeeInfo = objEmployeeDetailsDL.GetApplicantImageDetails(applicantId);
+                if (!string.IsNullOrEmpty(dremployeeInfo))
+                {
+                    string strDecryptedBinaryData = this.DecryptBinaryData(dremployeeInfo);
+                    dbyte = Encoding.Default.GetBytes(strDecryptedBinaryData);
+                    return dbyte;
+                }
+                else
+                {
+                    return null;
+            }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region GetEmployeeImageDetails
+        /// <summary>
+        /// Method to get Employee Image Details
+        /// </summary>
+        /// <param name="associateId">Associate Id</param>          
+        /// <returns>DBYTE Byte array</returns>
+        public string GetEmployeeImageDetails(string associateId)
+        {
+            string fileContentID = string.Empty;
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                DataRow dremployeeInfo = objEmployeeDetailsDL.GetEmployeeImageDetails(associateId);
+                if (dremployeeInfo["FileContentID"] != null)
+                {
+                    fileContentID = dremployeeInfo["FileContentID"].ToString().Trim();
+                }
+
+                return fileContentID;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        ////public Byte[] GetEmployeeImageDetails(string AssociateId)
+        ////{
+        ////    try
+        ////    {
+        ////        EmployeeDL objEmployeeDetailsDL = new EmployeeDL();
+        ////        Byte[] dByte;
+        ////        DataRow drEmployeeInfo = objEmployeeDetailsDL.GetEmployeeImageDetails(AssociateId);
+        ////        if (drEmployeeInfo["AssociateImage"] != null)
+        ////        {
+        ////            string strDecryptedBinaryData = DecryptBinaryData(drEmployeeInfo["AssociateImage"].ToString());
+        ////            dByte = Encoding.Default.GetBytes(strDecryptedBinaryData);
+        ////            return dByte;
+        ////        }
+        ////        return null;
+        ////    }
+        ////    catch (System.Data.SqlClient.SqlException ex)
+        ////    {
+        ////        throw ex;
+        ////    }
+        ////    catch (System.NullReferenceException ex)
+        ////    {
+        ////        throw ex;
+        ////    }
+        ////    catch (Exception ex)
+        ////    {
+        ////        throw ex;
+        ////    }
+        ////}
+        #endregion
+
+        #region GetEmployeeDetails
+        /// <summary>
+        /// Method to get Employee Image Details
+        /// </summary>
+        /// <param name="associateId">associate Id</param>          
+        /// <returns>Employee Information Data row</returns>
+        public System.Data.DataRow GetEmployeeDetails(string associateId)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                DataRow dremployeeInfo = objEmployeeDetailsDL.GetEmployeeDetails(associateId);
+                return dremployeeInfo;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Method to get Terminated Employee Image Details
+        /// </summary>
+        /// <param name="associateId">associate Id</param>          
+        /// <returns>Employee Information Data row</returns>
+        ////COMMENTED FOR CR 37
+        public System.Data.DataRow GetTerminatedEmployeeDetails(string associateId)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                DataRow dremployeeInfo = objEmployeeDetailsDL.GetTerminatedEmployeeDetails(associateId);
+                return dremployeeInfo;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Get employee details associate
+        /// </summary>
+        /// <param name="associateId">associate Id</param>
+        /// <returns>returns employee details</returns>
+        public System.Data.DataRow GetEmployeeDetails_Associate(string associateId)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                DataRow dremployeeInfo = objEmployeeDetailsDL.GetEmployeeDetails_Associate(associateId);
+                return dremployeeInfo;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region GetTempIDCardDetails
+
+        /// <summary>
+        /// Get temporary Id card details
+        /// </summary>
+        /// <param name="passDetailsId">pass details Id</param>
+        /// <returns>returns result</returns>
+        public DataSet GetTempIDCardDetails(string passDetailsId)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                DataSet dsreturnSet = objEmployeeDetailsDL.GetTempIDCardDetails(passDetailsId);
+                return dsreturnSet;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion
+        #region GetLaptopDetails
+
+        /// <summary>
+        /// Method to get Laptop Information
+        /// </summary>
+        /// <param name="AssociateId"></param>          
+        /// <returns>drEmployeeInfo Datarow</returns>
+        ////public System.Data.DataRow GetLaptopDetails(string AssociateId, string strassetno)
+        ////{
+        ////    try
+        ////    {
+        ////        EmployeeDL objEmployeeDetailsDL = new EmployeeDL();
+        ////        DataRow drEmployeeInfo = objEmployeeDetailsDL.GetLaptopDetails(AssociateId, strassetno);
+        ////        return drEmployeeInfo;
+        ////    }
+        ////    catch (System.Data.SqlClient.SqlException ex)
+        ////    {
+        ////        throw ex;
+        ////    }
+        ////    catch (System.NullReferenceException ex)
+        ////    {
+        ////        throw ex;
+        ////    }
+        ////    catch (Exception ex)
+        ////    {
+        ////        throw ex;
+        ////    }
+        ////}
+        #endregion
+
+        #region BulkUploadAssocaiteImages
+
+        /// <summary>
+        /// Get bulk upload Id
+        /// </summary>
+        /// <param name="strAdminID">admin Id value</param>
+        /// <returns>returns status</returns>
+        public int GetBulkUploadId(string strAdminID)
+        {
+            int intBulkUploadID = 0;
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                intBulkUploadID = objEmployeeDetailsDL.GetBulkUploadId(strAdminID);
+                return intBulkUploadID;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// insert image upload details
+        /// </summary>
+        /// <param name="intBulkUploadID">bulk upload Id</param>
+        /// <param name="strFileName">file name</param>
+        /// <param name="issuccess">success value</param>
+        /// <param name="intErrorMessage">error message</param>
+        public void InsertImageuploadDetails(
+            int intBulkUploadID, 
+            string strFileName, 
+            bool issuccess, 
+            int intErrorMessage)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                objEmployeeDetailsDL.InsertImageuploadDetails(
+                    intBulkUploadID, 
+                    strFileName, 
+                    issuccess, 
+                    intErrorMessage);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// get bulk upload details
+        /// </summary>
+        /// <param name="intBulkUploadID">bulk upload details</param>
+        /// <returns>returns employee details</returns>
+        public DataSet GetBulkUploadDetails(int intBulkUploadID)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                return objEmployeeDetailsDL.GetBulkUploadDetails(intBulkUploadID);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Get next bulk upload details
+        /// </summary>
+        /// <param name="intBulkUploadID">bulk upload details</param>
+        /// <param name="intLastID">Last Id</param>
+        /// <param name="intCount">count value</param>
+        /// <returns>returns employee details</returns>
+        public DataSet GetNextBulkUploadDetails(int intBulkUploadID, int intLastID, int intCount)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                return objEmployeeDetailsDL.GetNextBulkUploadDetails(intBulkUploadID, intLastID, intCount);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// check membership
+        /// </summary>
+        /// <param name="associateId">associate Id</param>
+        /// <param name="strassetno">asset number</param>
+        /// <param name="type">type value</param>
+        /// <returns>member value</returns>
+        public string Checkmembership(string associateId, string strassetno, string type)
+        {
+            try
+            {
+                string member;
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                member = objEmployeeDetailsDL.Checkmembership(associateId, strassetno, type);
+                return member;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Get laptop details
+        /// </summary>
+        /// <param name="associateId">associate Id</param>
+        /// <param name="strassetno">asset number</param>
+        /// <returns>returns employee information</returns>
+        public System.Data.DataRow GetLaptopDetails(string associateId, string strassetno)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                DataRow dremployeeInfo = objEmployeeDetailsDL.GetLaptopDetails(associateId, strassetno);
+                return dremployeeInfo;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #region GetAssociateID
+        /// <summary>
+        /// Method to retrieve AssociateID on the basis of Serial Number
+        /// </summary>
+        /// <param name="strSerialNo">serial number</param>          
+        /// <returns>Associate ID string</returns>
+        public string GetAssociateID(string strSerialNo)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                string strAssociateID = objEmployeeDetailsDL.GetAssociateID(strSerialNo);
+                return strAssociateID;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Get asset number
+        /// </summary>
+        /// <param name="assetNumber">asset number</param>
+        /// <returns>returns associate Id</returns>
+        public string GetAssetNumber(string assetNumber)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                string strAssociateID = objEmployeeDetailsDL.GetAssetNumber(assetNumber);
+                return strAssociateID;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region GetAssociateImageApproveStatus
+
+        /// <summary>
+        /// get associate image approve status
+        /// </summary>
+        /// <param name="requestID">request Id</param>
+        /// <returns>returns status</returns>
+        public string GetAssociateImageApproveStatus(string requestID)
+        {
+            try
+            {
+                VMSDataLayer.EmployeeDL objEmployeeDetailsDL = new VMSDataLayer.EmployeeDL();
+                string strstatus = objEmployeeDetailsDL.GetAssociateImageApproveStatus(requestID);
+                return strstatus;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (System.NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region DecryptData
+        /// <summary>
+        /// Method to DecryptData
+        /// Input string Binary Data Image
+        /// </summary>
+        /// <param name="strEncrpytedDataImg">encrypted data image</param>
+        /// <returns>Binary Data string</returns>
+        public string DecryptBinaryData(string strEncrpytedDataImg)
+        {
+            return new EncryptDecrypt().Decrypt(strEncrpytedDataImg, "CTS", true);
+        }
+        #endregion
+
+        #region EncryptData
+        /// <summary>
+        /// Method to EncryptData
+        /// Input string Binary Data Image
+        /// </summary>
+        /// <param name="strBinaryDataImg">binary data image</param>
+        /// <returns>Binary Data string</returns>
+        private string EncrpytBinaryData(string strBinaryDataImg)
+        {
+            return new EncryptDecrypt().Encrypt(strBinaryDataImg, "CTS", true);
+        }
+        #endregion
+
+        #region ReadFile
+        /// <summary>
+        /// Method to read the Image file
+        /// Input string Image Path
+        /// </summary>      
+        /// <returns>Binary Data string</returns>
+        /// <param name="strImagePath">image path file</param>
+        private string ReadFile(string strImagePath)
+        {
+            FileInfo fileinfo = null;
+            FileStream fstream = null;
+            try
+            {
+                fileinfo = new FileInfo(strImagePath);
+                string strBinaryData = string.Empty;
+                byte[] dbytes = null;
+                long numBytes = fileinfo.Length;
+                fstream = new FileStream(fileinfo.FullName, FileMode.Open, FileAccess.Read);
+                BinaryReader br = new BinaryReader(fstream);
+                dbytes = br.ReadBytes((int)numBytes);
+                strBinaryData = Encoding.Default.GetString(dbytes);
+                br.Close();
+                return strBinaryData;
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                throw ex;
+            }
+            catch (NullReferenceException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+    }
+            finally
+            {   
+                if (fileinfo != null)
+                {
+                    fileinfo = null;
+}
+
+                if (fstream != null)
+                {
+                    fstream.Close();
+                    fstream.Dispose();
+                }
+
+                fstream.Close();                
+            }
+        }
+        #endregion
+        }
+}
