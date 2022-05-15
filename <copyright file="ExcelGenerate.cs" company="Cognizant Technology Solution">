@@ -1,0 +1,44 @@
+
+namespace VMSUtility
+{
+    using OfficeOpenXml;
+    using OfficeOpenXml.Table;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+
+    /// <summary>
+    /// Excel generate
+    /// </summary>
+    public class ExcelGenerate
+    {
+        /// <summary>
+        /// Excel generate in byte array
+        /// </summary>
+        /// <param name="requiredData">data table</param>
+        /// <param name="excelSheetName">sheet name</param>
+        /// <returns>return bytes</returns>
+        public byte[] GenerateExcelForVisitorCheckIn(DataTable requiredData, string excelSheetName)
+        {
+            byte[] excel = null;
+            using (ExcelPackage package = new ExcelPackage(new FileInfo(excelSheetName)))
+            {
+                if (requiredData != null)
+                {
+                    ExcelWorksheet worksheet
+                        = package.Workbook.Worksheets.Add(excelSheetName);
+
+                    worksheet.Cells["A1"].LoadFromDataTable(
+                        requiredData, true, TableStyles.Light8);
+                    worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+                    excel = package.GetAsByteArray();
+                }
+            }
+
+            return excel;
+        }
+    }
+}
