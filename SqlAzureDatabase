@@ -1,0 +1,23 @@
+using Microsoft.Practices.EnterpriseLibrary.Data.Sql;
+using System.Data.Common;
+using System.Data.SqlClient;
+using AzureSQLHelper;
+
+namespace EnterpriseLibConn
+{
+    public class SqlAzureDatabase : SqlDatabase
+    {
+        public SqlAzureDatabase(string connectionString) : base(connectionString)
+        {
+
+        }
+
+        public override DbConnection CreateConnection()
+        {
+            SqlConnection sqlConnection = new SqlConnection(ConnectionString);
+            sqlConnection.SetAccessToken();
+            return sqlConnection;
+        }
+    }
+}
+
