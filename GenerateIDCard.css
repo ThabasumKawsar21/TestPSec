@@ -1,0 +1,291 @@
+
+/*General Class Start*/
+*
+{
+    margin: 0;
+    padding: 0;
+}
+.IdContainerFront, .IdContainerBack
+{
+    height: 330px;
+    width: 194px;
+    border: 0px solid red;
+    margin: auto;
+    position: relative;
+    margin-bottom: 2px;
+    padding: 0 5px 0 5px;
+    font: normal 10px Arial Narrow;
+}
+.TopImg
+{
+    width: 145px;
+    margin: auto;
+}
+.BotImg
+{
+    width: 145px;
+    margin: auto;
+    position: absolute;
+    bottom: 0;
+    left: 30px;
+    right: 30px;
+}
+.marTop5
+{
+    margin-top: 5px;
+}
+.marTop10
+{
+    margin-top: 5px;
+    margin-left: 8px;
+}
+.marTop15
+{
+    margin-top: 15px;
+    margin-left: 8px;
+}
+.marTop16
+{
+    margin-left: 8px;
+}
+
+.boldText
+{
+    font-weight: bold;
+}
+/*General Class End*/
+
+/*Front ID Card Class Start*/
+.issueYear
+{
+    color: #9B9B9B;
+    font-size: 32px;
+    margin: 10px 0 0 10px;
+}
+.assPhoto
+{
+    width: 107px;
+    height: 107px;
+    margin: 28px auto 0 auto;
+    border: 2px solid black;
+    vertical-align: middle;
+    text-align: center;
+}
+.assName, .assNumber
+{
+    text-align: center;
+    font: bold 16px arial narrow;
+    margin-top: 3px;
+}
+.ctsLogo
+{
+    height: 38px;
+    width: 170px;
+    padding-top: 1px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0;
+}
+.ctsLogo img
+{
+    width: 135px;
+    margin: auto;
+    display: block;
+}
+.IdContainerFront label
+{
+    display: block;
+}
+.IdContainerFront label span
+{
+    font-weight: bold;
+}
+/*Front ID Card Class End*/
+
+/*Back ID Card Class Start*/
+.barCode
+{
+    height: 50px;
+    border: 0px solid red;
+    margin: 30px 0px 0px 0px;
+    text-align: left;
+}
+.assNumber2
+{
+    font: bold 12pt arial narrow;
+    margin-top: 18px;
+    margin-left: 8px;
+}
+.inform
+{
+    font-weight: bold;
+    padding-top: 5px;
+    text-align: justify;
+    height: 20px;
+    margin-left: 8px;
+}
+.inform label
+{
+    font-size: 8pt;
+}
+.inform label span
+{
+    font-size: 10pt;
+}
+.contactCts
+{
+    font-size: 5.5pt;
+    margin-top: 15px;
+    margin-left: 8px;
+}
+.contactCts label
+{
+    display: block;
+}
+.contactCts span
+{
+    font-weight: bold;
+}
+/*Back ID Card Class End*/
+
+@media all
+{
+    .page-break
+    {
+        display: none;
+    }
+}
+
+@media print
+{
+    .page-break
+    {
+        display: inline;
+        page-break-before: always;
+    }
+
+    .noPrint
+    {
+        display: none;
+    }
+    .Print
+    {
+        display: inline;
+    }
+}
+.Smallconstants
+{
+    text-align: left;
+    vertical-align: top;
+    font-family: Interstate-Regular;
+    font-size: 11px;
+    line-height: 12px;
+    margin-left: 0px;
+}
+
+.Rowstyle
+{
+    width: 330px;
+    vertical-align: top;
+    line-height: 11px;
+}
+.constantNamelabelbold
+{
+    text-align: left;
+    vertical-align: top;
+    font-family: Interstate-Regular;
+    font-size: 12px;
+    width: 50px;
+    line-height: 12px;
+}
+.constantlabel
+{
+    text-align: left;
+    vertical-align: top;
+    font-family: Interstate-Regular;
+    font-size: 11px;
+    width: 50px;
+    line-height: 12px;
+}
+.constantlabelbold
+{
+    text-align: left;
+    vertical-align: top;
+    font-family: Interstate-Regular;
+    font-size: 11px;
+    width: 50px;
+    line-height: 12px;
+}
+.Variables_TD
+{
+    vertical-align: top;
+    line-height: 12px;
+}
+.Rowstyle2
+{
+    width: 330px;
+    vertical-align: top;
+    line-height: 12px;
+}
+
+
+.Notestyle
+{
+    text-align: left;
+    vertical-align: top;
+    font-family: Interstate-Regular;
+    font-size: 9px;
+    line-height: 12px;
+}
+
+#form2
+{
+    height: 330px;
+}
+.IDFontBold
+{
+    font-family: Arial Narrow;
+    font-weight: bold;
+}
+.IDFontNormal
+{
+    font-family: Arial Narrow;
+    font-weight: normal;
+}
+
+/* Modal Pop Up Style Classes*/
+.ModalWindow
+{
+    border: 1px solid #c0c0c0;
+    background: #f0f0f0;
+    padding: 0px 0px 0px 0px;
+    width: 500px;
+    height: auto;
+}
+
+.popupWindow
+{
+    border: 1px solid #c0c0c0;
+    background: #f0f0f0;
+    padding: 0px 0px 0px 0px;
+    width: 600px;
+    height: 600px;
+}
+
+.modalBackground
+{
+    background-color: #878776;
+    filter: alpha(opacity=40);
+    opacity: 0.5;
+}
+
+p.MsoNormal
+{
+    margin-top: 1.3pt;
+    margin-right: 5.75pt;
+    margin-bottom: 12.0pt;
+    margin-left: 0in;
+    line-height: 12.0pt;
+    font-size: 8.0pt;
+    font-family: "Arial" , "sans-serif";
+}
