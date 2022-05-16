@@ -1,0 +1,776 @@
+
+namespace VMSDev.SafetyPermitUserControls
+{
+    using CAS.Security.Application;
+    using ECMCommon;
+    using ECMSharedServices;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Data;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Web;
+    using System.Web.Security;
+    using System.Web.UI;
+    using System.Web.UI.HtmlControls;
+    using System.Web.UI.WebControls;
+    using System.Web.UI.WebControls.WebParts;
+    using System.Xml.Linq;
+    using VMSBL;
+    using VMSBusinessEntity;
+    using VMSBusinessLayer;
+    using VMSDev.DocUploadServiceRef;
+    using XSS = CAS.Security.Application.EncodeHelper;
+
+    /// <summary>
+    /// Send message to page
+    /// </summary>
+    /// <param name="messageToThePage">message to the page</param>
+    public delegate void SendMessageToThePageHandlerSP(string messageToThePage);
+
+    /// <summary>
+    /// Visitor general information
+    /// </summary>
+    public partial class VisitorGeneralInformationSP : System.Web.UI.UserControl
+    {
+        /// <summary>
+        /// define global variables used in the page.
+        /// </summary>
+        #region private variables
+        private VMSBusinessLayer.RequestDetailsBL requestDetails =
+            new VMSBusinessLayer.RequestDetailsBL();
+
+        /// <summary>
+        /// The  field
+        /// </summary>
+        private Hashtable htpurposeData = new Hashtable();
+
+        /// <summary>
+        /// The  field
+        /// </summary>
+        private List<string> countries = new List<string>();
+
+        /// <summary>
+        /// The  field
+        /// </summary>
+        private VMSBusinessLayer.LocationDetailsBL locationDetails =
+            new VMSBusinessLayer.LocationDetailsBL();
+
+        /// <summary>
+        /// The genTimeZone field
+        /// </summary>        
+        private GenericTimeZone genTimeZone = new GenericTimeZone();
+
+        /// <summary>
+        /// The FILE UPLOAD RESONSE
+        /// </summary> 
+        private MFileuploadResponse objMFileuploadResponse = new MFileuploadResponse();
+
+        /// <summary>
+        /// The  field
+        /// </summary>
+        private FileUploadDetailsRequest objFileUploadDetailsRequest = new FileUploadDetailsRequest();
+
+        /// <summary>
+        /// The  event
+        /// </summary>
+        private event SendMessageToThePageHandlerSP SendMessageToThePage;
+        /// <summary>
+        /// Used to assign application id
+        /// </summary>
+        private int appId = Convert.ToInt32(ConfigurationManager.AppSettings["ECMAPPID"]);
+        #endregion
+
+        /// <summary>        
+        /// Get user details by user
+        /// </summary>
+        /// <param name="userID">user Id</param>
+        /// <returns>user details</returns>
+        public string GetUserDetailsByUserID(string userID)
+        {
+            VMSBusinessLayer.UserDetailsBL userDetailsBL =
+                new VMSBusinessLayer.UserDetailsBL();
+            VMSBusinessLayer.UserDetails<string, string, string, string> userDetails =
+                new VMSBusinessLayer.UserDetails<string, string, string, string>();
+            userDetails = userDetailsBL.GetUserDetails(userID);
+            return userDetails.AssociateName + "(" + userID + ")";
+        }
+
+        /// <summary>
+        /// This method is used to get photo of visitor information.
+        /// It will be called handler page to get photo of visitor information. 
+        /// </summary>
+        /// <param name="propertiesDC">collection of request information</param>
+        public void ShowGeneralInformationByPhoto(VMSDataLayer.VMSDataLayer.PropertiesDC propertiesDC)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(propertiesDC.VisitorProofProperty.FileContentId))
+                {
+                    this.hdnFileContentId.Value = propertiesDC.VisitorProofProperty.FileContentId;
+                    /*byte[] visitorImage = this.GetImageFromSAN(propertiesDC.VisitorProofProperty.FileContentId)*/; // Get visitor image from SAN
+                    byte[] visitorImage = this.DownloadECM(propertiesDC.VisitorProofProperty.FileContentId);
+                    this.Session["UploadImage"] = visitorImage;
+                    this.Session["Webcamimage"] = null;
+                    this.Session["VisitorImgByte"] = visitorImage;
+                    if (visitorImage != null)
+                    {
+                        string base64String = Convert.ToBase64String(visitorImage, 0, visitorImage.Length);
+                        this.imgphoto.ImageUrl = "data:image/jpeg;base64," + base64String;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// Populate  ID Proof
+        /// </summary>
+        public void PopulateIDProofs()
+        {
+            DataTable dtpurpose = new DataTable();
+            List<string> purposeDataType = new List<string>();
+            string[] purposeListArray;
+            try
+            {
+                VMSBusinessLayer.MasterDataBL masterDataBL =
+                    new VMSBusinessLayer.MasterDataBL();
+                purposeDataType.Clear();
+                dtpurpose.Columns.Add("Id");
+                dtpurpose.Columns.Add("Name");
+                ////Get Master Data to Populate IDProof 
+                purposeDataType = masterDataBL.GetMasterData("IDProof");
+                for (int i = 0; i <= purposeDataType.Count - 1; i++)
+                {
+                    purposeListArray = purposeDataType[i].ToString().Split('|');
+                    DataRow drpurpose = dtpurpose.NewRow();
+                    drpurpose["Id"] = purposeListArray[1].ToString();
+                    drpurpose["Name"] = purposeListArray[0].ToString();
+                    dtpurpose.Rows.Add(drpurpose);
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// This method is used to save visitor photo to space.
+        /// </summary>
+        /// <returns>Visitor Photo</returns>
+        public VisitorProof InsertPhoto()
+        {
+            GenericFileUpload fu = new GenericFileUpload();
+            VMSBusinessEntity.VisitorProof visitorProof = new VisitorProof();
+            if (this.Session["VisitorImgByte"] != null || this.Session["Webcamimage"] != null)
+            {
+                if (this.Session["Webcamimage"] != null)
+                {
+                    byte[] img = (byte[])Session["Webcamimage"];
+                    //string fileContentID = this.SaveImageIntoSAN(this.txtFirstName.Text.Trim() + "_" + DateTime.Now.Ticks, img, Session["LoginID"].ToString());
+                    string fileContentID = this.EcmUpload(img);
+                    visitorProof.Photo = string.Empty;
+                    visitorProof.FileContentId = fileContentID;
+                }
+                else if (this.Session["VisitorImgByte"] != null && this.Session["UploadImage"] != null)
+                {
+                    byte[] img = (byte[])Session["UploadImage"];
+                    //string fileContentID = this.SaveImageIntoSAN(this.txtFirstName.Text.Trim() + "_" + DateTime.Now.Ticks, img, Session["LoginID"].ToString());
+                    string fileContentID=EcmUpload(img);
+                    visitorProof.Photo = string.Empty;
+                    visitorProof.FileContentId = fileContentID;
+                }
+            }
+
+            return visitorProof;
+        }
+
+        /// <summary>
+        /// Method to Insert General Information Data including First name ,Last Name,
+        /// Gender,company,Designation etc.
+        /// </summary>
+        /// <returns>visitor master</returns>
+        public VisitorMaster InsertGeneralInformation()
+        {
+            VMSBusinessEntity.VisitorMaster visitorMaster = new VisitorMaster();
+            visitorMaster.Gender = this.ddlGender.SelectedValue.Trim();
+            visitorMaster.FirstName = this.txtFirstName.Text.Trim();
+            visitorMaster.LastName = this.txtLastName.Text.Trim();
+            visitorMaster.Company = this.txtCompany.Text.Trim();
+            visitorMaster.Designation = this.txtDesignation.Text.Trim();
+            visitorMaster.MobileNo = this.txtCountryCode.Text.Trim() + "-" + this.txtMobileNo.Text.Trim();
+            visitorMaster.EmailID = this.txtEmail.Text.Trim();
+            visitorMaster.Country = this.ddlNativeCountry.SelectedItem.Value;
+            visitorMaster.CreatedBy = Session["LoginID"].ToString();
+            visitorMaster.CreatedDate = this.genTimeZone.GetCurrentDate();
+            VMSUtility.VMSUtility.WriteLog("Created Date" + visitorMaster.CreatedDate, VMSUtility.VMSUtility.LogLevel.Normal);
+            visitorMaster.IsConfidential = this.chkIsCofidential.Checked;
+            if (this.Session["RefID"] != null)
+            {
+                visitorMaster.VisitorReferenceNo = Session["RefID"].ToString();
+            }
+
+            return visitorMaster;
+        }
+
+        /// <summary>
+        /// This method is used to get Visitor General information
+        /// </summary>
+        /// <returns>Visitor Master</returns>
+        public VisitorMaster GetParameters()
+        {
+            VMSBusinessEntity.VisitorMaster visitorMaster = new VisitorMaster();
+            visitorMaster.Gender = this.ddlGender.SelectedValue.Trim();
+            visitorMaster.FirstName = this.txtFirstName.Text.Trim();
+            visitorMaster.LastName = this.txtLastName.Text.Trim();
+            visitorMaster.Company = this.txtCompany.Text.Trim();
+            visitorMaster.Designation = this.txtDesignation.Text.Trim();
+            visitorMaster.MobileNo = this.txtMobileNo.Text.Trim();
+            visitorMaster.EmailID = this.txtEmail.Text.Trim();
+            return visitorMaster;
+        }
+
+        /// <summary>
+        /// This method is used to Reset General Information.
+        /// </summary> 
+        /// <param name="isMultipleEntry">Is multiple entry</param>
+        public void ResetGeneralInformation(bool isMultipleEntry)
+        {
+            this.txtFirstName.Text = string.Empty;
+            this.txtLastName.Text = string.Empty;
+            this.txtMobileNo.Text = string.Empty;
+            this.txtEmail.Text = string.Empty;
+            this.txtDesignation.Text = string.Empty;
+            this.imgphoto.ImageUrl = "~/Images/DummyPhoto.png";
+            this.Session["ProofImgByte"] = null;
+            this.Session["VisitorImgByte"] = null;
+            this.Session["Webcamimage"] = null;
+            if (isMultipleEntry == false)
+            {
+                if (this.chkMultipleEntry.Checked)
+                {
+                    this.chkMultipleEntry.Checked = false;
+                    this.panelmultiplereqRadio.Visible = false;
+                }
+                else
+                {
+                    this.panelmultiplereqRadio.Visible = true;
+                }
+
+                this.txtCompany.Text = string.Empty;
+                this.ddlNativeCountry.ClearSelection();
+                this.ddlNativeCountry.SelectedIndex = this.ddlNativeCountry.Items.IndexOf(this.ddlNativeCountry.Items.FindByText("India"));
+                this.ddlGender.ClearSelection();
+                this.ddlGender.Items.FindByValue("0").Selected = true;
+            }
+        }
+
+        /// <summary>
+        /// To get Visitor General Information details based on RequestId
+        /// </summary>
+        /// <param name="propertiesDC">Request Details</param>
+        public void ShowGeneralInformationByRequestID(VMSDataLayer.VMSDataLayer.PropertiesDC propertiesDC)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(propertiesDC.VisitorMasterProperty.Gender.Trim()))
+                {
+                    this.ddlGender.Items.FindByValue(propertiesDC.VisitorMasterProperty.Gender.Trim()).Selected = true;
+                }
+
+                this.txtFirstName.Text = propertiesDC.VisitorMasterProperty.FirstName;
+                this.txtLastName.Text = propertiesDC.VisitorMasterProperty.LastName;
+                if (propertiesDC.VisitorMasterProperty.Company == "NA")
+                {
+                    this.txtCompany.Text = string.Empty;
+                }
+                else
+                {
+                    this.txtCompany.Text = propertiesDC.VisitorMasterProperty.Company;
+                }
+
+                this.txtDesignation.Text = propertiesDC.VisitorMasterProperty.Designation;
+                string strMobileNo = propertiesDC.VisitorMasterProperty.MobileNo;
+                if (!string.IsNullOrEmpty(strMobileNo))
+                {
+                    string[] values = strMobileNo.Split('-');
+                    this.txtCountryCode.Text = values[0];
+                    this.txtMobileNo.Text = values[1];
+                }
+
+                this.txtEmail.Text = propertiesDC.VisitorMasterProperty.EmailID;
+
+                if (!string.IsNullOrEmpty(propertiesDC.VisitorMasterProperty.Gender))
+                {
+                    if (propertiesDC.VisitorMasterProperty.Gender.Trim() == "0")
+                    {
+                        this.ddlGender.SelectedIndex = 0;
+                    }
+                    else if (propertiesDC.VisitorMasterProperty.Gender.Trim() == "M")
+                    {
+                        this.ddlGender.SelectedIndex = 1;
+                    }
+                    else
+                    {
+                        this.ddlGender.SelectedIndex = 2;
+                    }
+                }
+                ////updated by bincey -- 20 Feb 2012 -- SP app integration
+                if (!string.IsNullOrEmpty(propertiesDC.VisitorMasterProperty.Country))
+                {
+                    this.ddlNativeCountry.SelectedIndex = this.ddlNativeCountry.Items.IndexOf(this.ddlNativeCountry.Items.FindByValue(propertiesDC.VisitorMasterProperty.Country));
+                }
+                else
+                {
+                    this.ddlNativeCountry.SelectedIndex = this.ddlNativeCountry.Items.IndexOf(this.ddlNativeCountry.Items.FindByValue("101")); // set as default
+                }
+
+                if (propertiesDC.VisitorMasterProperty.VisitorReferenceNo != null)
+                {
+                    this.Session["RefID"] = propertiesDC.VisitorMasterProperty.VisitorReferenceNo.ToString();
+                }
+
+                if (!string.IsNullOrEmpty(this.chkIsCofidential.Text))
+                {
+                    this.chkIsCofidential.Checked = (bool)propertiesDC.VisitorMasterProperty.IsConfidential;
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// Method is used to Disable Visitor General Information.
+        /// </summary>
+        /// <param name="requestStatus">request status</param>
+        public void DisableVisitGeneralInformationControls(string requestStatus)
+        {
+            try
+            {
+                if ((requestStatus == "OUT") || (requestStatus == "IN") ||
+                   (requestStatus == "CANCELLED") ||
+                   (requestStatus == VMSConstants.VMSConstants.REPEATVISITOR))
+                {
+                    this.ddlGender.Enabled = false;
+                    this.txtFirstName.Enabled = false;
+                    this.txtLastName.Enabled = false;
+                    this.txtCompany.Enabled = false;
+                    this.txtDesignation.Enabled = false;
+                    this.txtMobileNo.Enabled = false;
+                    this.txtEmail.Enabled = false;
+                    this.ddlNativeCountry.Enabled = false;
+                    this.chkMultipleEntry.Enabled = false;
+                }
+                else if (requestStatus == "YET TO ARRIVE")
+                {
+                    this.EnableVisitGeneralInformationControls();
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// Enable Visitor General Information Controls
+        /// </summary>
+        public void EnableVisitGeneralInformationControls()
+        {
+            // ddlTitle.Enabled = true;
+            this.ddlGender.Enabled = true;
+            this.txtFirstName.Enabled = true;
+            this.txtLastName.Enabled = true;
+            this.txtCompany.Enabled = true;
+            this.txtDesignation.Enabled = true;
+            this.txtMobileNo.Enabled = true;
+            this.txtEmail.Enabled = true;
+            this.ddlNativeCountry.Enabled = true;
+        }
+
+        /// <summary>
+        /// Description: Method to Initialize Country, Cities 
+        /// </summary>
+        public void InitCountries()
+        {
+            try
+            {
+                VMSBusinessLayer.RequestDetailsBL objrequestDetails =
+                    new VMSBusinessLayer.RequestDetailsBL();
+                int countryId = 0;
+                DataTable dtsecurityCity = new DataTable();
+                if (this.Session["LoginID"] != null)
+                {
+                    string userID = Session["LoginID"].ToString();
+                    dtsecurityCity = objrequestDetails.GetSecurityCity(userID).Tables[0];
+                    countryId = Convert.ToInt32(dtsecurityCity.Rows[0]["CountryId"]);
+                }
+
+                DataTable dtcountry = objrequestDetails.GetNativeCountry(string.Empty);
+                this.ddlNativeCountry.DataSource = dtcountry;
+                this.ddlNativeCountry.DataTextField = "Country";
+                this.ddlNativeCountry.DataValueField = "CountryId";
+                this.ddlNativeCountry.DataBind();
+                if ((this.ddlNativeCountry.Items.Count == 0) || (this.ddlNativeCountry.Items.Count > 0))
+                {
+                    this.ddlNativeCountry.SelectedValue = Convert.ToString(countryId);
+                }
+
+                var query = (from p in dtcountry.AsEnumerable()
+                             where p.Field<int>("CountryId") == countryId
+                             select p).FirstOrDefault();
+                this.txtCountryCode.Text = string.Concat("+", Convert.ToString(query["Code"]));
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// Method is used to set panel visibility for entry request
+        /// </summary>
+        public void ChkMultipleEntryVisibility()
+        {
+            List<string> roles = (List<string>)Session["UserRole"];
+            if (roles.Contains("Security") || roles.Contains("SuperAdmin"))
+            {
+                if (this.chkMultipleEntry.Checked == true)
+                {
+                    this.panelmultiplereqRadio.Visible = true;
+                    this.multiplereqRadio.SelectedValue = "0";
+                }
+                else
+                {
+                    this.panelmultiplereqRadio.Visible = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Delete file from SAN
+        /// </summary>
+        public void DeleteFileFromSAN()
+        {
+            if (!string.IsNullOrEmpty(this.hdnFileContentId.Value))
+            {
+                using (DocumentUploadServiceClient objDocumentUploadServiceClient = new DocumentUploadServiceClient())
+                {
+                    this.objFileUploadDetailsRequest.FileContentId = new Guid(this.hdnFileContentId.Value);
+                    this.objFileUploadDetailsRequest.CreatedBy = this.Session["Loginid"].ToString();
+                    this.objFileUploadDetailsRequest.AppTemplateId = System.Configuration.ConfigurationManager.AppSettings["VMSappTemplateId"].ToString();
+                    this.objMFileuploadResponse = objDocumentUploadServiceClient.DeleteFileUploadDetails(this.objFileUploadDetailsRequest);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Page event to get roles information and populate country details.
+        /// </summary>
+        /// <param name="sender">sender object</param>
+        /// <param name="e">event e</param>
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.Session["LoginID"] == null)
+                {
+                    return;
+                }
+
+                this.txtFirstName.Focus();
+                if (Page.IsPostBack)
+                {
+                    if (this.Session["VisitorImgByte"] != null)
+                    {
+                        this.imgphoto.ImageUrl = "../EmployeeImage.aspx?strImage=Photo";
+                    }
+
+                    if (this.Session["Webcamimage"] != null)
+                    {
+                        this.imgphoto.ImageUrl = "../EmployeeImage.aspx?strImage=Photo";
+                    }
+                }
+
+                if (!Page.IsPostBack)
+                {
+                    if (Request.QueryString.ToString().Contains("RequestID="))
+                    {
+                        this.chkMultipleEntry.Visible = false;
+                        this.lblMultipleEntry.Visible = false;
+                        this.panelmultiplereqRadio.Visible = false;
+                    }
+                    else
+                    {
+                        this.chkMultipleEntry.Visible = true;
+                        this.lblMultipleEntry.Visible = true;
+                        this.imgphoto.ImageUrl = "~/Images/DummyPhoto.png";
+                        this.Session["VisitorImgByte"] = null;
+                        this.Session["ProofImgByte"] = null;
+                        ////for testing defects VMS_CR06_08 of IRVMS22062010CR07
+                        List<string> roles = (List<string>)Session["UserRole"];
+                        if (roles.Contains("Security"))
+                        {
+                            if (this.chkMultipleEntry.Checked == true)
+                            {
+                                this.panelmultiplereqRadio.Visible = true;
+                            }
+                            else
+                            {
+                                this.panelmultiplereqRadio.Visible = false;
+                            }
+                        }
+                    }
+
+                    this.HideControlsBasedOnRoles();
+                    this.InitCountries();
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// To set focus of the control
+        /// </summary>
+        /// <param name="sender">sender object</param>
+        /// <param name="e">event e</param>
+        protected void TxtFirstName_LostFocus(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.SendMessageToThePage != null)
+                {
+                    this.SendMessageToThePage(this.txtFirstName.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// To get country code on the selected Index changed to bind country code in mobile number field.
+        /// </summary>
+        /// <param name="sender">sender object</param>
+        /// <param name="e">event e</param>
+        protected void DdlNativeCountry_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            VMSBusinessLayer.RequestDetailsBL objrequestDetails =
+                new VMSBusinessLayer.RequestDetailsBL();
+            string countrycode;
+            countrycode = XSS.HtmlEncode(objrequestDetails.GetCountryCode(this.ddlNativeCountry.SelectedItem.Text));
+            this.txtCountryCode.Text = string.Concat("+", countrycode.Trim());
+        }
+
+        /// <summary>
+        /// for testing defects VMS_CR06_08 of VMS06072010CR09
+        /// </summary>
+        /// <param name="sender">sender object</param>
+        /// <param name="e">event e</param>
+        protected void ChkMultipleEntry_CheckedChanged(object sender, EventArgs e)
+        {
+            this.ChkMultipleEntryVisibility();
+        }
+
+        /// <summary>
+        /// Show /Hide User controls details based on the user role.
+        /// </summary>
+        private void HideControlsBasedOnRoles()
+        {
+            try
+            {
+                List<string> roles = (List<string>)Session["UserRole"];
+                if (roles.Contains("Security") || roles.Contains("SuperAdmin"))
+                {
+                    this.divIDProof.Visible = true;
+                }
+                else
+                {
+                    this.divIDProof.Visible = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// This method is used to decrypt request Id information. Here we passed encrypted Request Id as 
+        /// query string to get request information.
+        /// </summary>
+        /// <param name="strEncrpytedDataImg">Encrypted information</param>
+        /// <returns>Decrypted Data</returns>
+        private string DecryptBinaryData(string strEncrpytedDataImg)
+        {
+            return new EncryptDecrypt().Decrypt(strEncrpytedDataImg, "CTS", true);
+        }
+
+        /// <summary>
+        /// Method to Encrypt Request Id information which is passed as query string parameter to get  
+        /// request details
+        /// </summary>
+        /// <param name="strBinaryDataImg">Binary data</param>
+        /// <returns>STRING BINARY DATA</returns>
+        private string EncrpytBinaryData(string strBinaryDataImg)
+        {
+            return new EncryptDecrypt().Encrypt(strBinaryDataImg, "CTS", true);
+        }
+
+        /// <summary>
+        /// Get Associate Image
+        /// </summary>
+        /// <param name="fileContentID">file Content ID</param>
+        /// <returns>byte array</returns>
+        private byte[] GetImageFromSAN(string fileContentID)
+        {
+            try
+            {
+                byte[] associateImage = null;
+                string strMessage = string.Empty;
+                FileUploadDC objFileUploadDC = new FileUploadDC();
+                MFileuploadResponse objMFileuploadResponses = new MFileuploadResponse();
+                FileUploadDetailsRequest objFileUploadDetailsRequests = new FileUploadDetailsRequest();
+                using (DocumentUploadServiceClient objDocumentUploadServiceClient = new DocumentUploadServiceClient())
+                {
+                    // objFileUploadDC.FileUploadId = fileuploadId;
+                    objFileUploadDC.FileContentId = new Guid(fileContentID);
+                    objFileUploadDC.AppTemplateId = ConfigurationManager.AppSettings["VMSappTemplateId"];
+                    objMFileuploadResponses = objDocumentUploadServiceClient.DownloadFile(objFileUploadDC);
+                    associateImage = objMFileuploadResponses.OutgoingFile;
+
+                    if (associateImage != null)
+                    {
+                        return associateImage;
+                    }
+                    else
+                    {
+                        string strException = "Associate Image return as Null for FileContentId" + fileContentID;
+                        return null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Save Image In to SAN
+        /// </summary>
+        /// <param name="fileName">file Name</param>
+        /// <param name="imageBytes"> image Bytes</param>
+        /// <param name="createdBy">created By</param>
+        /// <returns>file content id</returns>
+        private string SaveImageIntoSAN(string fileName, byte[] imageBytes, string createdBy)
+        {
+            using (DocumentUploadServiceClient objDocumentUploadServiceClient = new DocumentUploadServiceClient())
+            {
+                this.objFileUploadDetailsRequest.AppId = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["VMSappId"].ToString());
+                this.objFileUploadDetailsRequest.AppTemplateId = System.Configuration.ConfigurationManager.AppSettings["VMSappTemplateId"].ToString();
+                this.objFileUploadDetailsRequest.FileName = fileName + ".jpg";
+                this.objFileUploadDetailsRequest.IncomingFile = imageBytes;
+                this.objFileUploadDetailsRequest.CreatedBy = createdBy;
+                this.objFileUploadDetailsRequest.CreatedDate = DateTime.Now;
+                this.objFileUploadDetailsRequest.AssociateId = Convert.ToInt32(createdBy);
+                this.objMFileuploadResponse = objDocumentUploadServiceClient.UploadFile_WithResponse(this.objFileUploadDetailsRequest);
+                return this.objMFileuploadResponse.FileContentId.ToString();
+            }
+        }
+      
+        /// <summary>
+        /// Function to Uplaod image to ECM
+        /// </summary>
+        /// <param name="webcamImage">byte array image</param>
+        /// <returns></returns>
+        public string EcmUpload(byte[] webcamImage)
+        {
+            try
+            {
+                WrapperUICheckIn obj = new WrapperUICheckIn(this.appId);//library initialization
+                XDocument metadata = XDocument.Load(System.Web.HttpContext.Current.Server.MapPath("~/ECMMetaData/ECMMetaData.xml"));//load metadata
+
+                IdcFile primaryfile = new IdcFile();//declare file type
+
+
+                primaryfile.Filecontent = webcamImage;//assign file content
+                primaryfile.Filename = "PSWebCamImage_"+webcamImage.Length;
+                //Response.Write(primaryfile.Filecontent.Length);
+
+                XDocument res = obj.UploadFile(primaryfile, metadata);//call upload method
+                                                                      //Then extract ecm related data from response object as follows and store it in your DB.
+                var responseData = from datas in res.Descendants("ECMStatus")
+                                   select new
+                                   {
+                                       dContentId = datas.Element("ECMContentId").Value,
+                                       dAppDocId = datas.Element("AppDocId").Value,
+                                       dID = datas.Element("ECMdID").Value
+                                   };
+                //string contentID = "SIT_1484076";
+                string contentID = Convert.ToString(responseData.FirstOrDefault().dContentId);
+                //Response.Write(contentID);
+                return contentID;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        // <summary>
+        /// Download ECM
+        /// </summary>
+        /// <param name="contentId">File Conetent Id</param>
+        /// <returns></returns>
+        /// <summary>
+        /// Function to download Image from ECM
+        /// </summary>
+        /// <param name="contentId">file content Id</param>
+        private byte[] DownloadECM(string contentId)
+        {
+            //documentId="1155369"
+            //string ecmContentId = EncodeHelper.HtmlEncode("SIT_1153605");
+            string ecmContentId = EncodeHelper.HtmlEncode(contentId);
+
+
+            try
+            {
+                if (!string.IsNullOrEmpty(ecmContentId))
+                {
+                    WrapperUICheckIn objECMCheckInScrapSaleEmail = new WrapperUICheckIn(this.appId);
+                    byte[] fileContent = null;
+                    ECMCommon.IdcFile fileVal = new ECMCommon.IdcFile();
+                    fileVal = objECMCheckInScrapSaleEmail.DownloadFileContent(ecmContentId, this.appId);
+                    fileContent = fileVal.Filecontent;
+                    return fileContent;
+
+
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+
+            }
+        }
+
+    }
+}
