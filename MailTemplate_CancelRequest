@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Untitled Document</title>
+    <style type="text/css">
+        body
+        {
+            margin-left: 0px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
+        }
+        body, td, th
+        {
+            font-family:  Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            color: #474747;
+        }
+    </style>
+</head>
+<body>
+    <table width="487.5pt" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#929292">
+        <tr>
+            <td>
+                <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+                    <tr>
+                        <td>
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td bgcolor="#0033A0" height="50pt" style="text-align:center">
+                                        </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table width="100%" border="0" cellspacing="0" cellpadding="10">
+                                <tr>
+                                    <td style="BACKGROUND: #def2f6; PADDING-BOTTOM: 11.25pt; PADDING-TOP: 11.25pt; PADDING-LEFT: 15pt; PADDING-RIGHT: 15pt;vertical-align:top;">
+                                        <p>
+                                            Hi,
+                                        </p>
+</td>
+</tr>
+<tr>
+<td>
+
+                                        <p style="MARGIN-LEFT: 22.5pt;font-size:10.5pt">
+                                            The visitor request that was raised by you for the following visitor has been cancelled at the security desk.<br />
+	
+	
+<b>Name		:</b> tknVisitor<br />
+		
+<b>Company	:</b> tknCompany <br />
+               
+<b>From date	:</b> tknInDate<br /> <b>		To date	:</b> tknOutDate  <br />
+
+<b>From Time	:</b> tknInTime<br /><b>		To Time	:</b> tknOutTime  <br />
+                
+<b>City		:</b> tknCity    <br /> <b>		Facility	:</b> tknFacility  <br />
+                               
+<b>Badge Number	:</b> tknBadgeNo <br />
+                
+                
+               
+                                        </p>
+                                   <p style="MARGIN-LEFT: 22.5pt;font-size:10.5pt">
+                                            Please log into <a style="text-decoration: none" href="https://onecognizant.cognizant.com/?globalappid=116">
+                                                VMS app</a> for viewing/ resubmitting the cancelled request.</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        
+                    </tr>
+                    <tr>
+                        <td>
+                            <table width="100%" border="0" cellspacing="0" cellpadding="10">
+                                <tr>
+                                    <td>
+                                        
+<p style="padding:0;margin:0;font-size:10.5pt">Regards,</p>
+<p style="padding:0;margin:0;font-size:10.5pt">Cognizant</p>
+<p>
+* This is an auto generated mail, please do not reply to this mail.
+</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td bgcolor="black" height="10px">
+                            &nbsp;</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    
+</body>
+</html>
