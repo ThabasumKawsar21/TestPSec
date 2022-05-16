@@ -1,0 +1,1476 @@
+//-----------------------------------------------------------------------
+// <copyright file="ViewLogbySecuritySP.ascx.cs" company="MyCompanyName">
+//     Copyright (c) MyCompanyName. All rights reserved.
+// </copyright>
+// <summary>
+// This file contains ViewLogbySecuritySP class.
+// </summary>
+//-----------------------------------------------------------------------
+
+namespace VMSDev.SafetyPermitUserControls
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using System.Linq;
+    using System.Security.Principal;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Web;
+    using System.Web.UI;
+    using System.Web.UI.HtmlControls;
+    using System.Web.UI.WebControls;
+    using VMSBusinessLayer;
+    using XSS = CAS.Security.Application.EncodeHelper;
+
+    /// <summary>
+    /// View log by security
+    /// </summary>
+    public partial class ViewLogbySecuritySP : System.Web.UI.UserControl
+    {
+        #region Variables
+
+        /// <summary>
+        /// The Facilities field
+        /// </summary>        
+        private List<string> facilities = new List<string>();
+        
+        /// <summary>
+        /// The Search field
+        /// </summary>        
+        private object searchParamObj = new object();
+        
+        /// <summary>
+        /// The Grid data field
+        /// </summary>        
+        private DataSet griddata = new DataSet();
+        
+#pragma warning disable CS0169 // The field 'ViewLogbySecuritySP.city' is never used
+        /// <summary>
+        /// The city field
+        /// </summary>        
+        private string city;
+#pragma warning restore CS0169 // The field 'ViewLogbySecuritySP.city' is never used
+        
+        /// <summary>
+        /// The security city field
+        /// </summary>        
+        private DataSet securitycity;
+       
+       /// <summary>
+       /// The LocationDetails field
+       /// </summary>       
+       private VMSBusinessLayer.LocationDetailsBL locationDetails = new VMSBusinessLayer.LocationDetailsBL();
+        
+        /// <summary>
+        /// The RequestDetails field
+        /// </summary>        
+        private VMSBusinessLayer.RequestDetailsBL requestDetails = new VMSBusinessLayer.RequestDetailsBL();
+        
+        /// <summary>
+        /// The genTimeZone field
+        /// </summary>        
+        private GenericTimeZone genTimeZone = new GenericTimeZone();
+        #endregion
+
+        #region Events Methods
+   
+        /// <summary>
+        /// Check out request
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        public void BtnCheckOutRequest_Click(object sender, EventArgs e)
+        {
+            string requestId = Convert.ToString(Session["hdnVisitDetailId"]);
+            if (!string.IsNullOrEmpty(requestId))
+            {
+                if (this.requestDetails != null)
+                {
+                    DataSet dtbadgeStatus = this.requestDetails.Badgereturnvalues(requestId);
+                    string[] startFromDate = this.hdnCheckOutFromDate.Value.Split('/');
+                    DateTime startDate = Convert.ToDateTime(startFromDate[1] + "/" + startFromDate[0] + "/" + startFromDate[2] + " " + this.hdnCheckOutFromTime.Value);
+                    string[] endToDate = this.hdnCheckOutToDate.Value.Split('/');
+                    DateTime endDate = Convert.ToDateTime(endToDate[1] + "/" + endToDate[0] + "/" + endToDate[2] + " " + this.hdnCheckOutToTime.Value);
+                    DateTime actulOutDate = Convert.ToDateTime(endToDate[1] + "/" + endToDate[0] + "/" + endToDate[2] + " " + this.hdnCheckOutActualTimeout.Value);
+                    this.requestDetails.Sendbadgereturnmail(dtbadgeStatus, startDate, endDate, actulOutDate);
+                }
+            }
+
+            this.BindData();
+        }
+
+        /// <summary>
+        /// Grid view row deleting
+        /// </summary>
+        /// <param name="inputTxt">input search text</param>
+        /// <returns>input text</returns> 
+        public string Highlight(string inputTxt)
+        {
+            try
+            {
+                string strSearch = this.txtSearch.Text.ToString();
+                string[] arrSearch = strSearch.Split(' ');
+                foreach (string str in arrSearch)
+                {
+                    if (inputTxt.ToUpper().Contains(str.ToUpper()) && (!string.IsNullOrEmpty(str)))
+                    {
+                        int len = str.Length;
+                        int i = 0;
+                        while ((i = inputTxt.ToUpper().IndexOf(str.ToUpper(), i)) != -1)
+                        {
+                            inputTxt = inputTxt.Insert(i, "$");
+                            inputTxt = inputTxt.Insert(i + len + 1, "^");
+                            i = inputTxt.LastIndexOf('^');
+                        }
+
+                        inputTxt = inputTxt.Replace("$", "<span style=\"background-color: #FFFF00; font-weight:bolder;\">");
+                        inputTxt = inputTxt.Replace("^", "</span>");
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            return inputTxt;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Commented by 173710
+        /// To set date fields with default values
+        /// </summary>
+        public void InitDates()
+        {
+            try
+            {
+                ////Page.ClientScript.RegisterStartupScript(Type.GetType("System.String"), "DefaultDate", "setDefaultDate();", true);
+
+                string format = "dd/MM/yyyy HH:mm:ss";
+                System.Globalization.CultureInfo provider =
+                    System.Globalization.CultureInfo.InvariantCulture;
+                if (this.Session["currentDateTime"] != null)
+                {
+                    string currenttime = Convert.ToString(HttpContext.Current.Session["currentDateTime"]);
+                    var today = DateTime.ParseExact(currenttime, format, provider);
+                    this.txtFromDate.Text = today.ToShortDateString();
+                    this.txtToDate.Text = today.ToShortDateString();
+                }
+                else
+                {
+                    var today = this.genTimeZone.GetCurrentDate().ToShortDateString();
+                    this.txtFromDate.Text = today;
+                    this.txtToDate.Text = today;
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// The BindData method
+        /// </summary>        
+        public void BindData()
+        {
+            try
+            {
+                this.grdResult.DataSource = null;
+                this.grdResult.DataBind();
+                if (this.Session["LoginID"] != null)
+                {
+                    if (this.ValidateSearch())
+                    {
+                        this.securitycity = this.GetSecurityCity();
+                        string reqStatus = Convert.ToString(this.ddlReqStatus.SelectedValue);
+                        string securityID = Session["LoginID"].ToString();
+                        string[] fromdateArray = this.txtFromDate.Text.Split('/');
+                        //// string fromdateActual = fromdateArray[2] + '-' + fromdateArray[1] + '-' + fromdateArray[0];
+                        string[] todateArray = this.txtToDate.Text.Split('/');
+                        ////  string todateActual = todateArray[2] + '-' + todateArray[1] + '-' + todateArray[0];
+                        string fromTime = DateTime.Now.ToShortTimeString();
+                        string format = "dd/MM/yyyy HH:mm:ss";
+                        System.Globalization.CultureInfo provider =
+                            System.Globalization.CultureInfo.InvariantCulture;
+                        if (this.Session["currentDateTime"] != null)
+                        {
+                            string currenttime = Convert.ToString(HttpContext.Current.Session["currentDateTime"]);
+                            var today = DateTime.ParseExact(currenttime, format, provider);
+                            fromTime = today.ToShortTimeString();
+                        }
+
+                        GenericTimeZone genrTimeZone = new GenericTimeZone();
+                        DateTime fromDate = genrTimeZone.GetdatetimedetailsinIST(Convert.ToDateTime(fromdateArray[0] + "/" + fromdateArray[1] + "/" + fromdateArray[2] + " " + fromTime), Convert.ToString(Session["TimezoneOffset"]));
+                        DateTime todated = genrTimeZone.GetdatetimedetailsinIST(Convert.ToDateTime(todateArray[0] + "/" + todateArray[1] + "/" + todateArray[2] + " " + fromTime), Convert.ToString(Session["TimezoneOffset"]));
+                        string fromdateActual = fromDate.ToShortDateString();
+                        string todateActual = todated.ToShortDateString();
+                        this.griddata = this.requestDetails.ViewLogBySecurity(this.txtSearch.Text, securityID, fromdateActual, todateActual, reqStatus,string.Empty,string.Empty);
+                        for (int rowCount = 0; rowCount < this.griddata.Tables[0].Rows.Count; rowCount++)
+                        {
+                            bool isotherfacility = true;
+                            ////timezone conversion
+                            string offset = this.griddata.Tables[0].Rows[rowCount]["offset"].ToString();
+                            DateTime vmsindate = Convert.ToDateTime(this.griddata.Tables[0].Rows[rowCount]["Date"]);
+                            string vmsintime = vmsindate.ToString("MM/dd/yyyy ") + this.griddata.Tables[0].Rows[rowCount]["intime"].ToString();
+                            string vmsouttime = vmsindate.ToString("MM/dd/yyyy ") + this.griddata.Tables[0].Rows[rowCount]["Expectedouttime"].ToString();
+                            if (this.griddata.Tables[0].Rows[rowCount]["ActualOutTime"].ToString() != string.Empty)
+                            {
+                                string vmsactualouttime = vmsindate.ToString("MM/dd/yyyy ") + this.griddata.Tables[0].Rows[rowCount]["ActualOutTime"].ToString();
+                                vmsactualouttime = this.genTimeZone.ToLocalTimeZone(Convert.ToDateTime(vmsactualouttime), offset);
+                                this.griddata.Tables[0].Rows[rowCount]["ActualOutTime"] = DateTime.Parse(vmsouttime).ToString("HH:mm");
+                            }
+
+                            vmsintime = this.genTimeZone.ToLocalTimeZone(Convert.ToDateTime(vmsintime), offset);
+                            vmsouttime = this.genTimeZone.ToLocalTimeZone(Convert.ToDateTime(vmsouttime), offset);
+
+                            this.griddata.Tables[0].Rows[rowCount]["Date"] = vmsintime;
+                            this.griddata.Tables[0].Rows[rowCount]["intime"] = DateTime.Parse(vmsintime).ToString("HH:mm");
+                            this.griddata.Tables[0].Rows[rowCount]["Expectedouttime"] = DateTime.Parse(vmsouttime).ToString("HH:mm");
+                            
+                            if (this.griddata.Tables[0].Rows[rowCount]["BadgeStatus"].ToString().ToUpper().Equals("RETURNED") || this.griddata.Tables[0].Rows[rowCount]["BadgeStatus"].ToString().ToUpper().Equals("LOST"))
+                            {
+                                DateTime todate = Convert.ToDateTime(Convert.ToDateTime(this.griddata.Tables[0].Rows[rowCount]["ActualOutTime"].ToString()).ToShortDateString());
+                                DateTime fromdate = Convert.ToDateTime(Convert.ToDateTime(fromdateActual).ToShortDateString());
+                                TimeSpan ts = todate - fromdate;
+                                if ((ts.Days < 0) && (todate != fromdate))
+                                {
+                                    this.griddata.Tables[0].Rows[rowCount].Delete();
+                                }
+                            }
+                            else
+                            {
+                                // added for CR IRVMS22062010CR07  starts here done by Priti
+                                for (int rowCountFac = 0; rowCountFac < this.securitycity.Tables[0].Rows.Count; rowCountFac++)
+                                {
+                                    if (this.griddata.Tables[0].Rows[rowCount]["Facility"].ToString().Equals(this.securitycity.Tables[0].Rows[rowCountFac]["Facility"].ToString()))
+                                    {
+                                        isotherfacility = false;
+                                    }
+                                }
+
+                                if (isotherfacility)
+                                {
+                                    this.griddata.Tables[0].Rows[rowCount].Delete();
+                                }
+                                ////end addition for CR IRVMS22062010CR07  starts here done by Priti
+                            }
+                        }
+
+                        if (this.griddata.Tables[0].Rows.Count > 0)
+                        {
+                            this.lblResult.Visible = false;
+                            this.lblStatusResult.Visible = false;
+                            this.pnlRequests.Visible = true;
+                            this.grdResult.DataSource = this.griddata;
+                            this.grdResult.DataBind();
+                            if (VMSUtility.VMSUtility.CountryTimeZoneCheck() == true)
+                            {
+                                this.btnExport.Visible = true;
+                            }
+                            else
+                            {
+                                this.btnExport.Visible = false;
+                            }
+
+                            this.pnlImage.Visible = true;
+                            this.UpnlVisitor.Visible = false;
+                            this.hdnRecordFound.Value = "1";
+                        }
+                        else
+                        {
+                            this.lblStatusResult.Visible = false;
+                            this.errortbl.Visible = true;
+                            this.lblResult.Visible = true;
+                            this.pnlRequests.Visible = false;
+
+                            this.lblResult.Text = Resources.LocalizedText.NoRecordFound;
+
+                            this.btnExport.Visible = false;
+                            this.hdnRecordFound.Value = "0";
+                            if (this.hfSearch.Checked == false)
+                            {
+                                this.pnlGotoRequests.Visible = true;
+                                this.pnlGotoVisitors.Visible = false;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// Page load
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!Page.IsPostBack)
+                {
+                    Page.ClientScript.RegisterStartupScript(Type.GetType("System.String"), "GetDefaultDate", "GetDefaultDate();", true);
+                    this.lblResult.Visible = false;
+                    this.lblStatusResult.Visible = false;
+                    this.txtExpress.Focus();
+                    Page.Form.DefaultButton = this.btnSearch.UniqueID;
+                    this.btnExport.Visible = false;
+                    this.ddlReqStatus.Items.FindByValue("Yet to arrive").Selected = true;
+                    this.hfSearch.Checked = true;
+                    this.EnableOrDiableControls();
+                    if (this.Session["currentDateTime"] != null)
+                    {
+                        this.InitDates();
+                        this.BindData();
+                    }
+                    else
+                    {
+                        Page.ClientScript.RegisterStartupScript(Type.GetType("System.String"), "GetOffset", "GetOffset();", true);
+                    }
+                }
+            }
+            catch (System.Threading.ThreadAbortException)
+            {
+            }
+            catch (Exception ex)
+            {
+                ////  throw ex;
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// Button add new click
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void BtnAddNew_Click(object sender, EventArgs e)
+        {
+            this.modalVisit.Show();
+        }
+
+        /// <summary>
+        /// Button back to request
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void BtnBackToRequests_Click(object sender, EventArgs e)
+        {
+            this.hfSearch.Checked = true;
+            this.EnableOrDiableControls();
+            this.BindData();
+        }
+
+        /// <summary>
+        /// Reset click      
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void BtnReset_Click(object sender, EventArgs e)
+        {
+            this.hfSearch.Checked = true;
+            if (this.hfSearch.Checked == true)
+            {
+                try
+                {
+                    Response.Redirect("SafetyPermit.aspx", true);
+                     
+                }
+                catch (System.Threading.ThreadAbortException ex)
+                {
+
+                }
+            }
+            else
+            {
+                this.txtSearch.Text = string.Empty;
+                this.SearchVisitors();
+            }
+        }
+
+        /// <summary>
+        /// Button search click
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void BtnSearch_Click(object sender, EventArgs e)
+        {
+            this.lblError.Visible = false;
+            try
+            {
+                if (this.hfSearch.Checked == true)
+                {
+                    if (string.IsNullOrEmpty(this.txtExpress.Text))
+                    {
+                        ////sendSearchParams();                 
+                        if (this.ValidateSearch())
+                        {
+                            this.BindData();
+                            if (this.grdResult.Rows.Count == 0)
+                            {
+                                this.modalVisit.Show();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            string securityID = string.Empty;
+                            securityID = Session["LoginID"].ToString();
+                            string requestID = this.txtExpress.Text.Trim();
+                            long visitDetailsID = (long)this.requestDetails.VerifyExpressCheckinCode(Convert.ToInt32(requestID), securityID);
+                            if (visitDetailsID == 0)
+                            {
+                                this.lblError.Visible = true;
+                                this.lblError.Text = Resources.LocalizedText.NoOpenRequest;
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    string TargetPage = "SafetyPermitEnterInformationBySecurity.aspx?details=" + visitDetailsID.ToString();
+                                    Response.Redirect(TargetPage, true);
+                                     
+                                }
+                                catch (System.Threading.ThreadAbortException ex)
+                                {
+
+                                }
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            this.lblError.Visible = true;
+                            this.lblError.Text = Resources.LocalizedText.lblInvalidCheckinCode;
+                        }
+                    }
+                }
+                else
+                {
+                    this.SearchVisitors();
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// Button export click
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void BtnExport_Click(object sender, ImageClickEventArgs e)
+        {
+            this.ExportGridView();
+        }
+
+        /// <summary>
+        /// Button print click
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void BtnPrint_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string securityID = Convert.ToString(Session["LoginID"]);
+                string detailsID = XSS.HtmlEncode(Convert.ToString(ViewState["DetailsID"]));
+                string status = this.ddlReason.SelectedItem.Value == "1" ? VMSConstants.VMSConstants.LOST :
+                  VMSConstants.VMSConstants.PRINTERJAMMED;
+                this.requestDetails.RePrintBadge(Convert.ToInt32(detailsID), securityID, status);
+                string strMessgae = Resources.LocalizedText.Reprintsuccessful;
+                string strPopScript = string.Concat("<script>alert('", strMessgae, "'); </script>");
+                Page.ClientScript.RegisterStartupScript(typeof(Page), "LoadViewLogBySecuritySP", strPopScript);
+                this.ViewState["DetailsID"] = string.Empty;
+                string strScript = "<script language='javascript'>window.open('VMSBadge.aspx?key=" + detailsID + "', 'List', 'scrollbars=no,resizable=no,width=780,height=370, location=center ');</script>";
+                Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "LoadBadgepage", strScript);
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// Button hidden click
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void BtnHidden_Click(object sender, EventArgs e)
+        {
+            this.BindData();
+        }
+
+        /// <summary>
+        /// Button hidden click
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void BtnHidden1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Response.Redirect("ErrorPage.aspx", true);
+        
+            }
+            catch (System.Threading.ThreadAbortException ex)
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// Button click
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+            string strScript = "<script language='javascript'>window.open('VMSBadge.aspx', 'List', 'scrollbars=auto,resizable=no,width=780,height=370, location=center ');</script>";
+            Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "LoadBadgepage", strScript);
+        }
+
+        /// <summary>
+        /// Grid result row command
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void GrdResult_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            try
+            {
+                GridViewRow row = (GridViewRow)((Control)e.CommandSource).Parent.Parent;
+                LinkButton btnCheckOut = (LinkButton)row.FindControl("btnCheckOut");
+                LinkButton lbtnPrint = (LinkButton)row.FindControl("btnPrint");
+                LinkButton btnCheckIn = (LinkButton)row.FindControl("btnCheckIn");
+                LinkButton btnView = (LinkButton)row.FindControl("btnView");
+                string securityID = Session["LoginID"].ToString();
+                if (e.CommandName.ToString() == "CheckIn")
+                {
+                    VMSBusinessEntity.VisitorRequest visitorLocObj = new VMSBusinessEntity.VisitorRequest();
+                    string detailsID = e.CommandArgument.ToString();
+                    if (this.requestDetails.VisitorCheckIn(Convert.ToInt32(detailsID), securityID))
+                    {
+                        string visitDetailsIDchk;
+                        visitDetailsIDchk = detailsID;
+                        string loginID = string.Empty;
+                        VMSDataLayer.VMSDataLayer.PropertiesDC propertiesDC = new VMSDataLayer.VMSDataLayer.PropertiesDC();
+                        VMSBusinessLayer.UserDetailsBL userDetailsBL = new VMSBusinessLayer.UserDetailsBL();
+                        MailNotification objMailNotofication = new MailNotification();
+                        MailSMSNotification objMailSMSNotification = new MailSMSNotification();
+                        if (!string.IsNullOrEmpty(visitDetailsIDchk))
+                        {
+                            if (this.requestDetails != null)
+                            {
+                                propertiesDC = this.requestDetails.DisplayInfo(Convert.ToInt32(visitDetailsIDchk));
+                                if (propertiesDC != null)
+                                {
+                                    string smsnot = Convert.ToString(propertiesDC.VisitorRequestProperty.ISSMSEnabled);
+                                    if (smsnot == "True")
+                                    {
+                                        string strVisitorName = string.Concat(propertiesDC.VisitorMasterProperty.FirstName.ToString(), " ", propertiesDC.VisitorMasterProperty.LastName.ToString()).ToUpper();
+                                        string strOrganization = Convert.ToString(propertiesDC.VisitorMasterProperty.Company);
+                                        string strRequestId = Convert.ToString(propertiesDC.VisitorRequestProperty.RequestID);
+                                        ////string strHostName = propertiesDC.VisitorRequestProperty.HostID.ToString();
+                                        string strHostName = propertiesDC.VisitorRequestProperty.HostID.ToString().Split(',')[1].Split('(')[0].ToString();
+                                        string strFacility = string.Empty;
+                                        VMSBusinessLayer.RequestDetailsBL requestInfo =
+                                                         new VMSBusinessLayer.RequestDetailsBL();
+
+                                        DataTable dtlocationDetails = requestInfo.GetLocationDetailsById(propertiesDC.VisitorRequestProperty.RequestID);
+                                        if (dtlocationDetails.Rows.Count > 0)
+                                        {
+                                            strFacility = Convert.ToString(dtlocationDetails.Rows[0]["Facility"]);
+                                        }
+
+                                        string strHostID = propertiesDC.VisitorRequestProperty.HostID.ToString().Split('(')[1].Split(')')[0].ToString();                                    
+                                        DateTime today = this.genTimeZone.GetLocalCurrentDateInFormat();
+                                        string dttoday = today.ToString("dd/MMM/yyyy");
+                                        string time = today.ToShortTimeString();
+                                        objMailSMSNotification.SendMail(strHostName, strVisitorName, strFacility, dttoday, time, strRequestId, strHostID);
+                                    }
+                                }
+                            }
+
+                            Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "script", "<script language='javascript'> alert(\"Visitor's Badge is successfully generated.\"); </script>");
+                            string strScript = "<script language='javascript'>(window.open('VMSBadge.aspx?key=" + detailsID + "', 'List', 'scrollbars=no,resizable=no,width=780,height=370, location=center ')).focus();</script>";
+                            Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "LoadBadgepage", strScript);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        this.BindData();
+                        string strMessgae = Resources.LocalizedText.Visitorcheckinsuccessful;
+                        ////MgsBoxCheckin.Show(VMSDev.UserControls.MsgBox.MsgBoxType.Warning, strMessgae);
+                        Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "script", "<script language='javascript'> alert('" + strMessgae + "'); </script>");
+                        return;
+                    }
+                }
+
+                if (e.CommandName.ToString() == "CheckOut")
+                {
+                    string str = e.CommandArgument.ToString();
+                    string visitDetailsID = e.CommandArgument.ToString();
+                    this.Session["hdnVisitDetailId"] = visitDetailsID;
+                    string bdgestatus = "Returned";
+                    DateTime currentSystemTime = this.genTimeZone.GetCurrentDate();
+                    string actualouttime = currentSystemTime.ToLongTimeString();
+                    string reqstatus = "Out";
+                    string comments = string.Empty;
+                    string strCheckOut = string.Empty;
+                    string strBadgeReturned = Resources.LocalizedText.BadgeReturned;
+                    strCheckOut = "alert('" + strBadgeReturned + "')";
+                    string strCheckOutNoRecord = "alert('" + strBadgeReturned + "');window.location.href ='SafetyPermit.aspx'";
+                    DataSet dtrequest = this.requestDetails.Updatebdgestatus(visitDetailsID, bdgestatus, actualouttime, reqstatus, comments, Convert.ToString(Session["LoginID"]));
+                    string[] fromDateArray = Convert.ToString(dtrequest.Tables[0].Rows[0]["FromDate"]).Split('/');
+                    string fromDateActual = fromDateArray[2] + '-' + fromDateArray[1] + '-' + fromDateArray[0];
+                    string[] todateArray = Convert.ToString(dtrequest.Tables[0].Rows[0]["ToDate"]).Split('/');
+                    string todateActual = todateArray[2] + '-' + todateArray[1] + '-' + todateArray[0];
+                    this.hdnCheckOutFromDate.Value = Convert.ToDateTime(fromDateActual.ToString()).ToString("MM/dd/yyyy");
+                    this.hdnCheckOutToDate.Value = Convert.ToDateTime(todateActual.ToString()).ToString("MM/dd/yyyy");
+                    this.hdnCheckOutFromTime.Value = Convert.ToString(dtrequest.Tables[0].Rows[0]["inTime"]);
+                    this.hdnCheckOutToTime.Value = Convert.ToString(dtrequest.Tables[0].Rows[0]["ToTime"]);
+                    this.hdnCheckOutActualTimeout.Value = Convert.ToString(dtrequest.Tables[0].Rows[0]["ActualOutTime"]);
+                    if (this.hdnRecordFound.Value == "1")
+                    {
+                        ScriptManager.RegisterStartupScript(this.UpdatePanel1, this.UpdatePanel1.GetType(), "strCheckOut", strCheckOut, true);
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this.UpdatePanel1, this.UpdatePanel1.GetType(), "strCheckOutNoRecord", strCheckOutNoRecord, true);
+                    }
+
+                    this.BindData();
+                    Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "script", "<script language='javascript'> alert('" + strBadgeReturned + "'); </script>");
+                    return;
+                }
+
+                if (e.CommandName.ToString() == "Lost")
+                {
+                    string str = e.CommandArgument.ToString();
+                    string visitDetailsID = e.CommandArgument.ToString();
+                    string bdgestatus = "Lost";
+                    DateTime currentSystemTime = this.genTimeZone.GetCurrentDate();
+                    string actualouttime = currentSystemTime.ToLongTimeString();
+                    this.Session["hdnVisitDetailId"] = visitDetailsID;
+                    //// hdnVisitDetailId.Value = VisitDetailsID;
+                    string reqstatus = "Out";
+                    string comments = string.Empty;
+                    string strbdgeLost;
+                    strbdgeLost = Resources.LocalizedText.BadgeLost;
+                    ////  strbdgeLost = "alert('Badge Lost. Check Out Successful');";
+                    strbdgeLost = "alert('" + strbdgeLost + "');";
+                    string strbdgeLostNoRecord = "alert('" + strbdgeLost + "');window.location.href ='SafetyPermit.aspx'";
+                    DataSet dtrequest = this.requestDetails.Updatebdgestatus(visitDetailsID, bdgestatus, actualouttime, reqstatus, comments, Session["LoginID"].ToString());
+                    //// ScriptManager.RegisterStartupScript(UpdatePanel1, UpdatePanel1.GetType(), "strbadgeLost", "<script language='javascript'>alert('Badge Lost. Check Out Successful');window.location.href ='ViewLogbySecurity.aspx';</script>", false);
+                    string[] fromDateArray = Convert.ToString(dtrequest.Tables[0].Rows[0]["FromDate"]).Split('/');
+                    string fromDateActual = fromDateArray[2] + '-' + fromDateArray[1] + '-' + fromDateArray[0];
+                    string[] todateArray = Convert.ToString(dtrequest.Tables[0].Rows[0]["ToDate"]).Split('/');
+                    string todateActual = todateArray[2] + '-' + todateArray[1] + '-' + todateArray[0];
+                    this.hdnCheckOutFromDate.Value = Convert.ToDateTime(fromDateActual.ToString()).ToString("MM/dd/yyyy");
+                    this.hdnCheckOutToDate.Value = Convert.ToDateTime(todateActual.ToString()).ToString("MM/dd/yyyy");
+                    this.hdnCheckOutFromTime.Value = Convert.ToString(dtrequest.Tables[0].Rows[0]["inTime"]);
+                    this.hdnCheckOutToTime.Value = Convert.ToString(dtrequest.Tables[0].Rows[0]["ToTime"]);
+                    this.hdnCheckOutActualTimeout.Value = Convert.ToString(dtrequest.Tables[0].Rows[0]["ActualOutTime"]);
+                    //// BindData();
+                    this.UpdatePanel1.Update();
+                    if (this.hdnRecordFound.Value == "1")
+                    {
+                        ScriptManager.RegisterStartupScript(this.UpdatePanel1, this.UpdatePanel1.GetType(), "strbdgeLost", strbdgeLost, true);
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this.UpdatePanel1, this.UpdatePanel1.GetType(), "strbdgeLostNoRecord", strbdgeLostNoRecord, true);
+                    }
+
+                    this.BindData();
+                    return;
+                }
+
+                if (e.CommandName.ToString() == "RePrint")
+                {
+                    this.ViewState["DetailsID"] = e.CommandArgument.ToString();
+                    this.modalReprintComments.Show();
+                    return;
+                }
+
+                if (e.CommandName.ToString() == "ViewDetailsLink")
+                {
+                    string str = e.CommandArgument.ToString();
+                     
+                        string TargetPage = "SafetyPermitEnterInformationBySecurity.aspx?details=" + str;
+                        Response.Redirect(TargetPage, true);
+                       
+               
+                    return;
+                }
+            }
+            catch (System.Threading.ThreadAbortException ex)
+            {
+
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// Result command
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void GrdResult_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            try
+            {
+                DataRowView drv = e.Row.DataItem as DataRowView;
+                if (e.Row.RowType == DataControlRowType.DataRow)
+                {
+                    Label lblVisitorID = (Label)e.Row.FindControl("lblVisitorId");
+                    ////Image imgVisitorImage = (Image)e.Row.FindControl("imgVisitorImage");
+                    ////Image imgVisitorImageBig = (Image)e.Row.FindControl("imgVisitorImageBig");
+                    string visitorId = lblVisitorID.Text.Trim();
+                    string encryptedVisitorID = VMSBusinessLayer.Encrypt(visitorId);
+                    ////imgVisitorImage.ImageUrl = string.Concat("..\\EmployeeImage.aspx?key=", encryptedVisitorID);
+                    ////imgVisitorImageBig.ImageUrl = string.Concat("..\\EmployeeImage.aspx?key=", encryptedVisitorID);
+                    DateTime dtcurrentTime = this.genTimeZone.GetCurrentDate();
+                    LinkButton btnCheckIn = (LinkButton)e.Row.FindControl("btnCheckIn");
+                    LinkButton btnCheckOut = (LinkButton)e.Row.FindControl("btnCheckOut");
+                    LinkButton btnLost = (LinkButton)e.Row.FindControl("btnLost");
+                    LinkButton lbtnPrint = (LinkButton)e.Row.FindControl("btnPrint");
+                    LinkButton btnView = (LinkButton)e.Row.FindControl("btnView");
+                    string currentTime;
+                    bool todaysRequest = Convert.ToDateTime(drv["Date"].ToString()).ToString("dd/MM/yyyy").Equals(dtcurrentTime.ToString("dd/MM/yyyy"));
+                    if (string.IsNullOrEmpty(Convert.ToString(drv["intime"])))
+                    {
+                        currentTime = dtcurrentTime.ToString("H:mm");
+                    }
+                    else
+                    {
+                        currentTime = drv["intime"].ToString();
+                    }
+
+                    DateTime dtinTime = this.ConcateDateTime(drv["Date"].ToString(), currentTime);
+                    bool currentRequest = false;
+                    if (dtinTime <= dtcurrentTime && dtcurrentTime < dtinTime.AddDays(1))
+                    {
+                        currentRequest = true;
+                    }
+
+                    DateTime dtexpectedOutTime;
+                    string expectedouttime;
+                    if (string.IsNullOrEmpty(Convert.ToString(drv["ExpectedOutTime"])))
+                    {
+                        expectedouttime = dtcurrentTime.ToString("H:mm");
+                    }
+                    else
+                    {
+                        expectedouttime = drv["ExpectedOutTime"].ToString();
+                    }
+
+                    if (Convert.ToDateTime(currentTime) < Convert.ToDateTime(expectedouttime))
+                    {
+                        dtexpectedOutTime = this.ConcateDateTime(drv["Date"].ToString(), expectedouttime);
+                    }
+                    else
+                    {
+                        dtexpectedOutTime = this.ConcateDateTime(drv["Date"].ToString(), expectedouttime).AddDays(1);
+                    }
+
+                    Image imgStatus = (Image)e.Row.FindControl("image");
+                    string strBadgeStatus = drv["BadgeStatus"].ToString();
+                    imgStatus.ImageUrl = this.SetStatusImage(strBadgeStatus, dtinTime, dtexpectedOutTime);
+                    if (todaysRequest || currentRequest)
+                    {
+                        if (string.IsNullOrEmpty(strBadgeStatus))
+                        {
+                            btnCheckIn.Enabled = true;
+                            btnCheckOut.Enabled = false;
+                            btnLost.Enabled = false;
+                            lbtnPrint.Enabled = false;
+                            btnView.Enabled = true;
+                        }
+                        else
+                        {
+                            switch (drv["BadgeStatus"].ToString().ToUpper().Trim())
+                            {
+                                case "ISSUED":
+                                    {
+                                        btnCheckIn.Enabled = false;
+                                        btnCheckOut.Enabled = true;
+                                        btnLost.Enabled = true;
+                                        lbtnPrint.Enabled = true;
+                                        btnView.Enabled = true;
+                                        break;
+                                    }
+
+                                case "RETURNED":
+                                    {
+                                        btnCheckIn.Enabled = false;
+                                        btnCheckOut.Enabled = false;
+                                        btnLost.Enabled = false;
+                                        lbtnPrint.Enabled = false;
+                                        btnView.Enabled = true;
+                                        break;
+                                    }
+
+                                default:
+                                    {
+                                        btnCheckIn.Enabled = false;
+                                        btnCheckOut.Enabled = false;
+                                        btnLost.Enabled = false;
+                                        lbtnPrint.Enabled = false;
+                                        btnView.Enabled = true;
+                                        break;
+                                    }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        btnCheckIn.Enabled = false;
+                        btnCheckOut.Enabled = false;
+                        btnLost.Enabled = false;
+                        lbtnPrint.Enabled = false;
+                        btnView.Enabled = true;
+                    }
+
+                    Label lblBadgeStatus = (Label)e.Row.FindControl("lblBadgeStatus");
+                    if (string.Compare(lblBadgeStatus.Text.ToUpper(), "RETURNED") == 0)
+                    {
+                        lblBadgeStatus.Text = Resources.LocalizedText.Returned;
+                    }
+                    else if (string.Compare(lblBadgeStatus.Text.ToUpper(), "ISSUED") == 0)
+                    {
+                        lblBadgeStatus.Text = Resources.LocalizedText.Issued;
+                    }
+                    else if (string.Compare(lblBadgeStatus.Text.ToUpper(), "LOST") == 0)
+                    {
+                        lblBadgeStatus.Text = Resources.LocalizedText.Lost;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// Refresh tick
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void RefreshGrid_Tick(object sender, EventArgs e)
+        {
+            this.BindData();
+        }
+
+        /// <summary>
+        /// Button yes click
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void BtnYes_Click(object sender, EventArgs e)
+        {
+            this.modalVisit.Hide();
+            this.SearchVisitors();
+        }
+
+        /// <summary>
+        /// Grid visitor 
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void GrdVisitor_Selected(object sender, SqlDataSourceStatusEventArgs e)
+        {
+            DataPager objpager = (DataPager)this.UpdatePanel1.FindControl("pager");
+            if (e.AffectedRows <= objpager.PageSize)
+            {
+                objpager.Visible = false;
+            }
+            else
+            {
+                objpager.Visible = true;
+            }
+
+            if (e.AffectedRows > 0)
+            {
+                this.errortbl.Visible = false;
+                this.lblResult.Visible = false;
+            }
+            else
+            {
+                this.errortbl.Visible = true;
+                this.lblResult.Text = Resources.LocalizedText.NoRecordFound;
+                this.lblResult.Visible = true;
+            }
+        }
+
+        /// <summary>
+        /// Grid visitor command
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void GrdVisitor_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            try
+            {
+                DataRowView drv = e.Row.DataItem as DataRowView;
+                foreach (GridViewRow grdRow in this.grdVisitor.Rows)
+                {
+                    Label lblVisitorId = (Label)grdRow.FindControl("lblVisitorId");
+                    Image imgVisitorImage = (Image)grdRow.FindControl("imgVisitorImage");
+                    Image imgVisitorImageBig = (Image)grdRow.FindControl("imgVisitorImageBig");
+                    string visitorId = lblVisitorId.Text.Trim();
+                    string encryptedVisitorID = VMSBusinessLayer.Encrypt(visitorId);
+                    imgVisitorImage.ImageUrl = string.Concat("..\\EmployeeImage.aspx?key=", encryptedVisitorID);
+                    imgVisitorImageBig.ImageUrl = string.Concat("..\\EmployeeImage.aspx?key=", encryptedVisitorID);
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// The sendSearch method
+        /// </summary>        
+        private void SendSearchParams()
+        {
+            string reqStatus = Convert.ToString(this.ddlReqStatus.SelectedValue);
+            string securityID = Session["LoginID"].ToString();
+            try
+            {
+                if (string.IsNullOrEmpty(this.txtSearch.Text) && this.txtFromDate.Text.Trim().Equals("__/__/____") && this.txtToDate.Text.Trim().Equals("__/__/____") && string.IsNullOrEmpty(reqStatus))
+                {
+                    this.lblStatusResult.Visible = false;
+                    this.grdResult.Visible = false;
+                    this.errortbl.Visible = true;
+                    this.lblResult.Visible = true;
+                    this.grdResult.Visible = false;
+                    this.btnExport.Visible = false;
+                    this.pnlImage.Visible = false;
+                    //// lblResult.Text = "Select atleast one search option";
+                    this.lblResult.Text = Resources.LocalizedText.Selectsearch;
+                }
+                else if (this.txtFromDate.Text != "__/__/____" && this.txtToDate.Text != "__/__/____")
+                {
+                    string[] str1 = this.txtFromDate.Text.Split('/');
+                    string[] str2 = this.txtToDate.Text.Split('/');
+                    DateTime dt1 = Convert.ToDateTime(str1[1] + "/" + str1[0] + "/" + str1[2]);
+                    DateTime dt2 = Convert.ToDateTime(str2[1] + "/" + str2[0] + "/" + str2[2]);
+
+                    if (dt1 > dt2)
+                    {
+                        this.errortbl.Visible = true;
+                        this.lblResult.Visible = true;
+                        this.grdResult.Visible = false;
+                        this.btnExport.Visible = false;
+                        this.pnlImage.Visible = false;
+                        ////  lblResult.Text = "To date should be greater than From date";
+                        this.lblResult.Text = Resources.LocalizedText.DateValid;
+                        this.modalVisit.Hide();
+                    }
+                    else
+                    {
+                        this.BindData();
+                    }
+                }
+                else
+                {
+                    this.BindData();
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// The GetSecurityCity method
+        /// </summary>
+        /// <returns>The System.Data.DataSet type object</returns>        
+        private DataSet GetSecurityCity()
+        {
+            string securityID = Session["LoginID"].ToString();
+            return this.requestDetails.GetSecurityCity(securityID);
+        }
+
+        /// <summary>
+        /// The ExportGridView method
+        /// </summary>        
+        private void ExportGridView()
+        {
+            try
+            {
+                DataTable dt = this.ExcelData();
+                string attachment = "attachment; filename=Visitorlog.xls";
+                Response.ClearContent();
+                Response.AddHeader("content-disposition", attachment);
+                Response.ContentType = "application/vnd.ms-excel";
+                string tab = string.Empty;
+                foreach (DataColumn dc in dt.Columns)
+                {
+                    Response.Write(tab + dc.ColumnName);
+                    tab = "\t";
+                }
+
+                Response.Write("\n");
+                int i;
+                foreach (DataRow dr in dt.Rows)
+                {
+                    tab = string.Empty;
+                    for (i = 0; i < dt.Columns.Count; i++)
+                    {
+                        Response.Write(tab + dr[i].ToString());
+                        tab = "\t";
+                    }
+
+                    Response.Write("\n");
+                }
+
+                Response.End();
+                ////HttpContext.Current.ApplicationInstance.CompleteRequest();
+            }
+            catch (System.Threading.ThreadAbortException)
+            {
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// The ValidateSearch method
+        /// </summary>
+        /// <returns>The type object</returns>        
+        private bool ValidateSearch()
+        {
+            bool retValue = false;
+
+            try
+            {
+                if (this.Session["LoginID"] != null)
+                {
+                    string reqStatus = Convert.ToString(this.ddlReqStatus.SelectedValue);
+                    string securityID = Session["LoginID"].ToString();
+                    if (string.IsNullOrEmpty(this.txtSearch.Text) &&
+                       !string.IsNullOrEmpty(this.txtFromDate.Text) && !string.IsNullOrEmpty(this.txtToDate.Text)
+                       && string.IsNullOrEmpty(reqStatus))
+                    {
+                        this.lblStatusResult.Visible = false;
+                        this.grdResult.Visible = false;
+                        this.errortbl.Visible = true;
+                        this.lblResult.Visible = true;
+                        this.grdResult.Visible = false;
+                        this.btnExport.Visible = false;
+                        this.pnlImage.Visible = false;
+                        ////  lblResult.Text = "Select atleast one search option";
+                        this.lblResult.Text = Resources.LocalizedText.Selectsearch;
+                    }
+                    else if (!string.IsNullOrEmpty(this.txtFromDate.Text) && !string.IsNullOrEmpty(this.txtToDate.Text))
+                    {
+                        string[] str1 = this.txtFromDate.Text.Split('/');
+                        string[] str2 = this.txtToDate.Text.Split('/');
+                        DateTime today = this.genTimeZone.GetLocalCurrentDate();
+                        string time = today.ToShortTimeString();
+                        DateTime fromDate = this.genTimeZone.GetdatetimedetailsinIST(Convert.ToDateTime(str1[0] + "/" + str1[1] + "/" + str1[2] + " " + time), Convert.ToString(Session["TimezoneOffset"]));
+                        DateTime todate = this.genTimeZone.GetdatetimedetailsinIST(Convert.ToDateTime(str2[0] + "/" + str2[1] + "/" + str2[2] + " " + time), Convert.ToString(Session["TimezoneOffset"]));
+
+                        if (fromDate > todate)
+                        {
+                            this.errortbl.Visible = true;
+                            this.lblResult.Visible = true;
+                            this.grdResult.Visible = false;
+                            this.btnExport.Visible = false;
+                            this.pnlImage.Visible = false;
+                            ////   lblResult.Text = "To date should be greater than From date";
+                            this.lblResult.Text = Resources.LocalizedText.DateValid;
+                            retValue = false;
+                        }
+                        else
+                        {
+                            retValue = true;
+                        }
+                    }
+                    else
+                    {
+                        retValue = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+
+            return retValue;
+        }
+
+        /// <summary>
+        /// The ExcelData method
+        /// </summary>
+        /// <returns>The System.Data.DataTable type object</returns>        
+        private DataTable ExcelData()
+        {
+            DataTable returnTable = new DataTable();
+            try
+            {
+                if (this.Session["LoginID"] != null)
+                {
+                    this.securitycity = this.GetSecurityCity();
+                    string reqStatus = Convert.ToString(this.ddlReqStatus.SelectedValue);
+                    string securityID = Session["LoginID"].ToString();
+                    string[] fromdateArray = this.txtFromDate.Text.Split('/');
+                    string[] todateArray = this.txtToDate.Text.Split('/');
+                    string fromTime = DateTime.Now.ToShortTimeString();
+                    string format = "dd/MM/yyyy HH:mm:ss";
+                    System.Globalization.CultureInfo provider =
+                        System.Globalization.CultureInfo.InvariantCulture;
+                    if (this.Session["currentDateTime"] != null)
+                    {
+                        string currenttime = Convert.ToString(HttpContext.Current.Session["currentDateTime"]);
+                        var today = DateTime.ParseExact(currenttime, format, provider);
+                        fromTime = today.ToShortTimeString();
+                    }
+
+                    GenericTimeZone genrTimeZone = new GenericTimeZone();
+                    DateTime fromDate = genrTimeZone.GetdatetimedetailsinIST(Convert.ToDateTime(fromdateArray[0] + "/" + fromdateArray[1] + "/" + fromdateArray[2] + " " + fromTime), Convert.ToString(Session["TimezoneOffset"]));
+                    DateTime todated = genrTimeZone.GetdatetimedetailsinIST(Convert.ToDateTime(todateArray[0] + "/" + todateArray[1] + "/" + todateArray[2] + " " + fromTime), Convert.ToString(Session["TimezoneOffset"]));
+                    string fromdateActual = fromDate.ToShortDateString();
+                    string todateActual = todated.ToShortDateString();
+
+                    this.griddata = this.requestDetails.ViewLogBySecurity(this.txtSearch.Text, securityID, fromdateActual, todateActual, reqStatus,string.Empty,string.Empty);
+                    for (int rowCount = 0; rowCount < this.griddata.Tables[0].Rows.Count; rowCount++)
+                    {
+                        bool isotherfacility = true;
+                        if (this.griddata.Tables[0].Rows[rowCount]["BadgeStatus"].ToString().ToUpper().Equals("RETURNED") || this.griddata.Tables[0].Rows[rowCount]["BadgeStatus"].ToString().ToUpper().Equals("LOST"))
+                        {
+                            DateTime todate = Convert.ToDateTime(Convert.ToDateTime(this.griddata.Tables[0].Rows[rowCount]["ActualOutTime"].ToString()).ToShortDateString());
+                            DateTime fromdate = Convert.ToDateTime(Convert.ToDateTime(fromdateActual).ToShortDateString());
+                            TimeSpan ts = todate - fromdate;
+                            if ((ts.Days < 0) && (todate != fromdate))
+                            {
+                                this.griddata.Tables[0].Rows[rowCount].Delete();
+                            }
+                        }
+                        else
+                        {
+                            // added for CR IRVMS22062010CR07  starts here done by Priti
+                            for (int rowCountFac = 0; rowCountFac < this.securitycity.Tables[0].Rows.Count; rowCountFac++)
+                            {
+                                if (this.griddata.Tables[0].Rows[rowCount]["Facility"].ToString().Equals(this.securitycity.Tables[0].Rows[rowCountFac]["Facility"].ToString()))
+                                {
+                                    isotherfacility = false;
+                                }
+                            }
+
+                            if (isotherfacility)
+                            {
+                                this.griddata.Tables[0].Rows[rowCount].Delete();
+                            }
+                            ////end addition for CR IRVMS22062010CR07  starts here done by Priti
+                        }
+                    }
+
+                    if (this.griddata.Tables[0].Rows.Count > 0)
+                    {
+                        this.lblResult.Visible = false;
+                        this.lblStatusResult.Visible = false;
+                        this.grdResult.Visible = true;
+                        returnTable = this.griddata.Tables[0].Copy();
+                        returnTable.Columns.Remove("DetailsID");
+                        returnTable.Columns.Remove("Cnt");
+                        returnTable.Columns.Remove("VisitorID");
+                        returnTable.Columns.Remove("RequestID");
+                        returnTable.Columns.Remove("VisitDetailsID");
+                        returnTable.Columns.Remove("NativeCountry");
+                        returnTable.Columns.Remove("EmailID");
+                        returnTable.Columns.Remove("VisitorReferenceNo");
+                        returnTable.Columns.Remove("Comments");
+
+                        DataColumn sno = new DataColumn("S.No", System.Type.GetType("System.Int32"));
+                        sno.AutoIncrement = true;
+                        sno.AutoIncrementSeed = 1000;
+                        sno.AutoIncrementStep = 1;
+                        //// Add the column to a new DataTable. 
+                        returnTable.Columns.Add(sno);
+                        for (int i = 0; i < returnTable.Rows.Count; i++)
+                        {
+                            returnTable.Rows[i]["S.No"] = i + 1;
+                        }
+
+                        returnTable.Columns["date"].ColumnName = "Date";
+                        returnTable.Columns["inTime"].ColumnName = "InTime";
+                        returnTable.Columns["VisitingCity"].ColumnName = "City";
+                        returnTable.Columns["S.No"].SetOrdinal(0);
+                        returnTable.Columns["Name"].SetOrdinal(1);
+                        returnTable.Columns["Company"].SetOrdinal(2);
+                        returnTable.Columns["Designation"].SetOrdinal(3);
+                        returnTable.Columns["MobileNo"].SetOrdinal(4);
+                        returnTable.Columns["Host"].SetOrdinal(5);
+                        returnTable.Columns["Purpose"].SetOrdinal(6);
+                        returnTable.Columns["City"].SetOrdinal(7);
+                        returnTable.Columns["Facility"].SetOrdinal(8);
+                        returnTable.Columns["Date"].SetOrdinal(9);
+                        returnTable.Columns["FromDate"].SetOrdinal(10);
+                        returnTable.Columns["ToDate"].SetOrdinal(11);
+                        returnTable.Columns["InTime"].SetOrdinal(12);
+                        returnTable.Columns["ExpectedOutTime"].SetOrdinal(13);
+                        returnTable.Columns["ActualOutTime"].SetOrdinal(14);
+                        returnTable.Columns["BadgeNo"].SetOrdinal(15);
+                        returnTable.Columns["BadgeStatus"].SetOrdinal(16);
+                        returnTable.Columns["RequestStatus"].SetOrdinal(17);
+                        returnTable.Columns["HostDepartment"].SetOrdinal(18);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+
+            return returnTable;
+        }
+
+        /// <summary>
+        /// The DateTime method
+        /// </summary>
+        /// <param name="date">The Date parameter</param>
+        /// <param name="time">The time parameter</param>
+        /// <returns>The System.DateTime type object</returns>        
+        private DateTime ConcateDateTime(string date, string time)
+        {
+            DateTime retDate = Convert.ToDateTime(date).AddHours(double.Parse(time.Split(':')[0])).AddMinutes(double.Parse(time.Split(':')[1]));
+            return retDate;
+        }
+
+        /// <summary>
+        /// The SetStatusImage method
+        /// </summary>
+        /// <param name="strStatus">The Status parameter</param>
+        /// <param name="intime">The InTime parameter</param>
+        /// <param name="outTime">The OutTime parameter</param>
+        /// <returns>The string type object</returns>        
+        private string SetStatusImage(string strStatus, DateTime intime, DateTime outTime)
+        {
+            string strImageUrl = string.Empty;
+            try
+            {
+                // DateTime dtNow = DateTime.Now;
+                DateTime dtnow = this.genTimeZone.GetCurrentDate();
+                switch (strStatus.ToUpper().Trim())
+                {
+                    case "ISSUED":
+                        {
+                            if (dtnow > outTime)
+                            {
+                                strImageUrl = "~\\images\\Reddishblink.gif";
+                            }
+                            else
+                            {
+                                strImageUrl = "~\\images\\Amber1.jpg";
+                            }
+
+                            break;
+                        }
+
+                    case "RETURNED":
+                        {
+                            strImageUrl = "~\\images\\Green.jpg";
+
+                            break;
+                        }
+
+                    default:
+                        {
+                            strImageUrl = "~/Images/Black.jpg";
+
+                            break;
+                        }
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+
+            return strImageUrl;
+        }
+
+        /// <summary>
+        /// The Status method
+        /// </summary>        
+        private void InitStatus()
+        {
+            VMSBusinessLayer.UserDetailsBL userDetailsBL = new VMSBusinessLayer.UserDetailsBL();
+            List<string> druserInfo = userDetailsBL.GetStatus();
+            this.ddlReqStatus.DataSource = druserInfo;
+            this.ddlReqStatus.DataBind();
+            if ((this.ddlReqStatus.Items.Count == 0) || (this.ddlReqStatus.Items.Count > 0))
+            {
+                this.ddlReqStatus.Items.Insert(0, new ListItem("Select", string.Empty));
+            }
+        }
+
+        /// <summary>
+        /// The Reason method
+        /// </summary>        
+        private void InitReason()
+        {
+            string strType = Resources.LocalizedText.ReprintComments;
+            List<string> reasonDataText = new List<string>();
+            string[] reasonListArray;
+            VMSBusinessLayer.MasterDataBL masterDataBL = new VMSBusinessLayer.MasterDataBL();
+            List<string> drreason = masterDataBL.GetMasterData(strType);
+            int intIterValue = 0;
+            foreach (string reasonData in drreason)
+            {
+                reasonListArray = reasonData.ToString().Split('|');
+                this.ddlReason.Items.Insert(intIterValue, new ListItem(reasonListArray[0].ToString(), intIterValue.ToString()));
+                intIterValue++;
+            }
+        }
+
+        ////Setting the Status-color based on the badgestatus
+        ////Bugfix - Nightshift visitor 
+        
+        /// <summary>
+        /// The GetImageUrl method
+        /// </summary>
+        /// <param name="intime">The in time parameter</param>
+        /// <param name="dt">The parameter</param>
+        /// <param name="status">The Status parameter</param>
+        /// <returns>The string type object</returns>        
+        private string GetImageUrl(string intime, string dt, string status)
+        {
+            DateTime dt1 = Convert.ToDateTime(dt);
+            DateTime dt2 = Convert.ToDateTime(System.DateTime.Now.ToString("H:mm"));
+            ////Bugfix - Nightshift visitor 
+            DateTime intime1 = Convert.ToDateTime(intime);
+            if (status.ToUpper().Equals("IN"))
+            {
+                if (dt2 > dt1 && dt1 > intime1)
+                {
+                    return "~\\images\\Reddishblink.gif";
+                }
+                else
+                {
+                    return "~\\images\\Amber1.jpg";
+                }
+            }
+            else if (status.ToUpper().Equals("OUT"))
+            {
+                return "~\\images\\Green.jpg";
+            }
+            else
+            {
+                return "~\\images\\Black.jpg";
+            }
+        }
+
+        /// <summary>
+        /// The Enable Controls method
+        /// </summary>        
+        private void EnableOrDiableControls()
+        {
+            try
+            {
+                if (this.hfSearch.Checked == true)
+                {
+                    this.pnlGotoVisitors.Visible = true;
+                    this.pnlGotoRequests.Visible = false;
+                    this.grdResult.Visible = true;
+                    this.grdVisitor.Visible = false;
+                    this.pager.Visible = false;
+                    this.txtExpress.Enabled = true;
+                    this.txtFromDate.Enabled = true;
+                    this.txtToDate.Enabled = true;
+                    this.FromDateCalendar.Enabled = true;
+                    this.imgFromDate.Enabled = true;
+                    this.imgFromDate.ImageUrl = "~/Images/calender-icon.png";
+                    this.imbRefreshStartdate.Enabled = true;
+                    this.imbRefreshStartdate.ImageUrl = "~/Images/Refresh_image.gif";
+                    this.ToDateCalendar.Enabled = true;
+                    this.imgToDate.Enabled = true;
+                    this.imgToDate.ImageUrl = "~/Images/calender-icon.png";
+                    this.imbRefreshEnddate.Enabled = true;
+                    this.imbRefreshEnddate.ImageUrl = "~/Images/Refresh_image.gif";
+                    this.ddlReqStatus.Enabled = true;
+                    this.btnExport.Visible = true;
+                }
+                else
+                {
+                    this.pnlGotoVisitors.Visible = false;
+                    this.pnlGotoRequests.Visible = true;
+                    this.grdResult.Visible = false;
+                    this.grdVisitor.Visible = true;
+                    this.pager.Visible = true;
+                    this.txtExpress.Enabled = false;
+                    this.txtFromDate.Enabled = false;
+                    this.txtToDate.Enabled = false;
+                    this.FromDateCalendar.Enabled = false;
+                    this.ToDateCalendar.Enabled = false;
+                    this.imgFromDate.Enabled = false;
+                    this.imgFromDate.ImageUrl = "~/Images/calender-icon_disabled.gif";
+                    this.imbRefreshStartdate.Enabled = false;
+                    this.imbRefreshStartdate.ImageUrl = "~/Images/Refresh_image_disabled.gif";
+                    this.imgToDate.Enabled = false;
+                    this.imgToDate.ImageUrl = "~/Images/calender-icon_disabled.gif";
+                    this.imbRefreshEnddate.Enabled = false;
+                    this.imbRefreshEnddate.ImageUrl = "~/Images/Refresh_image_disabled.gif";
+                    this.ddlReqStatus.Enabled = false;
+                    this.btnExport.Visible = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Utility.VMSUtility.LogExceptionAndShowErrorPage(ex, HttpContext.Current);
+            }
+        }
+
+        /// <summary>
+        /// The SearchVisitors method
+        /// </summary>        
+        private void SearchVisitors()
+        {
+            VMSBusinessLayer.RequestDetailsBL objmasterbl = new VMSBusinessLayer.RequestDetailsBL();
+            this.UpnlVisitor.Visible = true;
+            this.pnlRequests.Visible = false;
+            this.lblResult.Visible = false;
+            this.grdVisitor.DataSource = objmasterbl.Getgrdvisitorsearchresult(this.txtSearch.Text);
+            this.grdVisitor.DataBind();
+            this.hfSearch.Checked = false;
+            this.EnableOrDiableControls();
+            if (this.grdVisitor.Rows.Count == 0)
+            {
+                this.pager.Visible = false;
+            }
+            else
+            {
+                this.pager.Visible = true;
+            }
+        }
+
+        #endregion
+    }
+}
