@@ -1,0 +1,606 @@
+::placeholder {
+    color: #596679;
+    opacity: 1; /* Firefox */
+     font: 14px;
+    font-family:Verdana;
+    content: '\f069';
+}
+
+:-ms-input-placeholder {
+    color: #596679;
+     font: 14px;
+    font-family:Verdana;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: #596679;
+     font: 14px;
+    font-family:Verdana;
+    padding: 2%;
+    content: '\f069';
+}
+.RecentvisitortableTheadtr ::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #e3e4e6;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #e3e4e6;
+    }
+
+.MainContainer {
+    background-color: #EDF2F6;
+    width: 100%;
+    height: 545px;
+}
+
+.helpimg {
+    height: 32px;
+    width: 32px;
+    float: left;
+    margin-top: -8%;
+    background: url('../../images/New Images/VMS-Icons.png') no-repeat -196px -24px;
+}
+
+.Logoimg {
+    height: 32px;
+    width: 32px;
+    float: left;
+    margin-top: 11px;
+    background: url('../../images/New Images/VMS-Icons.png') no-repeat -28px -23px;
+    border-color: transparent;
+    margin-left: 15px;
+}
+
+.NewVisitorIcon {
+    height: 18px;
+    width: 18px;
+    margin-top: 7%;
+    float: left;
+    margin-left: 9%;
+    background: url('../../images/New Images/VMS-Icons.png') no-repeat -286px -238px;
+}
+
+.SubContainerLeft {
+    float: left;
+    width: 0%;
+    max-height: 498px;
+    overflow-x: hidden;
+    /*overflow-y: scroll;*/
+}
+
+.SubContainerRight {
+    float: right;
+    width: 1200px;
+    height: 490px;
+    background-color: #ffffff;
+    margin-top: 18px;
+}
+
+.txtpurpose {
+    width: 287px;
+    margin-left: 15px;
+}
+
+#ddlpurpose {
+    height: 36px;
+    padding-left: 20px;
+    border: 1px solid #CCCCCC;
+}
+
+#ddllocationlist {
+    width: 229px;
+    height: 42px;
+    padding-left: 2px;
+    margin-left: 20px;
+}
+
+.divLocationdetails {
+    width: 262px;
+    margin-left: 15px;
+    background-color: #ffffff;
+    border: 1px solid #CCCCCC;
+    margin-top: 10px;
+    height: 198px;
+    float: left;
+}
+
+.textBoxhome {
+    background: transparent;
+    height: 36px;
+    /*border: 1px solid #CCCCCC;*/
+    color: #596679;
+     font: 14px;
+    font-family:Verdana;
+    width: 240px;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    float: left;
+    margin-left: -5px;
+    padding-left: 2px;
+}
+
+.imgdate {
+    height: 20px;
+    width: 20px;
+    background: url(/images/New%20Images/VMS-Icons.png) no-repeat -455px -25px;
+    float: left;
+    margin-left: -8%;
+    margin-top: 4%;
+}
+
+.Starttime {
+    width: 105px;
+    margin-left: 7%; 
+}
+
+.Endtime {
+    width: 105px;
+    margin-left: 2%;
+}
+
+.ImgStartTime {
+    height: 20px;
+    width: 20px;
+    /*background: url(/images/New%20Images/VMS-Icons.png) no-repeat -39px -91px;*/
+    float: left;
+    margin-left: -8%;
+    margin-top: 3%;
+}
+
+.ImgEndTime {
+    height: 20px;
+    width: 20px;
+    /*background: url(/images/New%20Images/VMS-Icons.png) no-repeat -35px -96px;*/
+    float: left;
+    margin-left: -9%;
+    margin-top: 5%;
+}
+
+.ImgHostID {
+    height: 20px;
+    width: 20px;
+    background: url(/images/New%20Images/VMS-Icons.png) no-repeat -116px -172px;
+    float: left;
+    margin-left: -7%;
+    margin-top: 6%;
+}
+
+.Dataccessdiv {
+    margin-left: 20px;
+    margin-top: 20px;
+    float: left;
+}
+
+.dataaccesscheckbox {
+    background-color: #ebeeee;
+    border-color: #b6c0c3;
+    height: 15px;
+    width: 15px;
+    border-radius: 1px;
+}
+
+.dataaccesscheckboxlabel {
+    color: #596679;
+     font: 14px;
+    font-family:Verdana;
+}
+
+.AddmoreDiv {
+    background-color: #ddfbd1;
+    color: #6ea822;
+    font: 12px;
+    font-family:Verdana;
+    font-weight:bold;
+    height: 28px;
+    width: 100%;
+    float: left;
+    margin-top: 15px;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+}
+
+.AddmoreDivimg {
+    height: 8px;
+    width: 8px;
+    background: url(/images/New%20Images/VMS-Icons.png) no-repeat -458px -172px;
+}
+
+.searchbar {
+    height: 58px;
+    border-bottom: 1px solid #DEE4E9;
+}
+
+.txtserachbox {
+    margin-left: 14px;
+    height: 34px;
+    width: 370px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    margin-top: 12px;
+    vertical-align: bottom;
+    float: left;
+    padding-left: 38px;
+    color: #596679;
+     font: 14px;
+    font-family:Verdana;
+}
+
+.btnserach {
+    background-color: #8ac542;
+    border: 1px solid #cccccc;
+    color: #ffffff;
+    cursor: pointer;
+    margin-top: 12px;
+     font: 14px;
+    font-family:Verdana;
+    font-weight:bold;
+    float: left;
+    height: 34px;
+    width: 70px;
+    text-align: center;
+    line-height: 33px;
+}
+
+.btnNewVisitor {
+    background-color: #8ac542;
+    border: 1px solid #cccccc;
+    color: #ffffff;
+    cursor: pointer;
+    margin-top: 12px;
+   font: 14px;
+    font-family:Verdana;
+    font-weight:bold;
+    float: left;
+    height: 34px;
+    width: 122px;
+    text-align: center;
+    line-height: 35px;
+    margin-left: 180px;
+    cursor: pointer;
+}
+
+input[type='checkbox']:checked:after {
+    color: #00728f;
+}
+
+.addtocarticon {
+    height: 14px;
+    width: 18px;
+    margin-top: 7%;
+    float: left;
+    margin-left: 17%;
+    background: url(/images/New%20Images/VMS-Icons.png) no-repeat -116px -239px;
+}
+
+.Removeicon {
+    height: 8px;
+    width: 8px;
+    background: url(/images/New%20Images/VMS-Icons.png) no-repeat -372px -172px;
+}
+
+#spncartcount1 {
+    float: left;
+    margin-left: 15%;
+    margin-top: -6%;
+}
+
+.cartcount {
+    float: left;
+    font: 16px Proxima-Nova-Bold;
+    color: #8ac542;
+    margin-top: 20px;
+    margin-left: 5px;
+}
+
+.CartImg {
+    height: 32px;
+    width: 32px;
+    background: url(/images/New%20Images/VMS-Icons.png) no-repeat -192px -228px;
+    margin-left: 28px;
+    float: left;
+    margin-top: 12px;
+    cursor: pointer;
+}
+
+.SearchIcon {
+    height: 32px;
+    width: 32px;
+    background: url(/images/New%20Images/VMS-Icons.png) no-repeat -117px -28px;
+    margin-left: -401px;
+    float: left;
+    margin-top: 21px;
+}
+
+.divRecentvisitor {
+    height: 460px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.Recentvisitortable {
+    width: 100%;
+    border: 1px solid black;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-collapse:collapse;
+}
+
+tr.RecentvisitortableTheadtr td {
+    border: 1px solid black;
+     border-collapse:collapse;
+}
+
+.Recentvisitortabletd {
+    width: 17%;
+}
+
+.Recentvisitortabletextbox {
+    /*border: 1px solid #CCCCCC;*/
+    border-color: transparent;
+    height: 30px;
+    width: 118px;
+    color: #596679;
+    font-family:  Verdana;
+    font-size:x-small;
+    padding-left: 7px;
+    background-color: transparent;
+    -webkit-appearance: none;
+    text-overflow:ellipsis;
+}
+.Recentvisitortablebodytrodd td {
+    border: 1px solid black;
+    /*padding: 5px;*/
+    border-collapse: collapse;
+
+}
+
+.Recentvisitortablebodytreven td {
+    border: 1px solid black;
+    /*padding: 5px;*/
+    border-collapse: collapse;
+
+}
+.Recentvisitortableaftertextbox {
+    /*border: 1px solid #CCCCCC;*/
+    border-color: white;
+    height: 25px;
+    width: 118px;
+    color: #596679;
+    font-family: Verdana;
+    font-size:x-small;
+    padding-left: 7px;
+    background-color: #ffffff;
+}
+
+.RecentvisitortableTheadtr {
+    height: 36px;
+    font-family: Verdana;
+    font-size:x-small;
+    color: white;
+    background-color: #3188B5;
+   /*line-height: 38px;*/ 
+    border: 1px solid #e1e2e4;
+    /*border-top: 0;
+    border-left: 0;
+    border-right: 0;*/
+    font-weight: bold;
+}
+
+.Recentvisitortablebodytrodd {
+   /*height: 40px;*/ 
+    font-family: Verdana;
+    font-size:x-small;
+    color: #596679;
+    background-color: #ffffff;
+   /*line-height: 38px;*/ 
+}
+
+.Equipmenttabletexbox {
+    width: 198px;
+    height: 30px;
+    margin-left: 0%;
+    padding-left: 0px;
+}
+
+.Equipmenttabletd {
+    width: 25%;
+}
+
+.Recentvisitortablebodytreven {
+    /*height: 40px;*/
+    font-family:  Verdana;
+    font-size:x-small;
+    color: #596679;
+    background-color: #FAFBFD;
+    /*line-height: 38px;*/
+}
+
+.footerContainer {
+    position: absolute;
+    /*left: 360px;*/
+    bottom: -25px;
+    width: 1200px;
+    height: 59px;
+    background-color: #ffffff;
+    color: white;
+    border: 1px solid #cccccc;
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
+    top : 610px;
+}
+
+.btnAddCart {
+    background-color: #3188B5;
+    border: 1px solid #cccccc;
+    color: #ffffff;
+    cursor: pointer;
+    margin-top: 14px;
+    font: 14px;
+    font-family:Verdana;
+    float: right;
+    height: 34px;
+    width: 137px;
+    line-height: 33px;
+    margin-right: 1%;
+}
+
+.btnPreviewSubmit {
+    background-color: #3188B5;
+    border: 1px solid #cccccc;
+    color: #ffffff;
+    cursor: pointer;
+    margin-top: 14px;
+     font: 14px;
+    font-family:Verdana;
+    float: right;
+    height: 34px;
+    width: 150px;
+    text-align: center;
+    line-height: 33px;
+    margin-right: 1%;
+}
+
+.DeleteIcon {
+    height: 20px;
+    width: 20px;
+    background: url(/images/New%20Images/VMS-Icons.png) no-repeat -203px -100px;
+    cursor: pointer;
+    margin-top: 3%;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    -webkit-animation-name: fadeIn; /* Fade in the background */
+    -webkit-animation-duration: 0.4s;
+    animation-name: fadeIn;
+    animation-duration: 0.4s;
+}
+
+/* Modal Content */
+.modal-content {
+    position: fixed;
+    background-color: #fefefe;
+    width: 878px;
+    bottom: 0;
+    -webkit-animation-name: slideIn;
+    -webkit-animation-duration: 0.4s;
+    animation-name: slideIn;
+    animation-duration: 0.4s;
+    /*margin-bottom: 10%;
+    margin-left: 232px;*/
+    height: 390px;
+      top: 25%;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+     font: 16px;
+    font-family:Verdana;
+    margin-top: 18px;
+    margin-right: 15px;
+}
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+.closeequip {
+    color: white;
+    float: right;
+    font: 16px;
+    font-family:Verdana;
+    margin-top: 18px;
+    margin-right: 15px;
+}
+
+    .closeequip:hover,
+    .closeequip:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: #3188B5;
+    color: #ffffff;
+     font: 16px;
+     /*font-weight:bold;*/
+    font-family:Verdana;
+    height: 50px;
+}
+
+.modal-body {
+    padding: 2px 16px;
+}
+
+.modal-footer {
+    padding: 2px 16px;
+    background-color: #E7FBDF;
+    color: white;
+    bottom: 0;
+    height: 63px;
+    font: 14px;
+    font-family:Verdana;
+}
+
+.RecentVisitortablebody {
+    height: 460px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.divRecentVisitor {
+    height: 57px;
+}
+
+.RecentvisitorH1 {
+    float: left;
+    color: #8994a5;
+    font: 14px;
+    font-family:Verdana;
+    margin-left: 4px;
+    margin-top: 1.8%;
+}
+
+.ui-widget{
+    font-size:11px;
+}
+/*select.Recentvisitortabletextbox::-ms-expand {
+    display: none;
+}*/
+
+select.Recentvisitortabletextbox::-ms-expand {
+    display: none;
+}
