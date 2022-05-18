@@ -1,0 +1,322 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Badge</title>
+    <style type="text/css">
+        .style1
+        {
+            width: 49%;
+        }
+        .style2
+        {
+            width: 256px;
+        }
+    </style>
+    <script language="javascript" type="text/javascript">
+
+
+        function imgPrint_onclick() {
+            //alert('hi');
+            window.print();
+            window.close();
+        }
+
+
+    </script>
+    <link href="App_Themes/UIStyle.css" rel="stylesheet" type="text/css" />
+</head>
+<body onload="Page_load()">
+    <table width="100%">
+        <tr align="left" valign="top">
+            <td>
+                <table width="90%" style="text-align: left;">
+                    <tr>
+                        <td align="left" class="style1">
+                            <!--<img src="Images/logo_1.jpg" width="200px" />-->
+                            <img src="Images/Cognizant_Blue_HD.png" width="200px" />
+                        </td>
+                        <td>
+                            <label id="lblBadgehead" style="font-weight: bold; width: 30%" class="lblField">
+                                Badge No. :
+                                <label id="lblBatchNo" style="text-align: left">
+                                </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <table>
+                                <tr align="left">
+                                    <td>
+                                        <label id="lblFacilityhead" style="font-weight: bold;" style="text-align: left" class="lblField">
+                                            Facility Name :</label>
+                                    </td>
+                                    <td>
+                                        <label id="lblFacility" style="text-align: left">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr align="center">
+                                    <td colspan="2">
+                                        <img src="Images/DummyPhoto.png" width="150px" height="175px" />
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td>
+                                        <label id="lblNamehead" style="font-weight: bold;" style="text-align: left" class="lblField">
+                                            Name :</label>
+                                    </td>
+                                    <td>
+                                        <label id="lblName" style="text-align: left">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td>
+                                        <label id="lblOrganisationhead" style="font-weight: bold;" style="text-align: left"
+                                            class="lblField">
+                                            Organisation :</label>
+                                    </td>
+                                    <td>
+                                        <label id="lblOrganisation" style="text-align: left" class="lblField">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td>
+                                        <label id="lblPurposehead" style="font-weight: bold;" style="text-align: left" class="lblField">
+                                            Purpose :</label>
+                                    </td>
+                                    <td>
+                                        <label id="lblPurpose" style="text-align: left" class="lblField">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td>
+                                        <label id="lblHostNamehead" style="font-weight: bold;" style="text-align: left" class="lblField">
+                                            Host Name :</label>
+                                    </td>
+                                    <td>
+                                        <label id="lblHostName" style="text-align: left" class="lblField">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td>
+                                        <label id="lblDateTimeInhead" style="font-weight: bold;" style="text-align: left"
+                                            class="lblField">
+                                            Date/In Time :</label>
+                                    </td>
+                                    <td>
+                                        <label id="lblDateTimeIn" style="text-align: left" class="lblField">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td>
+                                        <label id="lblDateTimeOuthead" style="font-weight: bold;" style="text-align: left"
+                                            class="lblField">
+                                            Date/ETD :</label>
+                                    </td>
+                                    <td>
+                                        <label id="lblDateTimeOut" style="text-align: left" class="lblField">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td>
+                                        <label id="Label5" style="font-weight: bold;" style="text-align: left" class="lblField">
+                                            In case of any emergency please contact the security at – (Contact of local security
+                                            number)</label>
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td colspan="2" align="left">
+                                        <img src="Images/CameraNotAllowed.jpg" width="15px" />&nbsp;&nbsp;
+                                        <img src="Images/NoSmoking.jpg" width="15px" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table width="90%" style="text-align: left;">
+                    <tr>
+                        <td align="left" class="style2">
+                            <!--<img src="Images/logo_1.jpg" width="200px" />-->
+                            <img src="Images/Cognizant_Blue_HD.png" width="200px" />
+                        </td>
+                        <td>
+                            <label id="lblBadgeNo1" style="font-weight: bold; width: 30%" class="lblField">
+                                Badge No. :
+                                <label id="lblBatchNo1" style="text-align: left">
+                                </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <table>
+                                <tr align="left">
+                                    <td>
+                                        <label id="lblFacility1head" style="font-weight: bold; width: 30%" class="lblField">
+                                            Facility Name :
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label id="lblFacility1" style="text-align: left" class="lblField" />
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td>
+                                        <label id="lblEquipmenthead" style="font-weight: bold; width: 30%" class="lblField">
+                                            Equipment Permitted :</label>
+                                    </td>
+                                    <td>
+                                        <label id="lblEquipment" style="text-align: left" class="lblField">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td>
+                                        <label id="lblEscorthead" style="font-weight: bold; width: 30%" class="lblField">
+                                            Escort Details :</label>
+                                    </td>
+                                    <td>
+                                        <label id="lblEscort" style="text-align: left" class="lblField">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td>
+                                        <label id="lblPurpose1head" style="font-weight: bold; width: 30%" class="lblField">
+                                            Purpose :</label>
+                                    </td>
+                                    <td>
+                                        <label id="lblPurpose1" style="text-align: left" class="lblField">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td>
+                                        <label id="lblHostContactNohead" style="font-weight: bold; width: 30%" class="lblField">
+                                            Host Contact No :</label>
+                                    </td>
+                                    <td>
+                                        <label id="lblHostContactNo" style="text-align: left" class="lblField">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td>
+                                        <label id="lblHostSignaturehaed" style="font-weight: bold; width: 30%" class="lblField">
+                                            Host Signature :</label>
+                                    </td>
+                                    <td>
+                                        <label id="lblHostSignature" style="text-align: left" class="lblField">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td colspan="2" style="height: 200px;">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td>
+                                        <label id="Label13" style="font-weight: bold; width: 30%" class="lblField">
+                                            In case of any emergency please contact the security at – (Contact of local security
+                                            number)</label>
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td colspan="2" align="left">
+                                        <img src="Images/CameraNotAllowed.jpg" width="15px" />&nbsp;&nbsp;
+                                        <img src="Images/NoSmoking.jpg" width="15px" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <a href="javascript:window.print()" onclick="imgPrint_onclick()">Print </a>
+    <!--<input type=button value="Print" onclick="window.print();"/>-->
+    <script language="javascript" type="text/javascript">
+        //
+        /// By Priti
+        /// getting values from VMSEnterInformationBySecurity.aspx
+        //        
+        //  
+        function Page_load() {
+            alert("Your Batch is successfully generated.");
+            var lblFirstName = window.opener.document.getElementById("VMSContentPlaceHolder_VisitorGeneralInformationControl_txtFirstName");
+            var lblLastName = window.opener.document.getElementById("VMSContentPlaceHolder_VisitorGeneralInformationControl_txtLastName");
+            var lblOrganisation = window.opener.document.getElementById("VMSContentPlaceHolder_VisitorGeneralInformationControl_txtCompany");
+            var lblPurpose = window.opener.document.getElementById("VMSContentPlaceHolder_VisitorLocationInformationControl_ddlPurpose");
+            var lblPurpose1 = window.opener.document.getElementById("VMSContentPlaceHolder_VisitorLocationInformationControl_txtPurpose");
+            var lblHostName = window.opener.document.getElementById("VMSContentPlaceHolder_VisitorLocationInformationControl_txtHost");
+            var lblHostContactNo = window.opener.document.getElementById("VMSContentPlaceHolder_VisitorLocationInformationControl_txtHostContactNo");
+            var lblDateIn = window.opener.document.getElementById("VMSContentPlaceHolder_VisitorLocationInformationControl_txtFromDate");
+            var lblTimeIn = window.opener.document.getElementById("VMSContentPlaceHolder_VisitorLocationInformationControl_txtFromTime");
+            var lblDateOut = window.opener.document.getElementById("VMSContentPlaceHolder_VisitorLocationInformationControl_txtToDate");
+            var lblTimeOut = window.opener.document.getElementById("VMSContentPlaceHolder_VisitorLocationInformationControl_txtToTime");
+            var lblEscort = window.opener.document.getElementById("VMSContentPlaceHolder_VisitorLocationInformationControl_txtEscort");
+            var lblFacility = window.opener.document.getElementById("VMSContentPlaceHolder_VisitorLocationInformationControl_ddlFacility");
+            var lblBatchNo = window.opener.document.getElementById("VMSContentPlaceHolder_BatchNo");
+
+            var LaptopCount = 0;
+            var CameraCount = 0;
+            var OthersCount = 0;
+            document.getElementById("lblName").innerText = ((lblFirstName).value + ", " + (lblLastName).value);
+            document.getElementById("lblOrganisation").innerText = (lblOrganisation).value;
+            if (lblPurpose.options[lblPurpose.selectedIndex].value != "Others") {
+                document.getElementById("lblPurpose").innerText = lblPurpose.options[lblPurpose.selectedIndex].value;
+                document.getElementById("lblPurpose1").innerText = lblPurpose.options[lblPurpose.selectedIndex].value;
+            }
+            else {
+                document.getElementById("lblPurpose").innerText = (lblPurpose1).value;
+                document.getElementById("lblPurpose1").innerText = (lblPurpose1).value;
+            }
+            document.getElementById("lblHostName").innerText = (lblHostName).value;
+            document.getElementById("lblHostContactNo").innerText = (lblHostContactNo).value;
+            document.getElementById("lblDateTimeIn").innerText = (lblDateIn).value + " " + (lblTimeIn).value;
+            document.getElementById("lblDateTimeOut").innerText = (lblDateOut).value + " " + (lblTimeOut).value;
+            document.getElementById("lblEscort").innerText = (lblEscort).value;
+            document.getElementById("lblFacility").innerText = lblFacility.options[lblFacility.selectedIndex].value;
+            document.getElementById("lblFacility1").innerText = lblFacility.options[lblFacility.selectedIndex].value;
+            //alert((lblBatchNo).value);
+            document.getElementById("lblBatchNo").innerText = (lblBatchNo).value;
+            document.getElementById("lblBatchNo1").innerText = (lblBatchNo).value;
+            for (var i = 2; i <= 6; i++) {
+
+                var lblEquipment = window.opener.document.getElementById("VMSContentPlaceHolder_EquipmentPermittedControl_GridView1_ctl0" + i + "_ddlEquipmentType");
+                //alert(((lblEquipment).value));
+                if (((lblEquipment).value) == 12) {
+                    CameraCount++;
+                    document.getElementById("lblEquipment").innerText = document.getElementById("lblEquipment").innerText + "Camera" + CameraCount + ", ";
+                }
+                if (((lblEquipment).value) == 13) {
+                    LaptopCount++;
+                    document.getElementById("lblEquipment").innerText = document.getElementById("lblEquipment").innerText + "Laptop" + LaptopCount + ", ";
+                }
+                if (((lblEquipment).value) == 14) {
+                    OthersCount++;
+                    document.getElementById("lblEquipment").innerText = document.getElementById("lblEquipment").innerText + "Others" + OthersCount + ", ";
+                }
+
+
+                //document.getElementById("lblEquipment").innerText=document.getElementById("lblEquipment").innerText+lblEquipment.options[lblEquipment.selectedIndex].innerText+", "; 
+            }
+        }
+
+
+        //        var lblHostSignature = document.getElementById("lblHostSignature");
+                
+               
+    </script>
+</body>
+</html>
