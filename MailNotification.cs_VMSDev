@@ -1,0 +1,732 @@
+
+namespace VMSDev
+{
+ 
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.IO;
+    using System.Linq;
+    using System.ServiceModel;
+    using System.Text;
+    using System.Web;
+    using System.Web.UI.WebControls;
+    using System.Xml.Linq;
+    using System.Xml.Serialization;
+    using Telecom.BLL;
+    using VMSDev.OneCommunicatorService;
+
+    /// <summary>
+    /// The MailNotification class
+    /// </summary>
+    public class MailNotification
+    {
+        /// <summary>
+        /// The Resource field
+        /// </summary>        
+        private CommunicatorBLL blresource = new CommunicatorBLL();
+
+        /// <summary>
+        /// The IVS mail to HCM method
+        /// </summary>
+        /// <param name="associateID">The Associate ID parameter</param>
+        /// <param name="strEmpemailID">The Employee email ID parameter</param>
+        /// <param name="manager">The Manager parameter</param>
+        /// <param name="hostName">The Host Name parameter</param>
+        /// <param name="strManagerEmailId">The Manager Email Id parameter</param>
+        /// <param name="facility">The Facility parameter</param>
+        /// <param name="strSubjectLine">The Subject Line parameter</param>
+        /// <param name="city">The City parameter</param>
+        /// <param name="country">The country parameter</param>
+        /// <param name="strManagerID">The Manager ID parameter</param>
+        /// <param name="intime">The In Time parameter</param>
+        /// <param name="passNumber">The Pass Number parameter</param>
+        /// <param name="accessType">The Access Type parameter</param>
+        /// <param name="designationstatus">The Designation status parameter</param>
+        /// <param name="reasonforissue">The reason for issue parameter</param>
+        /// <param name="accessCardNo">The Access Card No parameter</param>
+        /// <param name="todate">The To Date parameter</param>        
+        public void IVSmailtoHCM(string associateID, string strEmpemailID, string manager, string hostName, string strManagerEmailId, string facility, string strSubjectLine, string city, string country, string strManagerID, string intime, string passNumber, string accessType, int designationstatus, string reasonforissue, string accessCardNo, string todate)
+        ////public void IVSmailtoHCM(string AssociateID, string strEmpemailID, string Manager, string HostName, string strManagerEmailId, string Facility, string strSubjectLine, string City, string FromDate, string ToDate, string country, string strManagerID,string InTime, string PassNumber)
+        {
+            ////Added for 1 day access card PAN IND RollOut  
+            string s = ConfigurationManager.AppSettings["OnedayAccessCard_PANIND_Mailer"].ToString();
+            string[] onedayAccesscard = s.Split(',');
+            foreach (string strCountrychk in onedayAccesscard)
+            {
+                if (strCountrychk == country)
+                {
+                    /*Associate SD and above*/
+                    if (designationstatus != 1)
+                    {
+                        var requestXML = new StringBuilder();
+                        TemplateParameters templateParameters = new TemplateParameters();
+                        TransactionParameters transactioParameters = new TransactionParameters();
+                        templateParameters.Subject = "Temporary Id Card for " + associateID;
+                        string managerFirstName = manager.Split(',')[1].ToString();
+                        string managerLastName = manager.Split(',')[0].ToString();
+                        manager = managerFirstName + ' ' + managerLastName;
+                        templateParameters.Manager = manager.Trim();
+                        string associateFirstName = hostName.Split(',')[1].ToString();
+                        string associateLastName = hostName.Split(',')[0].ToString();                           
+                        hostName = associateFirstName + ' ' + associateLastName;
+                        templateParameters.HostName = hostName.Trim();
+                        templateParameters.City = city.Trim();
+                        templateParameters.Facility = facility.Trim();
+                        ////templateParameters.FromDate = FromDate.Trim();
+                        ////By Krishna (449138)
+                        templateParameters.ToDate = todate.Trim();
+                        templateParameters.FromDate = string.Empty;                                                
+                        templateParameters.InTime = intime.Trim();
+                        templateParameters.Country = country.Trim();
+                        templateParameters.HostID = associateID.Trim();
+                        ////templateParameters.Link = string.Empty;
+                                               
+                        ////string emailBodyText = string.Empty;
+                        if (accessType == "1 Day ID Card")
+                        {
+                            templateParameters.EmailBodyText = @"We would like to inform you that " + hostName + "(" + associateID + ") has reported to work at " + city + "-" + facility + " " +
+                                        @"without the Cognizant Identity card. we have verified credentials of the associate in the " +
+                                      @"Identity Verification application and issued a Temporary Identity card. " +
+                                       @"The associate needs to return the mentioned Identity card  before leaving the facility today. ";
+                        }
+                        else if (accessType == "1 Day Access Card")
+                        {
+                            if (reasonforissue == "22")
+                            {
+                                ////templateParameters.Link = "here";
+                                //// changed by Krishna (449138) for Temp access card CR
+                                templateParameters.EmailBodyText = HttpUtility.HtmlDecode("We would like to inform you that ") + hostName + "(" + associateID + ") has reported to work at " + city + "-" + facility + " " +
+                                             @"without the Cognizant  Access card. we have verified credentials of the associate in the " +
+                                           @"Identity Verification application and issued a Temporary Access card (" + accessCardNo + ")" +
+                                            @"The associate needs to return the mentioned Access card before " + todate + "\n\n"
+                                              + System.Environment.NewLine +
+                                        ////@"Note to " + HostName + "(" + AssociateID + ") :  This access card has been issued to you as you have lost your permanent access card. Request you to please raise a request on the Access Card 2.0 portal by clicking here.";
+                               //// @"Note to " + HostName + @"(" + AssociateID + @") :  This access card has been issued to you as you have lost your permanent access card. Request you to please raise a request on the Access Card 2.0 portal by clicking <a href='www.google.co.in'>here</a>;";
+                               HttpUtility.HtmlDecode("<p><b>Note to " + hostName + "(" + associateID + ")</b> :  This access card has been issued to you as you have lost your permanent access card. Request you to please raise a request on the Access Card 2.0 portal by clicking <a href='https://onecognizant.cognizant.com/?GlobalAppId=2234'>here</a></p>");
+                            }
+                            else
+                            {
+                                templateParameters.EmailBodyText = @"We would like to inform you that " + hostName + "(" + associateID + ") has reported to work at " + city + "-" + facility + " " +
+                                             @"without the Cognizant  Access card. we have verified credentials of the associate in the " +
+                                           @"Identity Verification application and issued a Temporary Access card (" + accessCardNo + ")" +
+                                            @"The associate needs to return the mentioned Access card before " + todate;
+                            }
+                        }
+                        else if (accessType == "1 day ID Card and Access Card")
+                        {
+                            if (reasonforissue == "22")
+                            {
+                                ////templateParameters.Link = "here";
+                                templateParameters.EmailBodyText = HttpUtility.HtmlDecode("We would like to inform you that ") + hostName + "(" + associateID + ") has reported to work at " + city + "-" + facility + " " +
+                                      @"without the Cognizant Identity card and Access card. we have verified credentials of the associate in the " +
+                                    @"Identity Verification application and issued a Temporary Identity card and Temporary Access card (" + accessCardNo + ")" +
+                                     @"The associate needs to return the mentioned Identity card and Access card before " + todate +
+
+                                     HttpUtility.HtmlDecode("<p><b>Note to " + hostName + "(" + associateID + ")</b> :  This access card has been issued to you as you have lost your permanent access card. Request you to please raise a request on the Access Card 2.0 portal by clicking <a href='https://onecognizant.cognizant.com/?GlobalAppId=2234'>here</a></p>");
+                               //// @"Note to " + HostName + "(" + AssociateID + ") :  This access card has been issued to you as you have lost your permanent access card. Request you to please raise a request on the Access Card 2.0 portal by clicking here.";
+                            }
+                            else                             
+                            {
+                                templateParameters.EmailBodyText = @"We would like to inform you that " + hostName + "(" + associateID + ") has reported to work at " + city + "-" + facility + " " +
+                                          @"without the Cognizant Identity card and Access card. we have verified credentials of the associate in the " +
+                                        @"Identity Verification application and issued a Temporary Identity card and Temporary Access card (" + accessCardNo + ")" +
+                                         @"The associate needs to return the mentioned Identity card and Access card before " + todate;
+                            }
+                        }
+
+                        ////emailBodyText= @"Dear " + requesterName + @", <br/><br/>
+
+                        ////emailBodyText = @"We would like to inform you that" + HostName + "(" + AssociateID + ") has reported to work at" + City + "-" + Facility + "&nbsp;" +
+                        //               @"without the Cognizant Identity card.we have verified credentials of the associate in the" +
+                        //             @"Identity Verification application and issued a ‘One Day’ Identity card." +
+                        ////              @"The associate needs to return the mentioned Identity card before leaving the facility today.";
+
+                        OneCommunicatorTransactionParameters oneCommunicatorTransactionParameters = new OneCommunicatorTransactionParameters();
+
+                        oneCommunicatorTransactionParameters.GlobalAppId = System.Configuration.ConfigurationManager.AppSettings["appId"];    ////"116";
+
+                        oneCommunicatorTransactionParameters.Process = VMSConstants.VMSConstants.IVSCHECKIN;   ////"IVSCheckInProcess";           
+
+                        oneCommunicatorTransactionParameters.Recipients = strManagerID.Trim();
+                        oneCommunicatorTransactionParameters.RequestId = passNumber.Trim();
+
+                        Email email = new Email();
+                        email.TemplateParameters = templateParameters;
+                        email.CC = associateID.Trim();
+
+                        ////SMS sms = new SMS();
+                        ////sms.TransactionParameters = transactioParameters;
+                        ////sms.ShortMessage = "Please be informed that " + HostName + " has been issued a temporary ID card at " + Facility + " at " + InTime + ".\nRegards,\nPhysical Security.";
+                        ////sms.IsRequired = false;
+
+                        ChannelParameters channelParameters = new ChannelParameters();
+                        channelParameters.Email = email;
+                        ////channelParameters.SMS = sms;
+
+                        OneCommunicator oneCommunicator = new OneCommunicator();
+                        oneCommunicator.TransactionParameters = oneCommunicatorTransactionParameters;
+                        oneCommunicator.ChannelParameters = channelParameters;
+                        XDocument xdocument = null;
+                        RequestUnifiedVASContractClient requestUnifiedVASContractClient = null;
+                        string returnVal = string.Empty;
+                        try
+                        {
+                            XmlSerializer xmlSerializerEApproval = new XmlSerializer(oneCommunicator.GetType());
+                            StringBuilder sbeApproval = new StringBuilder();
+                            StringWriter sweApproval = new StringWriter(sbeApproval);
+                            xmlSerializerEApproval.Serialize(sweApproval, oneCommunicator);
+                            xdocument = XDocument.Load(new StringReader(sbeApproval.ToString()));
+                            //////string relace = xDocument.ToString().Replace("<emailBodyText>", "<emailBodyText><![CDATA[")
+                            //////    .Replace("</emailBodyText>", "]]></emailBodyText>");
+                            requestUnifiedVASContractClient = new RequestUnifiedVASContractClient();
+                            sweApproval.Close();
+                            returnVal = requestUnifiedVASContractClient.Notify(HttpUtility.HtmlDecode(xdocument.ToString()), null);
+                        }
+#pragma warning disable CS0168 // The variable 'ex' is declared but never used
+                        catch (Exception ex)
+#pragma warning restore CS0168 // The variable 'ex' is declared but never used
+                        {
+                        }
+                        finally
+                        {
+                            if (requestUnifiedVASContractClient != null && requestUnifiedVASContractClient.State != CommunicationState.Closed)
+                            {
+                                requestUnifiedVASContractClient.Close();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var requestXML = new StringBuilder();
+                        TemplateParameters templateParameters = new TemplateParameters();
+                        TransactionParameters transactioParameters = new TransactionParameters();
+                        templateParameters.Subject = "Temporary Id Card for " + associateID;
+                        string managerFirstName = manager.Split(',')[1].ToString();
+                        string managerLastName = manager.Split(',')[0].ToString();
+                        manager = managerFirstName + ' ' + managerLastName;
+                        templateParameters.Manager = manager.Trim();
+                        string associateFirstName = hostName.Split(',')[1].ToString();
+                        string associateLastName = hostName.Split(',')[0].ToString();
+                        ////By Krishna (449138)
+                        DateTime totime = Convert.ToDateTime(intime);
+                        totime = totime.AddHours(18);
+                        hostName = associateFirstName + ' ' + associateLastName;
+                        templateParameters.HostName = hostName.Trim();
+                        templateParameters.City = city.Trim();
+                        templateParameters.Facility = facility.Trim();
+                        ////templateParameters.FromDate = FromDate.Trim();
+                        ////templateParameters.ToDate = ToDate.Trim();
+                        templateParameters.FromDate = string.Empty;
+                        templateParameters.ToDate = string.Empty;
+                        templateParameters.InTime = intime.Trim();
+                        templateParameters.Country = country.Trim();
+                        templateParameters.HostID = associateID.Trim();
+                        ////by Krishna (449138)
+                        templateParameters.ToDate = todate.ToString();                        
+                        ////string emailBodyText = string.Empty;
+                        if (accessType == "1 Day ID Card")
+                        {
+                            templateParameters.EmailBodyText = @"Temporary ID card has been issued to you as you have reported to work at " + facility +
+                                @" office without Cognizant Identity Card. The card has been issued after verifying your credentials." +
+                               @"Please return the mentioned Identity card before leaving the facility today.";
+                        }
+                        else if (accessType == "1 Day Access Card")
+                        {
+                            templateParameters.EmailBodyText = @"Temporary access card has been issued to you as you have reported to work at  " + facility +
+                                @" office without Cognizant Identity Card. The card has been issued after verifying your credentials." +
+                               @"Please return the mentioned Identity card before " + todate;
+                        }
+                        else if (accessType == "1 day ID Card and Access Card")
+                        {
+                            templateParameters.EmailBodyText = @"Temporary  access card & ID card  has been issued to you as you have reported to work at " + facility +
+                                @" office without Cognizant Identity Card. The card has been issued after verifying your credentials." +
+                               @"Please return the mentioned Identity card before " + todate;
+                        }
+
+                        ////emailBodyText= @"Dear " + requesterName + @", <br/><br/> 
+
+                        ////emailBodyText = @"We would like to inform you that" + HostName + "(" + AssociateID + ") has reported to work at" + City + "-" + Facility + "&nbsp;" +
+                        //               @"without the Cognizant Identity card.we have verified credentials of the associate in the" +
+                        //             @"Identity Verification application and issued a ‘One Day’ Identity card." +
+                        ////              @"The associate needs to return the mentioned Identity card before leaving the facility today.";
+
+                        OneCommunicatorTransactionParameters oneCommunicatorTransactionParameters = new OneCommunicatorTransactionParameters();
+
+                        oneCommunicatorTransactionParameters.GlobalAppId = System.Configuration.ConfigurationManager.AppSettings["appId"];    ////"116";
+
+                        oneCommunicatorTransactionParameters.Process = VMSConstants.VMSConstants.IVSCHECKIN;   ////"IVSCheckInProcess";           
+
+                        oneCommunicatorTransactionParameters.Recipients = associateID.Trim();
+                            ////
+                        oneCommunicatorTransactionParameters.RequestId = passNumber.Trim();
+
+                        Email email = new Email();
+                        email.TemplateParameters = templateParameters;
+                        ////email.CC = AssociateID.Trim();
+
+                        ////SMS sms = new SMS();
+                        ////sms.TransactionParameters = transactioParameters;
+                        ////sms.ShortMessage = "Please be informed that " + HostName + " has been issued a temporary ID card at " + Facility + " at " + InTime + ".\nRegards,\nPhysical Security.";
+                        ////sms.IsRequired = false;
+
+                        ChannelParameters channelParameters = new ChannelParameters();
+                        channelParameters.Email = email;
+                        ////channelParameters.SMS = sms;
+
+                        OneCommunicator oneCommunicator = new OneCommunicator();
+                        oneCommunicator.TransactionParameters = oneCommunicatorTransactionParameters;
+                        oneCommunicator.ChannelParameters = channelParameters;
+                        XDocument xdocument = null;
+                        RequestUnifiedVASContractClient requestUnifiedVASContractClient = null;
+                        string returnVal = string.Empty;
+                        try
+                        {
+                            XmlSerializer xmlSerializerEApproval = new XmlSerializer(oneCommunicator.GetType());
+                            StringBuilder sbeApproval = new StringBuilder();
+                            StringWriter sweApproval = new StringWriter(sbeApproval);
+                            xmlSerializerEApproval.Serialize(sweApproval, oneCommunicator);
+                            xdocument = XDocument.Load(new StringReader(sbeApproval.ToString()));
+
+                            requestUnifiedVASContractClient = new RequestUnifiedVASContractClient();
+                            sweApproval.Close();
+                            returnVal = requestUnifiedVASContractClient.Notify(xdocument.ToString(), null);
+                        }
+#pragma warning disable CS0168 // The variable 'ex' is declared but never used
+                        catch (Exception ex)
+#pragma warning restore CS0168 // The variable 'ex' is declared but never used
+                        {
+                        }
+                        finally
+                        {
+                            if (requestUnifiedVASContractClient != null && requestUnifiedVASContractClient.State != CommunicationState.Closed)
+                            {
+                                requestUnifiedVASContractClient.Close();
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    var requestXML = new StringBuilder();
+                    TemplateParameters templateParameters = new TemplateParameters();
+                    TransactionParameters transactioParameters = new TransactionParameters();
+                    templateParameters.Subject = "Temporary Id Card for " + associateID;
+                    string managerFirstName = manager.Split(',')[1].ToString();
+                    string managerLastName = manager.Split(',')[0].ToString();
+                    manager = managerFirstName + ' ' + managerLastName;
+                    templateParameters.Manager = manager.Trim();
+                    string associateFirstName = hostName.Split(',')[1].ToString();
+                    string associateLastName = hostName.Split(',')[0].ToString();
+                    hostName = associateFirstName + ' ' + associateLastName;
+                    templateParameters.HostName = hostName.Trim();
+                    templateParameters.City = city.Trim();
+                    templateParameters.Facility = facility.Trim();
+                    ////templateParameters.FromDate = FromDate.Trim();
+                    ////templateParameters.ToDate = ToDate.Trim();
+                    templateParameters.FromDate = string.Empty;
+                    templateParameters.ToDate = string.Empty;
+                    templateParameters.InTime = intime.Trim();
+                    templateParameters.Country = country.Trim();
+                    templateParameters.HostID = associateID.Trim();
+                    string emailBodyText = string.Empty;
+                    //// requestXML.Append("<Body>" + emailBodyText + "</Body>");
+                    ////emailBodyText= @"Dear " + requesterName + @", <br/><br/>
+
+                    templateParameters.EmailBodyText = @"We would like to inform you that " + hostName + "(" + associateID + ") has reported to work at " + city + "-" + facility + " " +
+                                                   @"without the Cognizant Identity card.we have verified credentials of the associate in the " +
+                                                 @"Identity Verification application and issued a ‘One Day’ Identity card. " +
+                                                  @"The associate needs to return the mentioned Identity card before leaving the facility today. ";
+
+                    OneCommunicatorTransactionParameters oneCommunicatorTransactionParameters = new OneCommunicatorTransactionParameters();
+
+                    oneCommunicatorTransactionParameters.GlobalAppId = System.Configuration.ConfigurationManager.AppSettings["appId"];    ////"116";
+
+                    oneCommunicatorTransactionParameters.Process = VMSConstants.VMSConstants.IVSCHECKIN;   ////"IVSCheckInProcess";           
+
+                    oneCommunicatorTransactionParameters.Recipients = strManagerID.Trim();
+                    oneCommunicatorTransactionParameters.RequestId = passNumber.Trim();
+
+                    Email email = new Email();
+                    email.TemplateParameters = templateParameters;
+                    email.CC = associateID.Trim();
+
+                    ////SMS sms = new SMS();
+                    ////sms.TransactionParameters = transactioParameters;
+                    ////sms.ShortMessage = "Please be informed that " + HostName + " has been issued a temporary ID card at " + Facility + " at " + InTime + ".\nRegards,\nPhysical Security.";
+                    //////sms.IsRequired = false;
+
+                    ChannelParameters channelParameters = new ChannelParameters();
+                    channelParameters.Email = email;
+                    ////channelParameters.SMS = sms;
+
+                    OneCommunicator oneCommunicator = new OneCommunicator();
+                    oneCommunicator.TransactionParameters = oneCommunicatorTransactionParameters;
+                    oneCommunicator.ChannelParameters = channelParameters;
+                    XDocument xdocument = null;
+                    RequestUnifiedVASContractClient requestUnifiedVASContractClient = null;
+                    string returnVal = string.Empty;
+                    try
+                    {
+                        XmlSerializer xmlSerializerEApproval = new XmlSerializer(oneCommunicator.GetType());
+                        StringBuilder sbeApproval = new StringBuilder();
+                        StringWriter sweApproval = new StringWriter(sbeApproval);
+                        xmlSerializerEApproval.Serialize(sweApproval, oneCommunicator);
+                        xdocument = XDocument.Load(new StringReader(sbeApproval.ToString()));
+                        sweApproval.Close();
+                        requestUnifiedVASContractClient = new RequestUnifiedVASContractClient();
+                        returnVal = requestUnifiedVASContractClient.Notify(xdocument.ToString(), null);
+                    }
+#pragma warning disable CS0168 // The variable 'ex' is declared but never used
+                    catch (Exception ex)
+#pragma warning restore CS0168 // The variable 'ex' is declared but never used
+                    {
+                    }
+                    finally
+                    {
+                        if (requestUnifiedVASContractClient != null && requestUnifiedVASContractClient.State != CommunicationState.Closed)
+                        {
+                            requestUnifiedVASContractClient.Close();
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The Send Notification To Host method
+        /// </summary>
+        /// <param name="hostID">The Host ID parameter</param>
+        /// <param name="hostFirstName">The Host First Name parameter</param>
+        /// <param name="strVisitorName">The Visitor Name parameter</param>
+        /// <param name="strCompany">The Company parameter</param>
+        /// <param name="strFacility">The Facility parameter</param>
+        /// <param name="strCity">The City parameter</param>
+        /// <param name="strVisitorType">The Visitor Type parameter</param>
+        /// <param name="strFromDate">The From Date parameter</param>
+        /// <param name="strToDate">The To Date parameter</param>
+        /// <param name="requestID">The Request ID parameter</param>        
+        public void SendNotificationToHost(string hostID, string hostFirstName, string strVisitorName, string strCompany, string strFacility, string strCity, string strVisitorType, string strFromDate, string strToDate, string requestID)
+        {
+            if (ConfigurationManager.AppSettings["SendMail"] == "Y")
+            {
+                TemplateParameters templateParameters = new TemplateParameters();
+                TransactionParameters transactioParameters = new TransactionParameters();
+                templateParameters.HostID = hostID.Trim();
+                ////templateParameters.HostMailID = HostMailID.Trim();
+                templateParameters.HostFirstName = hostFirstName.Trim();
+                templateParameters.VisitorName = strVisitorName.Trim();
+                templateParameters.Company = strCompany.Trim();
+                ////templateParameters.Link = strLink.Trim();
+                templateParameters.FromDate = strFromDate.Trim();
+                templateParameters.ToDate = strToDate.Trim();
+                templateParameters.City = strCity.Trim();
+                templateParameters.VisitorType = strVisitorType.Trim();
+                templateParameters.Facility = strFacility.Trim();
+                templateParameters.EmailBodyText = " ";
+                //// templateParameters.Subject = VMSConstants.VMSConstants.VisitorRequestSubject;
+
+                OneCommunicatorTransactionParameters oneCommunicatorTransactionParameters = new OneCommunicatorTransactionParameters();
+
+                oneCommunicatorTransactionParameters.GlobalAppId = System.Configuration.ConfigurationManager.AppSettings["appId"]; ////"116";
+
+                oneCommunicatorTransactionParameters.Process = VMSConstants.VMSConstants.NOTIFICATIONTOHOST; ////"1CVisitorRequestSubmitProcess";
+
+                ////oneCommunicatorTransactionParameters.Process = "RICS";
+                oneCommunicatorTransactionParameters.Recipients = hostID;
+                oneCommunicatorTransactionParameters.RequestId = requestID.Trim();
+
+                Email email = new Email();
+                email.TemplateParameters = templateParameters;
+                ////email.CC = CC;
+
+                ChannelParameters channelParameters = new ChannelParameters();
+                channelParameters.Email = email;
+
+                OneCommunicator oneCommunicator = new OneCommunicator();
+                oneCommunicator.TransactionParameters = oneCommunicatorTransactionParameters;
+                oneCommunicator.ChannelParameters = channelParameters;
+                XDocument xdocument = null;
+                RequestUnifiedVASContractClient requestUnifiedVASContractClient = null;
+                string returnVal = string.Empty;
+                try
+                {
+                    XmlSerializer xmlSerializerEApproval = new XmlSerializer(oneCommunicator.GetType());
+                    StringBuilder sbeApproval = new StringBuilder();
+                    StringWriter sweApproval = new StringWriter(sbeApproval);
+                    xmlSerializerEApproval.Serialize(sweApproval, oneCommunicator);
+                    xdocument = XDocument.Load(new StringReader(sbeApproval.ToString()));
+                    sweApproval.Close();
+                    requestUnifiedVASContractClient = new RequestUnifiedVASContractClient();
+                    returnVal = requestUnifiedVASContractClient.Notify(xdocument.ToString(), null);
+                }
+#pragma warning disable CS0168 // The variable 'ex' is declared but never used
+                catch (Exception ex)
+#pragma warning restore CS0168 // The variable 'ex' is declared but never used
+                {
+                }
+                finally
+                {
+                    if (requestUnifiedVASContractClient != null && requestUnifiedVASContractClient.State != CommunicationState.Closed)
+                    {
+                        requestUnifiedVASContractClient.Close();
+                    }
+                }
+            }
+        }
+
+        ////597397
+        public void SendNotificationToHostICard(string HostID,string requestID,  string summary, string summaryJSON, string templateID, string content, string title)
+        {
+            TemplateParameters templateParameters = new TemplateParameters();
+            TransactionParameters transactioParameters = new TransactionParameters();
+
+            OneCommunicatorTransactionParameters oneCommunicatorTransactionParameters = new OneCommunicatorTransactionParameters();
+
+            oneCommunicatorTransactionParameters.GlobalAppId = "1496";
+
+            oneCommunicatorTransactionParameters.Process = "PSCollectVCardsClient";
+
+            ////oneCommunicatorTransactionParameters.Process = "RICS";
+            oneCommunicatorTransactionParameters.Recipients = HostID;  ////hostID;
+            oneCommunicatorTransactionParameters.RequestId = requestID.Trim();
+            Mobile mobile = new Mobile();
+            mobile.Summary = summary;
+            mobile.SummaryJSON = summaryJSON;
+         
+            mobile.TemplateID = templateID;
+            mobile.Content = content;
+            mobile.Title = title;
+            mobile.DueDate = string.Empty;
+
+            ////email.CC = CC;
+
+            ChannelParameters channelParameters = new ChannelParameters();
+          
+            channelParameters.Mobile = mobile;
+
+            OneCommunicator oneCommunicator = new OneCommunicator();
+            oneCommunicator.TransactionParameters = oneCommunicatorTransactionParameters;
+            oneCommunicator.ChannelParameters = channelParameters;
+            XDocument xdocument = null;
+            RequestUnifiedVASContractClient requestUnifiedVASContractClient = null;
+            string returnVal = string.Empty;
+            try
+            {
+                XmlSerializer xmlSerializerEApproval = new XmlSerializer(oneCommunicator.GetType());
+                StringBuilder sbeApproval = new StringBuilder();
+                StringWriter sweApproval = new StringWriter(sbeApproval);
+                xmlSerializerEApproval.Serialize(sweApproval, oneCommunicator);
+                xdocument = XDocument.Load(new StringReader(sbeApproval.ToString()));
+                sweApproval.Close();
+                requestUnifiedVASContractClient = new RequestUnifiedVASContractClient();
+                returnVal = requestUnifiedVASContractClient.Notify(HttpUtility.HtmlDecode(xdocument.ToString()), null);
+            }
+ 
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                if (requestUnifiedVASContractClient != null && requestUnifiedVASContractClient.State != CommunicationState.Closed)
+                {
+                    requestUnifiedVASContractClient.Close();
+                }
+            }
+        }
+
+            /////597397
+
+        /// <summary>
+        /// The Send Notification To Host method
+        /// </summary>
+        /// <param name="hostID">The Host ID parameter</param>
+        /// <param name="hostFirstName">The Host First Name parameter</param>
+        /// <param name="strtablebody">The Visitor Name parameter</param>
+        /// <param name="strFacility">The Facility parameter</param>
+        /// <param name="requestID">The Request ID parameter</param>   
+        /// <param name="requestor">The requestor parameter</param>      
+        public void CollectNotificationToHost(string hostID, string hostFirstName, string strtablebody, string strFacility, string requestID, string requestor,
+            string summary, string summaryJSON, string contentJSON, string templateID, string content, string title)
+        {
+            TemplateParameters templateParameters = new TemplateParameters();
+            TransactionParameters transactioParameters = new TransactionParameters();
+            templateParameters.HostID = string.Empty;
+            templateParameters.HostMailID = string.Empty;
+            templateParameters.HostFirstName = hostFirstName.Trim();
+            ////templateParameters.VisitorName = strVisitorName.Trim();
+            templateParameters.VisitorName = string.Empty;
+            templateParameters.Company = string.Empty;
+            ////templateParameters.Link = "";
+            templateParameters.FromDate = string.Empty;
+            templateParameters.ToDate = string.Empty;
+            templateParameters.City = string.Empty;
+            templateParameters.VisitorType = string.Empty;
+            templateParameters.Facility = strFacility.Trim();
+            templateParameters.EmailBodyText = string.Empty;
+            templateParameters.Requestor = requestor;
+            templateParameters.Visitors = strtablebody; 
+            templateParameters.Country = string.Empty;
+            templateParameters.HostName = string.Empty;
+            templateParameters.Subject = string.Empty;           
+
+            string summaryJSONreq = string.Empty;
+            string contentJSONreq = string.Empty;
+
+
+            string summaryJSONotp = string.Empty;
+            string contentJSONotp = string.Empty;
+
+            string visitplan = string.Empty;
+            //// templateParameters.Subject = VMSConstants.VMSConstants.VisitorRequestSubject;
+
+            OneCommunicatorTransactionParameters oneCommunicatorTransactionParameters = new OneCommunicatorTransactionParameters();
+
+            oneCommunicatorTransactionParameters.GlobalAppId = "1496";
+
+            oneCommunicatorTransactionParameters.Process = "PSNotifyHosttoCollectPass";
+
+            ////oneCommunicatorTransactionParameters.Process = "RICS";
+            oneCommunicatorTransactionParameters.Recipients = hostID;  ////hostID;
+            oneCommunicatorTransactionParameters.RequestId = requestID.Trim();
+
+            Email email = new Email();
+            email.TemplateParameters = templateParameters;
+
+          
+
+            Mobile mobile = new Mobile();
+            mobile.Summary = summary;
+            mobile.SummaryJSON = summaryJSON;
+            mobile.ContentJSON = contentJSON;
+            mobile.TemplateID = templateID;
+            mobile.Content = content;
+            mobile.Title = title;
+            mobile.DueDate = string.Empty;
+
+            ////email.CC = CC;
+
+            ChannelParameters channelParameters = new ChannelParameters();
+            channelParameters.Email = email;
+            channelParameters.Mobile = mobile;
+
+            OneCommunicator oneCommunicator = new OneCommunicator();
+            oneCommunicator.TransactionParameters = oneCommunicatorTransactionParameters;
+            oneCommunicator.ChannelParameters = channelParameters;
+            XDocument xdocument = null;
+            RequestUnifiedVASContractClient requestUnifiedVASContractClient = null;
+            string returnVal = string.Empty;
+            try
+            {
+                XmlSerializer xmlSerializerEApproval = new XmlSerializer(oneCommunicator.GetType());
+                StringBuilder sbeApproval = new StringBuilder();
+                StringWriter sweApproval = new StringWriter(sbeApproval);
+                xmlSerializerEApproval.Serialize(sweApproval, oneCommunicator);
+                xdocument = XDocument.Load(new StringReader(sbeApproval.ToString()));
+                sweApproval.Close();
+                requestUnifiedVASContractClient = new RequestUnifiedVASContractClient();
+                returnVal = requestUnifiedVASContractClient.Notify(HttpUtility.HtmlDecode(xdocument.ToString()), null);
+            }
+#pragma warning disable CS0168 // The variable 'ex' is declared but never used
+          catch (Exception ex)
+#pragma warning restore CS0168 // The variable 'ex' is declared but never used
+            {
+            }
+            finally
+            {
+                if (requestUnifiedVASContractClient != null && requestUnifiedVASContractClient.State != CommunicationState.Closed)
+                {
+                    requestUnifiedVASContractClient.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// The Send Notification To Host method
+        /// </summary>
+        /// <param name="hostID">The Host ID parameter</param>
+        /// <param name="hostFirstName">The Host First Name parameter</param>
+        /// <param name="strFacility">The Facility parameter</param>
+        /// <param name="requestID">The Request ID parameter</param>         
+        /// <param name="fromdate">The from date parameter</param>    
+        /// <param name="todate">The to date parameter</param>    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "transactioParameters", Justification = "Reviewed")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "returnVal", Justification = "Reviewed")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "ex", Justification = "Reviewed")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Reviewed")]
+        public void CheckOutNotificationToHost(string hostID, string hostFirstName, string strFacility, string requestID, string fromdate, string todate)
+        {
+            TemplateParameters templateParameters = new TemplateParameters();
+            TransactionParameters transactioParameters = new TransactionParameters();
+            templateParameters.HostID = string.Empty;
+            templateParameters.HostMailID = string.Empty;
+            templateParameters.HostFirstName = hostFirstName.Trim();
+            templateParameters.VisitorName = string.Empty;
+            templateParameters.Company = string.Empty;
+            ////templateParameters.Link = "";
+            templateParameters.FromDate = fromdate;
+            templateParameters.ToDate = todate;
+            templateParameters.City = string.Empty;
+            templateParameters.VisitorType = string.Empty;
+            templateParameters.Facility = strFacility.Trim();
+            templateParameters.EmailBodyText = string.Empty;
+            templateParameters.Requestor = string.Empty;
+            templateParameters.Country = string.Empty;
+            templateParameters.HostName = string.Empty;
+            templateParameters.Subject = string.Empty;
+            //// templateParameters.Subject = VMSConstants.VMSConstants.VisitorRequestSubject;
+
+            OneCommunicatorTransactionParameters oneCommunicatorTransactionParameters = new OneCommunicatorTransactionParameters();
+
+            oneCommunicatorTransactionParameters.GlobalAppId = "1496";
+
+            oneCommunicatorTransactionParameters.Process = "PSVisitCheckoutNotificationtoHost";
+
+            ////oneCommunicatorTransactionParameters.Process = "RICS";
+            oneCommunicatorTransactionParameters.Recipients = hostID; ////"445894";
+            oneCommunicatorTransactionParameters.RequestId = requestID.Trim();
+
+            Email email = new Email();
+            email.TemplateParameters = templateParameters;
+            ////email.CC = CC;
+
+            ChannelParameters channelParameters = new ChannelParameters();
+            channelParameters.Email = email;
+
+            OneCommunicator oneCommunicator = new OneCommunicator();
+            oneCommunicator.TransactionParameters = oneCommunicatorTransactionParameters;
+            oneCommunicator.ChannelParameters = channelParameters;
+            XDocument xdocument = null;
+            RequestUnifiedVASContractClient requestUnifiedVASContractClient = null;
+            string returnVal = string.Empty;
+            try
+            {
+                XmlSerializer xmlSerializerEApproval = new XmlSerializer(oneCommunicator.GetType());
+                StringBuilder sbeApproval = new StringBuilder();
+                StringWriter sweApproval = new StringWriter(sbeApproval);
+                xmlSerializerEApproval.Serialize(sweApproval, oneCommunicator);
+                xdocument = XDocument.Load(new StringReader(sbeApproval.ToString()));
+                sweApproval.Close();
+                requestUnifiedVASContractClient = new RequestUnifiedVASContractClient();
+                returnVal = requestUnifiedVASContractClient.Notify(xdocument.ToString(), null);
+            }
+#pragma warning disable CS0168 // The variable 'ex' is declared but never used
+            catch (Exception ex)
+#pragma warning restore CS0168 // The variable 'ex' is declared but never used
+            {
+            }
+            finally
+            {
+                if (requestUnifiedVASContractClient != null && requestUnifiedVASContractClient.State != CommunicationState.Closed)
+                {
+                    requestUnifiedVASContractClient.Close();
+                }
+            }
+        }
+
+        
+    }
+}
+
+
