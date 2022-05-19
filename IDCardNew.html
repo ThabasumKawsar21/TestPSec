@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Cognizant ID Card Template</title>
+
+    <style >
+        
+        /*General Class Start*/
+        *{margin:0;padding:0;}
+        .IdContainerFront, .IdContainerBack{height:320px;width:194px; border:1px solid red; margin:auto; position:relative; margin-bottom:2px; padding:0 5px 0 5px;font:normal 10px Arial}
+        .TopImg{width:145px; margin:auto}
+        .BotImg{width:145px; margin:auto; position:absolute; bottom:0; left:30px; right:30px}
+        .marTop5{margin-top:5px}
+        .marTop10{margin-top:10px}
+        .marTop15{margin-top:15px}
+        .boldText{font-weight:bold}
+        /*General Class End*/
+        
+        /*Front ID Card Class Start*/
+        .issueYear{color:#acacac; font-size:24px; margin:10px 0 0 10px}
+        .assPhoto{width:107px;height:107px; margin:28px auto 0 auto; border:1px solid red}
+        .assName, .assNumber{text-align:center; font:bold 14px arial; margin-top:3px }
+        .ctsLogo{height:38px; width:170px; margin:0px auto 0 auto; padding-top:5px}
+        .ctsLogo img{width:135px; margin:auto; display:block}
+        .IdContainerFront label{display:block}
+        .IdContainerFront label span{font-weight:bold}
+        /*Front ID Card Class End*/
+        
+        /*Back ID Card Class Start*/
+        .barCode{height:50px; border:1px solid red; margin:20px 0}
+        .assNumber2{font:bold 12pt arial; margin-top:3px}
+        .inform{font-weight:bold; padding-top:5px; text-align:center; height:20px}
+        .inform label{font-size:7pt}
+        .inform label span{font-size:9pt}
+        .contactCts{font-size:5.5pt; margin-top:15px}
+        .contactCts label{display:block}
+        .contactCts span{font-weight:bold}
+        /*Back ID Card Class End*/
+        
+    
+    </style>
+</head>
+<body>
+    <!--Front ID Start -->
+    <div class="IdContainerFront">
+        <div class="TopImg"><img ID="imgIDCardTop" src="Images/Kolkata/CardTop.jpg" class="TopImg" /></div>
+        <label class="issueYear">11</label>
+        <div class="assPhoto">Photo</div>
+        <label class="assName">K Vimal Kumar</label>
+        <label class="assNumber">221107</label>
+        <div class="marTop10"><img src="Images/Kolkata/line.jpg" width="190" height="1"  /></div>
+        <div class="ctsLogo"><img src="Images/IDCard_CognizantLogo.png" alt="CTS Logo" height="38" /></div>
+        <div class="BotImg"><img src="Images/Kolkata/CardBottom.jpg" class="TopImg" /></div>  
+    </div>
+    <!--Front ID End -->
+
+    <!--Back ID Start -->
+    <div class="IdContainerBack">
+        <div class="TopImg"><img ID="img1" src="Images/Kolkata/CardTop.jpg" class="TopImg" /></div>
+        <div class="barCode"></div>
+        <div>
+            <label class="assNumber2">221107</label>
+        </div>
+        
+        <div class="marTop10">
+            <label>Emergency contact</label> <label class="boldText">#9840817738</label>
+        </div>
+        <div class="marTop10">
+            <label>Blood Group </label><label class="boldText">o+</label>
+        </div>
+
+        <div class="marTop15"><img src="Images/Kolkata/line.jpg" width="190" height="1"  /></div>
+
+        <div class="inform">
+            <label>If found, please inform: <span>1800 258 2345</span></label>
+        </div>
+
+        <div><img src="Images/Kolkata/line.jpg" width="190" height="1"  /></div>
+        <div class="contactCts">
+            <label class="boldText">Cognizant Technology Solutions India Pvt. Ltd</label>
+            <label class="marTop5">Techno Campus, 5/535, Old Mahabalipuram Road, Okkiyam, Thoraipakkam, Chennai-600097, India</label>
+         </div>
+        
+        <div class="BotImg"><img src="Images/Kolkata/CardBottom.jpg" class="TopImg" /></div>
+    </div>
+    <!--Back ID End -->
+
+</body>
+</html>
