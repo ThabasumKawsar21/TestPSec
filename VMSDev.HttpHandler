@@ -1,0 +1,138 @@
+<%@ WebHandler Language="C#" Class="VMSDev.HttpHandler" %>
+
+/// Class Name: HttpHandler.cs
+/// Purpose  : To Implement HttpHandler functionality while passing query string values between pages
+/// Created Date : 2-Sep-2009
+/// Created By : Thenammai.M
+
+using System;
+using System.Data;
+using System.Configuration;
+using System.Web;
+using System.IO;
+using System.Web.SessionState;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Security.Principal;
+using System.Threading.Tasks;
+
+
+
+
+/// <summary>
+/// Summary description for HttpHandler
+/// </summary>
+/// 
+
+public class HttpHandler : IHttpHandler
+{
+    public void ProcessRequest(HttpContext context)
+    {
+
+        string strRoleId = string.Empty;
+        string strRequestFileName = string.Empty;
+
+        try
+        {
+            // Checking Login User is valid user or not.
+            if (HttpContext.Current.Session["LoginID"] == null)
+            {
+                 
+                    HttpContext.Current.Response.Redirect("Login.aspx", true);
+                                                  
+                // Context.ApplicationInstance.CompleteRequest();
+                return;
+            }
+
+            if (HttpContext.Current.Session["LoginID"] != null)
+            {
+                string strUserID = HttpContext.Current.Session["LoginID"].ToString();
+
+                if (HttpContext.Current.Session["RoleID"].ToString().Equals("Admin"))
+                {
+                    HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(strUserID), new string[] { "Admin" });
+                }
+                if (HttpContext.Current.Session["RoleID"].ToString().Equals("Security"))
+                {
+                    HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(strUserID), new string[] { "Security" });
+                }
+
+            }
+
+
+            strRequestFileName = Path.GetFileName(context.Request.FilePath).ToLower();
+
+            if (HttpContext.Current.Session["RoleID"].ToString().Equals("Security"))
+            {
+                if (strRequestFileName.Equals("VolumeofVisitors.aspx"))
+                {
+                    
+                        context.Response.Redirect("AccessDenied.aspx", true);
+                                                              
+                    // Context.ApplicationInstance.CompleteRequest();
+                    return;
+                }
+                if (strRequestFileName.Equals("MultipleEntries.aspx"))
+                {
+                     
+                        context.Response.Redirect("AccessDenied.aspx", true);
+                        
+                   
+                    
+                    //  Context.ApplicationInstance.CompleteRequest();
+                    return;
+                }
+                if (strRequestFileName.Equals("DatabyDepartmentHost.aspx"))
+                {
+                    
+                        context.Response.Redirect("AccessDenied.aspx", true);
+                         
+                  
+                    
+                    // Context.ApplicationInstance.CompleteRequest();
+                    return;
+                }
+
+            }
+
+
+            Page paint = (Page)PageParser.GetCompiledPageInstance(context.Request.Path, context.Server.MapPath(context.Request.Path), context);
+
+            paint.PreRenderComplete += new EventHandler(hand_PreRenderComplete);
+
+            paint.ProcessRequest(context);
+        }
+
+        catch (System.Threading.ThreadAbortException ex)
+        {
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+            //Logger.PublishException(ex, ListenerType.File);
+            //Logger.PublishException(ex, ListenerType.Email);
+            //context.Response.Redirect(SEZPMOConstants.ERRORPAGE, false);
+        }
+
+    }
+
+    void hand_PreRenderComplete(object sender, EventArgs e)
+    {
+        HttpContext.Current.RewritePath(HttpContext.Current.Request.Path);
+    }
+
+
+
+
+
+
+    public bool IsReusable
+    {
+        get
+        { return true; }
+    }
+}
+
