@@ -1,0 +1,280 @@
+<%@ Page Title="" Language="C#" MasterPageFile="~/VMSMain.Master" AutoEventWireup="true"
+    CodeBehind="MyDetails.aspx.cs" Inherits="VMSDev.MyDetails" %>
+
+<%@ Register Src="UserControls/EmployeeInformation.ascx" TagName="EmployeeInformation"
+    TagPrefix="uc1" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style type="text/css">
+        .ModalWindow
+        {
+            border: 1px solid #c0c0c0;
+            background: #f0f0f0;
+            padding: 0px 0px 0px 0px;
+            width: 500px;
+            height: auto;
+        }
+        .modalBackground
+        {
+            background-color: #878776;
+            filter: alpha(opacity=40);
+            opacity: 0.5;
+        }
+        p.MsoNormal
+        {
+            margin-top: 1.3pt;
+            margin-right: 5.75pt;
+            margin-bottom: 12.0pt;
+            margin-left: 0in;
+            line-height: 12.0pt;
+            font-size: 10.0pt;
+            font-family: "Arial" , "sans-serif";
+        }
+        .button
+        {
+            background-color: #767561;
+            font-weight: normal;
+            color: White;
+        }
+        
+        #File1
+        {
+            width: 414px;
+            height: 31px;
+        }
+        .style2
+        {
+            height: 29px;
+        }
+        .grdItems
+        {
+            padding: 0 0 0 20px;
+        }
+        .style3
+        {
+            width: 1.5px;
+            height: 240px;
+        }
+    </style>
+    <script language="javascript" type="text/javascript">
+        function btnReset_onclick() {
+            if (document.getElementById('VMSContentPlaceHolder_lblMessage1') != null) {
+                document.getElementById('VMSContentPlaceHolder_lblMessage1').style.display = 'none';
+            }
+            if (document.getElementById('VMSContentPlaceHolder_btnUpload') != null) {
+                document.getElementById('VMSContentPlaceHolder_btnUpload').disabled = true;
+            }
+            if (document.getElementById('VMSContentPlaceHolder_chkDisclaimer') != null) {
+                document.getElementById('VMSContentPlaceHolder_chkDisclaimer').checked = false;
+            }
+
+        }
+        function chkDisclaimer_onclick(getCheckBox) {
+            var checked = getCheckBox.checked;
+            if (checked) {
+                if (document.getElementById('VMSContentPlaceHolder_btnUpload') != null) {
+                    document.getElementById('VMSContentPlaceHolder_btnUpload').disabled = false;
+                }
+
+            }
+            else {
+                if (document.getElementById('VMSContentPlaceHolder_btnUpload') != null) {
+                    document.getElementById('VMSContentPlaceHolder_btnUpload').disabled = true;
+                }
+            }
+        }
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="VMSContentPlaceHolder" runat="server">
+    <asp:ScriptManager ID="DefaultMasterScriptManager" runat="server">
+    </asp:ScriptManager>
+    <uc1:EmployeeInformation ID="ucEmpInfo" runat="server"></uc1:EmployeeInformation>
+    <br />
+    <div id="divDetails" runat="server">
+        <asp:Panel ID="pnlWorkFlow" runat="server" Visible="false" Style="position: relative;
+            top: 0px; left: 0px; height: 150px">
+            <table width="100%">
+                <tr>
+                    <td align="left" class="table_header_bg" colspan="100%">
+                        &nbsp;<asp:Label ID="Label3" runat="server" CssClass="Table_header" Text="Image Correction Request"></asp:Label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <asp:Panel runat="server" ID="pnlImage" Width="200px" Visible="false">
+                            <asp:Image ID="imgUploadImage" runat="server" Height="100px" ImageUrl="~/Images/DummyPhoto.png"
+                                oncontextmenu="return false" ImageAlign="Top" /></asp:Panel>
+                    </td>
+                    <td>
+                        <asp:GridView ID="grdWorkflow" runat="server" AutoGenerateColumns="False" CssClass="GridText" OnRowDataBound="GrdWorkflow_RowDataBound"
+                            EmptyDataText="No Records Found" HorizontalAlign="Center" PageSize="3" Width="100%">
+                            <RowStyle CssClass="field_txt" HorizontalAlign="Center" />
+                            <HeaderStyle BackColor="#C6D4BB" CssClass="field_txt" HorizontalAlign="Center" />
+                            <Columns>
+                                <asp:BoundField DataField="Associate" HeaderStyle-Width="30%" HeaderStyle-HorizontalAlign="Center"
+                                    HeaderText="Associate">
+                                    <ItemStyle CssClass="grdItems" HorizontalAlign="Left" Wrap="True" />
+                                    <HeaderStyle HorizontalAlign="Center" />
+                                </asp:BoundField>
+                                <asp:TemplateField HeaderStyle-Width="30%" HeaderStyle-HorizontalAlign="Center"
+                                    HeaderText="Request Action">
+                                    <ItemTemplate>
+                                    <asp:Label ID="lblAction" runat="server" Text='<%#Eval("Action")%>'/>
+                                    </ItemTemplate>
+                                   <ItemStyle CssClass="grdItems" HorizontalAlign="Left" Wrap="True" />
+                                    <HeaderStyle HorizontalAlign="Center" />
+                                </asp:TemplateField>
+                                <%--<asp:BoundField DataField="Action" HeaderStyle-Width="30%" HeaderStyle-HorizontalAlign="Center"
+                                    HeaderText="Request Action">
+                                    <ItemStyle CssClass="grdItems" HorizontalAlign="Left" Wrap="True" />
+                                    <HeaderStyle HorizontalAlign="Center" />
+                                </asp:BoundField>--%>
+                                <asp:BoundField DataField="Status" HeaderStyle-Width="20%" HeaderStyle-HorizontalAlign="Center"
+                                    HeaderText="Status">
+                                    <ItemStyle HorizontalAlign="Center" Wrap="True" />
+                                    <HeaderStyle HorizontalAlign="Center" />
+                                </asp:BoundField>
+                                <asp:BoundField DataField="DateofRequest" HeaderStyle-Width="20%" HeaderStyle-HorizontalAlign="Center"
+                                    HeaderText="Date & Time">
+                                    <ItemStyle HorizontalAlign="Center" Wrap="True" />
+                                    <HeaderStyle HorizontalAlign="Center" />
+                                </asp:BoundField>
+                            </Columns>
+                        </asp:GridView>
+                    </td>
+                </tr>
+            </table>
+        </asp:Panel>
+        <asp:Panel ID="pnlImageUpload" runat="server" Height="61px">
+            <div style="text-align: left; width: 50%">
+                <p class="MsoNormal">
+                    <b><span style="font-size: 10.0pt">Missing / Mismatch of photograph?</span></b></p>
+                <p class="MsoNormal">
+                    <%--  <span style="color:black">Raise a request by logging into </span>--%>
+                    <span style="color: black"><b><span style="font-size: 9.0pt;">
+                        <asp:LinkButton runat="server" ID="lnkUploadImage">Upload</asp:LinkButton></span></b>
+                        <%-- <a href="https://gsdrem.cognizant.com/arsys/forms/remedysql/Remedy+Requester+-+New+Request/New+Admin/?cacheid=549af52">GSD</a>--%>
+                        &nbsp;your Photo </span>
+                </p>
+            </div>
+        </asp:Panel>
+        <asp:Panel ID="lblcontactdetails" runat="server">
+            <div style="text-align: left; width: 50%">
+                <p class="MsoNormal">
+                    <b><span style="font-size: 10.0pt">Mismatch of personal Information?</span></b></p>
+                <p class="MsoNormal">
+                    <span style="color: black">Update your details in </span><b><span style="color: black">
+                        <a href="https://compass.talent.cognizant.com/psp/HCM89PRD/EMPLOYEE/HRMS/s/WEBLIB_PTPP_SC.HOMEPAGE.FieldFormula.IScript_AppHP?pt_fname=CO_EMPLOYEE_SELF_SERVICE&FolderPath=PORTAL_ROOT_OBJECT.CO_EMPLOYEE_SELF_SERVICE&IsFolder=true">
+                            HCM</a></span></b></p>
+                <br />
+            </div>
+        </asp:Panel>
+    </div>
+    <ajaxToolkit:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="lnkUploadImage"
+        DropShadow="true" X="-1" Y="-1" PopupControlID="panUploadPhoto" BackgroundCssClass="modalBackground"
+        CancelControlID="btnCancel2" PopupDragHandleControlID="panUploadPhoto" Drag="false">
+    </ajaxToolkit:ModalPopupExtender>
+    <asp:Panel ID="panUploadPhoto" Width="920px" Height="289px" runat="server" Style="display: none">
+        <table style="background-color: White; height: 280px;" width="100%">
+            <tr style="border-color: #EDF6E3">
+                <td style="text-align: left; padding-left: 5px; background-color: #EDF6E3; border-color: #EDF6E3;
+                    width: 470px" class="style2">
+                    <asp:Label ID="lblUploadImageHeader" runat="server" CssClass="Table_header" Style="font-size: 14px;"
+                        Text="Upload Image"></asp:Label>
+                </td>
+                <td style="background-color: #EDF6E3; border-color: #EDF6E3; margin: 0 0 0 0; float: right;
+                    padding: 0 0 0 0; text-align: right; vertical-align: middle;" align="right" width="3%">
+                    <asp:ImageButton ID="btnCancel2" runat="server" ImageAlign="Right" ImageUrl="~/Images/Close.png"
+                        Width="23px" OnClick="BtnCancel2_Click" oncontextmenu="return false" Style="position: relative" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="height: 140px; padding: 0 2 0 2">
+                    <asp:UpdatePanel runat="server" ID="uplDisclaimer">
+                        <Triggers>
+                            <asp:PostBackTrigger ControlID="btnUpload" />
+                        </Triggers>
+                        <ContentTemplate>
+                            <table style="height: 234px;" width="100%">
+                                <tr>
+                                    <td style="height: 15px; text-align: left; vertical-align: middle; padding-left: 10px"
+                                        width="45%">
+                                        <p class="MsoNormal" style="margin-bottom: 2pt; line-height: 15pt">
+                                            <span style="color: black">Select an Image File</span></p>
+                                    </td>
+                                    <td width="5%" rowspan="5">
+                                        <img class="style3" alt="" oncontextmenu="return false" src="Images/line.png" />
+                                    </td>
+                                    <td rowspan="5" style="text-align: left">
+                                        <p class="MsoNormal" style="margin-bottom: 2pt; line-height: 15pt;">
+                                            <u>Prerequisites: </u>
+                                            <br />
+                                            <span style="color: black; font-size: 8.0pt; margin-left: 2pt">&nbsp;1. Upload an Image
+                                                with your Associate ID as its name
+                                                <br />
+                                                &nbsp; 2. The file formats should be either .jpg, .gif, .png, or .bmp
+                                                <br />
+                                                &nbsp; 3. Image should be in formal attire and setting
+                                                <br />
+                                                &nbsp; 4. Person should be facing straight such that both ears are visible
+                                                <br />
+                                                &nbsp; 5. Face of the person should be well lit and occupy about 80% of the image
+                                                area
+                                                <br />
+                                                &nbsp; 6. Image should have light blue/white background
+                                                <br />
+                                                &nbsp; 7. Image should be taken within the past 6 months, showing current appearance
+                                                <br />
+                                                &nbsp; 8. Associate should not wear a hat or headgear that obscures the hair or
+                                                hairline except for those wearing a headgear habitually on account of religious
+                                                reasons.
+                                                <br />
+                                                &nbsp; 9. Image with Dark glasses or nonprescription glasses with tinted lenses
+                                                is not acceptable. </span>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center">
+                                        <input id="UploadImage" runat="server" type="file" style="height: 25px; width: 310px;
+                                            font-size: 10pt;" />
+                                        <br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="height: 20px;">
+                                        <label id="lblMessage1" runat="server" class="field_txt" text="Upload Image" visible="false"
+                                            style="font-size: 10.0pt; font-weight: bold">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">
+                                        <span class="MsoNormal" style="font-family: Arial; height: 15px; text-align: left;
+                                            font-size: 10.0pt; margin-bottom: 2pt; line-height: 3; width: 477px;">Disclaimer:</span>
+                                        <br />
+                                        <asp:CheckBox ID="chkDisclaimer" runat="server" onclick="return chkDisclaimer_onclick(this)"
+                                            Style="font-family: Arial Narrow; font-style: oblique; text-align: left; color: #3E3535;
+                                            font-size: 10.0pt; margin-bottom: 2pt;" Checked="false" Text="I have read and understood the prerequisites for image upload and have complied by the same. I confirm that the image uploaded is my current image.">
+                                        </asp:CheckBox>
+                                        <br />
+                                        <br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="height: 30px;">
+                                        <asp:Button ID="btnUpload" runat="server" Text="Upload" CssClass="button" Width="80px"
+                                            OnClick="BtnUpload_Click" Enabled="false" />
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="reset" id="btnReset" runat="server" value="Clear" class="button" style="width: 80px"
+                                            onclick="return btnReset_onclick()" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </td>
+            </tr>
+        </table>
+    </asp:Panel>
+</asp:Content>
