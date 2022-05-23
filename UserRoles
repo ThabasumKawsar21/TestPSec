@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<UserPages>
+  <AllUsers>
+    <AccessiblePage>AccessDenied.aspx</AccessiblePage>
+    <AccessiblePage>AssociateImage.aspx</AccessiblePage>
+    <AccessiblePage>BarCode.aspx</AccessiblePage>
+    <AccessiblePage>Default.aspx</AccessiblePage>
+    <AccessiblePage>EmployeeImage.aspx</AccessiblePage>
+    <AccessiblePage>ErrorPage.aspx</AccessiblePage>
+    <AccessiblePage>Home.aspx</AccessiblePage>
+    <AccessiblePage>IDProofImage.aspx</AccessiblePage>
+    <AccessiblePage>ImageUpload.aspx</AccessiblePage>
+    <AccessiblePage>Login.aspx</AccessiblePage>
+    <AccessiblePage>SearchPage.aspx</AccessiblePage>
+    <AccessiblePage>SearchUserDetails.aspx</AccessiblePage>
+    <AccessiblePage>SessionExpired.aspx</AccessiblePage>
+    <AccessiblePage>Success.aspx</AccessiblePage>
+    <AccessiblePage>ViewLogbySecurity.aspx</AccessiblePage>
+  </AllUsers>
+  <Security>
+    <!--Security Pages-->
+    <AccessiblePage>GenerateBadge.aspx</AccessiblePage>
+    <AccessiblePage>incompleteverification.aspx</AccessiblePage>
+    <AccessiblePage>LVS.aspx</AccessiblePage>
+    <AccessiblePage>QRcodebadge.aspx</AccessiblePage>
+    <AccessiblePage>TemporaryIDCard.aspx</AccessiblePage>
+
+    <AccessiblePage>VMSEnterInformationBySecurity.aspx</AccessiblePage>
+    <AccessiblePage>Webcam.aspx</AccessiblePage>
+    <AccessiblePage>IVS.aspx</AccessiblePage>
+  </Security>
+  <ReceptionAdmin>
+    <!--Security Pages-->
+    <AccessiblePage>GenerateBadge.aspx</AccessiblePage>
+    <AccessiblePage>incompleteverification.aspx</AccessiblePage>
+    <AccessiblePage>LVS.aspx</AccessiblePage>
+    <AccessiblePage>QRcodebadge.aspx</AccessiblePage>
+    <AccessiblePage>TemporaryIDCard.aspx</AccessiblePage>
+
+    <AccessiblePage>VMSEnterInformationBySecurity.aspx</AccessiblePage>
+    <AccessiblePage>Webcam.aspx</AccessiblePage>
+    <AccessiblePage>IVS.aspx</AccessiblePage>
+  </ReceptionAdmin>
+  <Host>
+    <!--Host Pages-->
+    <!--<AccessiblePage>MyDetails.aspx</AccessiblePage>-->
+  </Host>
+  <Admin>
+    <!--Host Pages-->
+    <!--<AccessiblePage>MyDetails.aspx</AccessiblePage>-->
+    <!--Admin Pages-->
+    <AccessiblePage>AssociateImageUpload.aspx</AccessiblePage>
+    <AccessiblePage>CardReport.aspx</AccessiblePage>
+    <AccessiblePage>DatabyDepartmentHost.aspx</AccessiblePage>
+    <AccessiblePage>DatabyDeptMultiVisit.aspx</AccessiblePage>
+    <AccessiblePage>Headcount.aspx</AccessiblePage>
+    <AccessiblePage>IVSNoimageReport.aspx</AccessiblePage>
+    <AccessiblePage>LaptopUsersReport.aspx</AccessiblePage>
+    <AccessiblePage>MultipleEntries.aspx</AccessiblePage>
+    <AccessiblePage>UsageReport.aspx</AccessiblePage>
+    <AccessiblePage>VolumeofVisitors.aspx</AccessiblePage>
+    <AccessiblePage>AddRole.aspx</AccessiblePage>
+    <AccessiblePage>ImageBulkUpload.aspx</AccessiblePage>
+  </Admin>
+  <SuperAdmin>
+    <!--Security Pages-->
+    <AccessiblePage>GenerateBadge.aspx</AccessiblePage>
+    <AccessiblePage>incompleteverification.aspx</AccessiblePage>
+    <AccessiblePage>LVS.aspx</AccessiblePage>
+    <AccessiblePage>QRcodebadge.aspx</AccessiblePage>
+    <AccessiblePage>TemporaryIDCard.aspx</AccessiblePage>
+
+    <AccessiblePage>VMSEnterInformationBySecurity.aspx</AccessiblePage>
+    <AccessiblePage>Webcam.aspx</AccessiblePage>
+    <AccessiblePage>IVS.aspx</AccessiblePage>
+    <!--Host Pages-->
+
+    <!--<AccessiblePage>MyDetails.aspx</AccessiblePage>-->
+    <!--Admin Pages-->
+    <AccessiblePage>AssociateImageUpload.aspx</AccessiblePage>
+    <AccessiblePage>CardReport.aspx</AccessiblePage>
+    <AccessiblePage>DatabyDepartmentHost.aspx</AccessiblePage>
+    <AccessiblePage>DatabyDeptMultiVisit.aspx</AccessiblePage>
+    <AccessiblePage>Headcount.aspx</AccessiblePage>
+    <AccessiblePage>IVSNoimageReport.aspx</AccessiblePage>
+    <AccessiblePage>LaptopUsersReport.aspx</AccessiblePage>
+    <AccessiblePage>MultipleEntries.aspx</AccessiblePage>
+    <AccessiblePage>UsageReport.aspx</AccessiblePage>
+    <AccessiblePage>VolumeofVisitors.aspx</AccessiblePage>
+    <AccessiblePage>AddRole.aspx</AccessiblePage>
+    <AccessiblePage>ImageBulkUpload.aspx</AccessiblePage>
+    <AccessiblePage>GenerateIDCard.aspx</AccessiblePage>
+    <AccessiblePage>IDCard.aspx</AccessiblePage>
+    <AccessiblePage>ApproveImage.aspx</AccessiblePage>
+    <AccessiblePage>AssociateIDCardList.aspx</AccessiblePage>
+    <AccessiblePage>IDCardBulkPrint.aspx</AccessiblePage>
+  </SuperAdmin>
+  <IDCardAdmin>
+    <!--Host Pages-->
+    <!--<AccessiblePage>MyDetails.aspx</AccessiblePage>-->
+    <!--IDCardAdmin Pages-->
+    <!--<AccessiblePage>ApplicantImageUpload.aspx</AccessiblePage>-->
+    <AccessiblePage>AssociateImageUpload.aspx</AccessiblePage>
+    <AccessiblePage>AssociateIDUpload.aspx</AccessiblePage>
+    <AccessiblePage>GenerateIDCard.aspx</AccessiblePage>
+    <AccessiblePage>IDCard.aspx</AccessiblePage>
+    <AccessiblePage>IDCardReport.aspx</AccessiblePage>
+    <AccessiblePage>ManageImages.aspx</AccessiblePage>
+    <AccessiblePage>Webcam.aspx</AccessiblePage>
+  </IDCardAdmin>
+  <Approver>
+    <!--Host Pages-->
+    <!--<AccessiblePage>MyDetails.aspx</AccessiblePage>-->
+    <!--Approver Pages-->
+    <AccessiblePage>ApproveImage.aspx</AccessiblePage>
+  </Approver>
+  <!--<VisitorDesk>
+    
+    <AccessiblePage>ViewLogbySecurity.aspx</AccessiblePage>
+    <AccessiblePage>VMSEnterInformationBySecurity.aspx</AccessiblePage>
+     <AccessiblePage>Webcam.aspx</AccessiblePage>
+    <AccessiblePage>GenerateBadge.aspx</AccessiblePage>
+  
+  </VisitorDesk>-->
+
+</UserPages>
