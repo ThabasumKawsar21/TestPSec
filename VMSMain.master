@@ -1,0 +1,489 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="VMSMain.master.cs" Inherits="VMSDev.VMSMain" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script runat="server">
+
+    protected void LnkLogout_Click(object sender, EventArgs e)
+    {
+
+    }
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>Physical Security</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <script language="javascript" type="text/javascript">
+
+        function calendarPicker(strTxtRef) {
+            window.open('Controls/Calender.aspx?field=' + strTxtRef + '', 'calendarPopup', 'titlebar=no,left=470,top=100,width=300,height=250,resizable=no');
+        }
+
+        // TO-DO: Need to change function after implementing user creation screen.
+
+        function OpenPopUpHelp(roleId) {
+            var Url;
+            var windowName;
+            Url = "Help.aspx?RoleId=" + roleId + "";
+
+            if (windowName == undefined)
+                windowName = "Popup";
+            window.open(Url, windowName, "toolbar=0, menubar=0, location=0,resizable=0,status=1,top=20,left=20,height=650px,width=970px,scrollbars=yes, maximize=1");
+
+        }
+
+
+    </script>
+    <style type="text/css">
+        @media all {
+            .page-break {
+                display: none;
+            }
+        }
+
+        @media print {
+            .page-break {
+                display: block;
+                page-break-before: always;
+            }
+
+            .noPrint {
+                display: none;
+            }
+
+            .Print {
+                display: table;
+            }
+
+            #myFooter, #myHeader {
+                display: none;
+            }
+        }
+
+        .Smallconstants {
+            text-align: left;
+            vertical-align: top;
+            font-family: Interstate-Regular;
+            font-size: 11px;
+            line-height: 12px;
+            margin-left: 0px;
+        }
+
+        .Rowstyle {
+            width: 330px;
+            vertical-align: top;
+            line-height: 11px;
+        }
+
+        .constantNamelabelbold {
+            text-align: left;
+            vertical-align: top;
+            font-family: Interstate-Regular;
+            font-size: 12px;
+            width: 50px;
+            line-height: 12px;
+        }
+
+        .constantlabel {
+            text-align: left;
+            vertical-align: top;
+            font-family: Interstate-Regular;
+            font-size: 11px;
+            width: 50px;
+            line-height: 12px;
+        }
+
+        .constantlabelbold {
+            text-align: left;
+            vertical-align: top;
+            font-family: Interstate-Regular;
+            font-size: 11px;
+            width: 50px;
+            line-height: 12px;
+        }
+
+        .Variables_TD {
+            vertical-align: top;
+            line-height: 12px;
+        }
+
+        .Rowstyle2 {
+            width: 330px;
+            vertical-align: top;
+            line-height: 12px;
+        }
+
+
+        .Notestyle {
+            text-align: left;
+            vertical-align: top;
+            font-family: Interstate-Regular;
+            font-size: 9px;
+            line-height: 12px;
+        }
+
+        #form2 {
+            height: 330px;
+        }
+
+        .IDFontBold {
+            font-family: Arial Narrow;
+            font-weight: bold;
+        }
+
+        .IDFontNormal {
+            font-family: Arial Narrow;
+            font-weight: normal;
+        }
+
+        .style1 {
+            width: 269px;
+        }
+
+        .style2 {
+            width: 72px;
+        }
+
+        .styleImage {
+            max-height: 150px;
+            width: 200px;
+        }
+    </style>
+    <link href="App_Themes/UIStyle.css" rel="stylesheet" type="text/css" />
+    <link href="App_Themes/StandardUI.css" rel="stylesheet" type="text/css" />
+    <link href="App_Themes/jquery.Jcrop.css" rel="stylesheet" type="text/css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link href="css/MasterCss/HomePage.css" rel="stylesheet" />
+    <link href="css/MasterCss/datepicker.css" rel="stylesheet" />
+    <link href="css/MasterCss/simpleSelect.css" rel="stylesheet" />
+    <link href="App_Themes/Jquery-ui.css" rel="stylesheet" />
+    <%--<style>
+        .span.k-timepicker{
+            width:108px;
+        }
+        .k-timepicker{
+              width:108px;
+        }
+    </style>--%>
+    <style>
+        .k-state-selected {
+            background-color: transparent;
+            border-color: transparent;
+            background-image: none;
+            color: #ffffff;
+        }
+
+        td.k-state-focused.k-state-selected {
+            box-shadow: none;
+        }
+
+        .k-state-selected > .k-link {
+            color: black;
+        }
+
+        /*.selected1 > .k-link {
+        color: #FFF;
+    }*/
+
+        .k-i-clock:before {
+            content: "\e107";
+            color: #00728F;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .k-i-calendar:before {
+            content: "\e108";
+            color: #00728F;
+            font-weight: 300;
+            font-size: 16px;
+        }
+
+        .k-picker-wrap.k-state-default {
+            border-color: #CCCCCC;
+            height: 36px;
+            margin-left: 0%;
+            margin-top: 4px;
+            border: 1px solid #cccccc;
+            border-top: 0;
+            border-left: 0;
+            border-right: 0;
+        }
+
+        .k-picker-wrap.k-state-disabled {
+            border-color: #CCCCCC;
+            height: 36px;
+            margin-left: -4%;
+            margin-top: 4px;
+            border: 1px solid #cccccc;
+            border-top: 0;
+            border-left: 0;
+            border-right: 0;
+        }
+
+        .k-state-default > .k-select {
+            border-color: transparent;
+            background-color: transparent;
+            background-image: none;
+            line-height: 45px;
+            top: 10px;
+            right: 2px;
+        }
+
+        .k-state-disabled > .k-select {
+            border-color: transparent;
+            background-color: transparent;
+            background-image: none;
+            line-height: 45px;
+            top: 10px;
+        }
+        /*.k-select
+{
+    top:11px;
+    right:-2px;
+}*/
+        .item {
+            font: 14px Proxima-Nova-Regular;
+            color: #596679;
+        }
+
+        span.k-datepicker {
+            background-color: transparent;
+            background-image: none;
+            width: 229px;
+            margin-bottom: 8px;
+            margin-top: 0%;
+            margin-left: 20px;
+            height: 33px;
+        }
+
+        span.k-timepicker {
+            background-color: transparent;
+            background-image: none;
+            width: 105px;
+            margin-bottom: 8px;
+            margin-top: 1%;
+            margin-left: 16px;
+            height: 38px;
+        }
+
+        .k-list {
+            color: #596679;
+            font: 14px Proxima-Nova-Regular;
+            background-color: #ffffff;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+            .tooltip .tooltiptext {
+                visibility: hidden;
+                width: 97px;
+                background-color: #555;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 5px 0;
+                position: absolute;
+                z-index: 1;
+                bottom: 125%;
+                left: 50%;
+                margin-left: -56px;
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+                .tooltip .tooltiptext::after {
+                    content: "";
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    margin-left: -5px;
+                    border-width: 5px;
+                    border-style: solid;
+                    border-color: #555 transparent transparent transparent;
+                }
+
+            .tooltip:hover .tooltiptext {
+                visibility: visible;
+                opacity: 1;
+            }
+
+        .ui-dialog .ui-dialog-title {
+            margin-top: 2%;
+        }
+
+        .k-calendar .k-header .k-link {
+            color: #596679;
+        }
+
+        .k-header {
+            background-color: white;
+        }
+
+        .k-calendar .k-link {
+            color: #596679;
+        }
+
+        .k-calendar td.k-state-selected {
+            background-color: rgba(44, 104, 177, 1);
+        }
+
+        .k-calendar td {
+            border-radius: 0px;
+        }
+
+        .k-calendar .k-today {
+            color: rgba(195, 122, 139, 1);
+        }
+
+        ::-webkit-input-placeholder:after {
+            content: '*';
+            color: red;
+        }
+
+        :-moz-placeholder:after { /* Firefox 18- */
+            content: '*';
+            color: red;
+        }
+
+        ::-moz-placeholder:after { /* Firefox 19+ */
+            content: '*';
+            color: red;
+        }
+
+        :-ms-input-placeholder:after {
+            content: '*';
+            color: red;
+        }
+
+        select2-container select2-container--default select2-container--open {
+            top: 196px;
+            left: 22.8px;
+        }
+    </style>
+    <%--<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.2.620/styles/kendo.mobile.all.min.css"/>--%
+
+
+
+    <%--<link href="css/MasterCss/selectize.css" rel="stylesheet" />--%>
+    <%--<link href="css/MasterCss/selectize.bootstrap3.css" rel="stylesheet" />--%>
+    <%--<link href="css/MasterCss/selectize.default.css" rel="stylesheet" />--%>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta http-equiv="Pragma" content="no-cache" />
+
+
+</head>
+<body style="margin-bottom: 0px; margin-left: 0px; margin-right: 0px; margin-top: 0px;">
+
+    <form runat="server" id="coords" enctype="multipart/form-data">
+
+        <div>
+            <table width="100%">
+                <tr>
+
+                    <td style="text-align: right">
+                        <div class="noPrint">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td width="235" height="66">
+                                        <%--<img src="Images/logo_1.jpg" width="242" height="66">--%>
+                                        <img src="Images/Cognizant_Blue_HD.png" width="242" height="66">
+                                    </td>
+                                    <td>
+                                        <img src="Images/spacer.gif" width="1" height="1"></td>
+                                    <td width="494" align="center" valign="baseline" style="vertical-align: middle">
+                                        <!-- <asp:Label id="lblVms" Text="Visitor Management System" BackColor="Green"  ForeColor="LightYellow" Font-Bold="true" Font-Size="Large" width="383" height="66" runat="server"></asp:Label></td>-->
+                                        <img src="Images/Physical-Security.JPG" height="66" style="width: 489px"></td>
+                                    <td width="244" valign="top" bgcolor="#CDE3F1">
+                                        <table id="tableHeaderLinks" runat="server" width="244" border="0" cellspacing="1"
+                                            cellpadding="1" align="right" style="padding-right: 20px">
+                                            <tr runat="server" id="trMasterLinkItems">
+                                                <td style="height: 19px">
+                                                    <asp:HyperLink ID="home" CssClass="navlink" runat="server" NavigateUrl="~/default.aspx">
+                                                        <asp:Literal ID="Abouthome" runat="server"
+                                                            Text="<%$ Resources:LocalizedText, Home %>"></asp:Literal>
+                                                    </asp:HyperLink></td>
+                                                <%--   <td style="width: 10; height: 19px;" align="right">--%>
+                                                <%--<img src="Images/site_navi.gif"></td>--%>
+                                                <%--       <td width="44" align="center" style="height: 19px">
+                                                 <a id="helpLink" runat="server" class="navlink" style="cursor: hand;" href="#Help#" ><asp:Literal ID="lblHelp" runat="server" 
+                                            Text="<%$ Resources:LocalizedText, Help %>" ></asp:Literal></a>
+                                            </td>--%>
+                                                <td style="width: 3; height: 19px;">
+                                                    <img src="Images/site_navi.gif"></td>
+                                                <td class="navlink" style="height: 19px; width: 47px;">
+                                                    <asp:LinkButton ID="lnkLogout" runat="server" class="navlink"
+                                                        CausesValidation="False" OnClick="LnkLogout_Click" Text="<%$ Resources:LocalizedText, Logout %>" OnClientClick="javascript:window.close();" Visible="False"></asp:LinkButton><a href="#" class="navlink" onclick="self.close();"></a></td>
+                                                <td style="width: 12px; height: 19px;">
+                                                    <img src="Images/spacer.gif" width="1" height="1"></td>
+                                            </tr>
+                                        </table>
+                                        <br />
+                                        <br />
+                                        <span class="WelcomeUser_txt">
+                                            <asp:Label ID="lblwelcome" runat="server" CssClass="WelcomeUser_txt" Text="<%$ Resources:LocalizedText, Welcome %>"></asp:Label>
+                                            <asp:Label ID="lblName" runat="server" CssClass="WelcomeUser_txt"></asp:Label></span>
+                                        <span class="WelcomeUser_txt" style="white-space: nowrap">
+                                            <asp:Label ID="lblLanguage" runat="server" CssClass="WelcomeUser_txt" Text="<%$ Resources:LocalizedText, OfferedLanguage %>"></asp:Label>
+                                            <asp:DropDownList AutoPostBack="true" ID="drpPreferLang" runat="server"
+                                                OnSelectedIndexChanged="DrpPreferLang_SelectedIndexChanged">
+                                                <asp:ListItem Text="<%$ Resources:LocalizedText, English %>" Value="en-US"></asp:ListItem>
+                                                <asp:ListItem Text="<%$ Resources:LocalizedText, Chinese %>" Value="zh-CN"></asp:ListItem>
+                                            </asp:DropDownList></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="noPrint">
+                    <td class="tdMenu" id="tdmenu" runat="server" style>
+                        <asp:Menu ID="VMSMenu" runat="server" DataSourceID="VMSSiteMapDataSource"
+                            Orientation="Horizontal" Font-Bold="True" Font-Names="Verdana"
+                            ForeColor="White" StaticEnableDefaultPopOutImage="False"
+                            StaticTopSeparatorImageUrl="~/Images/menu_seprater.gif"
+                            MaximumDynamicDisplayLevels="5" Height="18px" OnMenuItemDataBound="MnuFooter_MenuItemDataBound">
+                            <StaticMenuItemStyle CssClass="menulink " HorizontalPadding="13px" ItemSpacing="0px" VerticalPadding="2px" />
+                            <StaticMenuStyle HorizontalPadding="0px" VerticalPadding="0px" />
+                            <DynamicHoverStyle BackColor="#6BB6DC" />
+                            <DynamicMenuItemStyle BackColor="#3188B5" BorderColor="White" BorderWidth="0px" CssClass="menulinkChild"
+                                HorizontalPadding="5px" VerticalPadding="5px" />
+                            <StaticHoverStyle BackColor="#6BB6DC" />
+                        </asp:Menu>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td height="550" valign="top" align="center">
+                        <div>
+                            <asp:ContentPlaceHolder ID="VMSContentPlaceHolder" runat="server">
+                            </asp:ContentPlaceHolder>
+
+                        </div>
+                        <asp:SiteMapDataSource ID="VMSSiteMapDataSource" runat="server" />
+                    </td>
+                </tr>
+                <tr class="noPrint">
+                    <td height="18" style="white-space: nowrap" valign="bottom" class="copyright" align="center">
+                        <asp:Label ID="lblCompanyName" runat="server" Text="<%$ Resources:LocalizedText, CompanyName %>"></asp:Label>&nbsp;&nbsp;
+                      <asp:Label ID="lblBottomCaption" runat="server" Text="<%$ Resources:LocalizedText, lblBottomCaption %>"></asp:Label>
+
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </form>
+    <asp:ContentPlaceHolder ID="ScriptContent" runat="server">
+    </asp:ContentPlaceHolder>
+</body>
+</html>
